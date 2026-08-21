@@ -1502,3 +1502,18 @@ table tr:hover { background-color: rgba(237, 232, 219, 0.15); }
 .badge-success { background-color: var(--color-success-light); color: var(--color-success); }
 .badge-warning { background-color: var(--color-warning-light); color: var(--color-warning); }
 .badge-error { background-color: var(--color-error-light); color: var(--color-error); }
+
+/* Product Detail 2-Column Responsive Layout */
+.product-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(440px, 520px) 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .product-detail-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}

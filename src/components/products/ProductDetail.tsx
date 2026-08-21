@@ -37,12 +37,12 @@ function PawPlaceholderLarge() {
       style={{
         background: 'var(--color-dominant-alt)',
         borderRadius: 'var(--radius-xl)',
-        minHeight: 400,
+        minHeight: 200,
       }}
     >
       <svg
-        width="96"
-        height="96"
+        width="64"
+        height="64"
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -191,34 +191,35 @@ export default function ProductDetail({
       </nav>
 
       {/* ── Main Content ── */}
-      <div className="grid grid-1 lg:grid-2 gap-8 md:gap-12 items-start">
-        {/* ── Image Gallery ── */}
-        <div>
+      <div className="product-detail-layout">
+        {/* ── Left Column: Image Gallery ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', width: '100%', maxWidth: 520, margin: '0 auto' }}>
           {/* Main Image */}
           <div
-            className="glass overflow-hidden relative"
+            className="glass overflow-hidden relative border border-secondary-alt/30 shadow-md bg-white/70 flex items-center justify-center p-4"
             style={{
-              aspectRatio: '1',
+              aspectRatio: '1/1',
+              width: '100%',
+              maxHeight: 520,
               borderRadius: 'var(--radius-xl)',
-              marginBottom: 'var(--space-3)',
             }}
           >
             <AnimatePresence mode="wait">
               {activeImage ? (
                 <motion.div
                   key={activeImage}
-                  className="relative w-full h-full"
+                  className="relative w-full h-full flex items-center justify-center"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.25 }}
                 >
                   <Image
                     src={activeImage}
                     alt={product.name}
                     fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-contain p-2"
+                    sizes="(max-width: 1024px) 100vw, 520px"
                     priority
                   />
                 </motion.div>
@@ -238,7 +239,8 @@ export default function ProductDetail({
                   color: 'var(--white)',
                   fontWeight: 700,
                   fontSize: 'var(--text-sm)',
-                  padding: 'var(--space-2) var(--space-3)',
+                  padding: 'var(--space-1) var(--space-3)',
+                  zIndex: 2,
                 }}
               >
                 -{discount}% OFF
@@ -246,32 +248,43 @@ export default function ProductDetail({
             )}
           </div>
 
-          {/* Thumbnails */}
+          {/* Thumbnails row directly below the image */}
           {allImages.length > 1 && (
-            <div className="flex gap-2" style={{ overflowX: 'auto' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 'var(--space-3)',
+                overflowX: 'auto',
+                padding: '6px 2px',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+              }}
+            >
               {allImages.map((img, i) => (
                 <button
                   key={img}
                   onClick={() => setActiveImageIdx(i)}
-                  className="relative overflow-hidden"
+                  className="relative overflow-hidden bg-white/90"
                   style={{
                     width: 72,
                     height: 72,
                     flexShrink: 0,
-                    borderRadius: 'var(--radius-md)',
+                    borderRadius: 'var(--radius-lg)',
                     border:
                       i === activeImageIdx
-                        ? '2px solid var(--color-accent)'
-                        : '2px solid transparent',
-                    transition: 'border-color 200ms',
+                        ? '2.5px solid var(--color-accent)'
+                        : '1.5px solid var(--color-secondary-alt)',
+                    transition: 'all 200ms ease',
                     cursor: 'pointer',
+                    padding: 0,
+                    boxShadow: i === activeImageIdx ? '0 0 10px rgba(255, 200, 0, 0.45)' : 'none',
                   }}
                 >
                   <Image
                     src={img}
                     alt={`${product.name} - ${i + 1}`}
                     fill
-                    className="object-cover"
+                    className="object-contain p-1.5"
                     sizes="72px"
                   />
                 </button>
@@ -280,8 +293,8 @@ export default function ProductDetail({
           )}
         </div>
 
-        {/* ── Product Info ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+        {/* ── Right Column: Product Info & Actions ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', width: '100%' }}>
           {/* Pet Type Badge */}
           <div className="flex items-center gap-2">
             {petIcon && (
