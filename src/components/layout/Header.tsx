@@ -5,14 +5,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, User, Phone, Menu } from 'lucide-react';
+import { ShoppingBag, Search, User, Phone, Menu, ChevronDown, LayoutGrid, Sparkles, Shield, Pill, ArrowRight, Activity, Bone, Box } from 'lucide-react';
 import { useCart } from '@/lib/hooks/useCart';
 import { useAuth } from '@/lib/hooks/useAuth';
 import CartDrawer from '../cart/CartDrawer';
 import ProfileDrawer from './ProfileDrawer';
 import MobileNav from './MobileNav';
 import { createBrowserClient } from '@/lib/supabase/client';
-import type { Offer } from '@/lib/types';
 
 export default function Header() {
   const { totalItems } = useCart();
@@ -24,37 +23,45 @@ export default function Header() {
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [offers, setOffers] = useState<Offer[]>([]);
-  const [showPromo, setShowPromo] = useState(true);
   const [settings, setSettings] = useState({
-    promo_text: { value: '✨ Free Delivery on orders over Rs. 5,000!   |   🐾 100% Genuine Pet Care Products', is_enabled: true },
     tagline: { value: 'Premium Pet Store', is_enabled: true },
     hotline: { value: '+94 77 123 4567', is_enabled: true },
   });
   
-  const [categories, setCategories] = useState<{
-    dog: Array<{ name: string; slug: string }>;
-    cat: Array<{ name: string; slug: string }>;
-    both: Array<{ name: string; slug: string }>;
-  }>({
-    dog: [
-      { name: 'Dry & Wet Pet Food', slug: 'dry-wet-pet-food' },
-      { name: 'Parasite & Tick Control', slug: 'parasite-tick-control' },
-      { name: 'Medicated Shampoos', slug: 'medicated-shampoos-grooming' },
-      { name: 'Health & Supplements', slug: 'health-supplements' },
-    ],
-    cat: [
-      { name: 'Dry & Wet Pet Food', slug: 'dry-wet-pet-food' },
-      { name: 'Cat Litter & Hygiene', slug: 'cat-litter-hygiene' },
-      { name: 'Parasite & Tick Control', slug: 'parasite-tick-control' },
-    ],
-    both: [
-      { name: 'Wound Care & Pharmacy', slug: 'wound-care-topical-pharmacy' },
-      { name: 'Medicated Shampoos', slug: 'medicated-shampoos-grooming' },
-    ]
-  });
+  const [rawCategories, setRawCategories] = useState<Array<{ name: string; slug: string }>>([]);
+  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+  
+  // Master Uniform Categories List (Consistent across all dropdowns)
+  const masterCategoryList = [
+    { name: 'Dry & Wet Pet Food', slug: 'dry-wet-pet-food', icon: Bone, desc: 'Premium kibbles, gravies & cans' },
+    { name: 'Cat Litter & Hygiene', slug: 'cat-litter-hygiene', icon: Box, desc: 'Odor control litters & scoops' },
+    { name: 'Parasite & Tick Control', slug: 'parasite-tick-control', icon: Shield, desc: 'Spot-on, sprays & collars' },
+    { name: 'Medicated Shampoos & Grooming', slug: 'medicated-shampoos-grooming', icon: Sparkles, desc: 'Antifungal, antibacterial & washes' },
+    { name: 'Health & Supplements', slug: 'health-supplements', icon: Pill, desc: 'Vitamins, tonics & immune care' },
+    { name: 'Wound Care & Topical Pharmacy', slug: 'wound-care-topical-pharmacy', icon: Activity, desc: 'Sprays, antiseptics & ointments' },
+  ];
 
-  // Fetch settings & active offers/promos for the header
+  // Dynamic category list combining DB categories if present
+  const unifiedCategories = rawCategories.length > 0
+    ? rawCategories.map((rc) => {
+        const matching = masterCategoryList.find((m) => m.slug === rc.slug);
+        return {
+          name: rc.name,
+          slug: rc.slug,
+          icon: matching?.icon || Sparkles,
+          desc: matching?.desc || 'Authorized pet care essentials',
+        };
+      })
+    : masterCategoryList;
+
+  const pharmacyCategories = [
+    { name: 'Parasite & Tick Control', slug: 'parasite-tick-control', icon: Shield, desc: 'Flea, tick and mite defense' },
+    { name: 'Wound Care & Topical Pharmacy', slug: 'wound-care-topical-pharmacy', icon: Activity, desc: 'Sprays, antiseptics & healing ointments' },
+    { name: 'Medicated Shampoos & Grooming', slug: 'medicated-shampoos-grooming', icon: Sparkles, desc: 'Antifungal & antibacterial washes' },
+    { name: 'Health & Supplements', slug: 'health-supplements', icon: Pill, desc: 'Vitamins, syrups & joint care' },
+  ];
+
+  // Fetch settings & categories for the header
   useEffect(() => {
     async function fetchHeaderData() {
       try {
@@ -81,39 +88,11 @@ export default function Header() {
         // Fetch categories
         const { data: catData, error: catError } = await supabase
           .from('categories')
-          .select('name, slug, parent_category')
+          .select('name, slug, parent_category, display_order')
           .order('display_order', { ascending: true });
           
         if (!catError && catData) {
-          const dogList: any[] = [];
-          const catList: any[] = [];
-          const bothList: any[] = [];
-          
-          catData.forEach((item: any) => {
-            const formattedItem = { name: item.name, slug: item.slug };
-            if (item.parent_category === 'Dog') {
-              dogList.push(formattedItem);
-            } else if (item.parent_category === 'Cat') {
-              catList.push(formattedItem);
-            } else {
-              bothList.push(formattedItem);
-            }
-          });
-          
-          setCategories({
-            dog: dogList.length > 0 ? dogList : categories.dog,
-            cat: catList.length > 0 ? catList : categories.cat,
-            both: bothList.length > 0 ? bothList : categories.both,
-          });
-        }
-
-        // Fetch active offers
-        const { data: offersData, error: offersError } = await supabase
-          .from('offers')
-          .select('*')
-          .eq('is_active', true);
-        if (!offersError && offersData) {
-          setOffers(offersData as Offer[]);
+          setRawCategories(catData.map((item: any) => ({ name: item.name, slug: item.slug })));
         }
       } catch (err) {
         console.error('Error fetching header details:', err);
@@ -127,6 +106,7 @@ export default function Header() {
     const handleUrlChange = () => {
       const params = new URLSearchParams(window.location.search);
       setSearchQuery(params.get('search') || '');
+      setCurrentCategory(params.get('category'));
     };
 
     handleUrlChange();
@@ -161,45 +141,50 @@ export default function Header() {
     }
   };
 
-  const activePromoMessage = offers.length > 0
-    ? offers.map((o) => `✨ ${o.title}: ${o.description || ''} ${o.code ? `[Code: ${o.code}]` : ''}`).join('   |   ')
-    : settings.promo_text.value;
-
-  const showPromoTicker = settings.promo_text.is_enabled && showPromo;
-
   const menuItems = [
-    { name: 'All Products', path: '/products' },
-    { name: 'Dog Food', path: '/products?category=dog-food-dry' },
-    { name: 'Cat Food', path: '/products?category=cat-food-dry' },
-    { name: 'Tick & Flea', path: '/products?category=tick-flea-treatment' },
-    { name: 'Cat Litter', path: '/products?category=cat-litter' },
-    { name: 'Shampoo & Grooming', path: '/products?category=shampoo-grooming' },
-    { name: 'Supplements', path: '/products?category=vitamins-supplements' },
+    { name: 'All Products', path: '/products', slug: '' },
+    ...(rawCategories.length > 0
+      ? rawCategories.map((c) => ({
+          name: c.name,
+          path: `/products?category=${encodeURIComponent(c.slug)}`,
+          slug: c.slug,
+        }))
+      : [
+          { name: 'Dog Food', path: '/products?category=dog-food-dry', slug: 'dog-food-dry' },
+          { name: 'Cat Food', path: '/products?category=cat-food-dry', slug: 'cat-food-dry' },
+          { name: 'Tick & Flea', path: '/products?category=tick-flea-treatment', slug: 'tick-flea-treatment' },
+          { name: 'Cat Litter', path: '/products?category=cat-litter', slug: 'cat-litter' },
+          { name: 'Shampoo & Grooming', path: '/products?category=shampoo-grooming', slug: 'shampoo-grooming' },
+          { name: 'Supplements', path: '/products?category=vitamins-supplements', slug: 'vitamins-supplements' },
+        ]),
   ];
+
+  const [activeDropdown, setActiveDropdown] = useState<'all' | 'dog' | 'cat' | 'pharmacy' | null>(null);
+  const [dropdownTimeout, setDropdownTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = (menu: 'all' | 'dog' | 'cat' | 'pharmacy') => {
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+    setActiveDropdown(menu);
+  };
+
+  const handleMouseLeave = () => {
+    const timer = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 150);
+    setDropdownTimeout(timer);
+  };
+
+  const closeDropdown = () => {
+    if (dropdownTimeout) clearTimeout(dropdownTimeout);
+    setActiveDropdown(null);
+  };
 
   return (
     <>
       <div className="w-full bg-white border-b border-secondary/40 z-40 relative">
-        
-        {/* 1. TOP PROMO TICKER BAR (Statically stacked) */}
-        {showPromoTicker && (
-          <div 
-            className="w-full bg-accent text-white py-2 px-4 relative overflow-hidden flex items-center justify-between text-[11px] font-bold tracking-wide select-none"
-            style={{ backgroundColor: 'var(--color-accent)', height: '34px' }}
-          >
-            <div className="flex-1 flex overflow-hidden items-center justify-center" style={{ whiteSpace: 'nowrap' }}>
-              <div className="animate-header-marquee" style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>
-                <span style={{ whiteSpace: 'nowrap' }}>{activePromoMessage}</span>
-              </div>
-            </div>
-            <button 
-              onClick={() => setShowPromo(false)} 
-              className="hover:bg-black/10 p-0.5 rounded-full text-white/80 hover:text-white transition-colors"
-            >
-              &times;
-            </button>
-          </div>
-        )}
 
         {/* 2. MIDDLE BRANDING & ACTIONS BAR */}
         <div className="container mx-auto px-4 header-middle-bar">
@@ -341,24 +326,352 @@ export default function Header() {
           </form>
         </div>
 
-
         {/* 3. CATEGORY NAVIGATION BAR (Hidden on mobile) */}
-        <div className="w-full bg-secondary-alt/10 border-t border-secondary/30 mobile-hidden">
-          <nav className="container mx-auto px-4 flex items-center justify-center md:justify-start gap-1 overflow-x-auto py-1 scrollbar-none">
-            {menuItems.map((item) => {
-              const isActive = pathname === item.path;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.path}
-                  className={`px-4 py-2 category-nav-link transition-colors hover:text-accent ${
-                    isActive ? 'text-accent border-b-2 border-accent' : 'text-text'
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
+        <div className="w-full bg-secondary-alt/15 border-t border-secondary/40 mobile-hidden relative">
+          <nav className="container mx-auto px-4 flex items-center gap-1 py-1">
+            
+            {/* 1. All Categories (Mega Menu Trigger) */}
+            <div 
+              className="relative"
+              onMouseEnter={() => handleMouseEnter('all')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveDropdown(activeDropdown === 'all' ? null : 'all')}
+                className={`px-3 py-2 rounded-lg flex items-center gap-2 category-nav-link text-xs font-bold transition-all ${
+                  activeDropdown === 'all'
+                    ? 'bg-accent text-white shadow-sm'
+                    : 'text-text hover:bg-secondary/60 hover:text-accent'
+                }`}
+              >
+                <LayoutGrid size={15} />
+                <span>All Categories</span>
+                <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === 'all' ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Mega Dropdown Menu */}
+              <AnimatePresence>
+                {activeDropdown === 'all' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute left-0 top-full mt-1.5 w-[720px] bg-white rounded-2xl shadow-2xl border border-secondary-alt/40 p-6 z-50 glass-strong"
+                  >
+                    {/* Top Pet Filters Header */}
+                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-secondary/50">
+                      <div>
+                        <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-text flex items-center gap-1.5">
+                          <LayoutGrid size={14} className="text-accent" />
+                          <span>Shop by Category</span>
+                        </h4>
+                        <p className="text-[11px] text-text-muted mt-0.5">Explore our complete catalog of authorized veterinary pet essentials</p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href="/products?pet_type=Dog"
+                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
+                          className="px-2.5 py-1 bg-secondary/60 hover:bg-accent hover:text-white rounded-lg text-[11px] font-bold text-text transition-colors"
+                        >
+                          🐶 Dogs Only
+                        </Link>
+                        <Link
+                          href="/products?pet_type=Cat"
+                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
+                          className="px-2.5 py-1 bg-secondary/60 hover:bg-accent hover:text-white rounded-lg text-[11px] font-bold text-text transition-colors"
+                        >
+                          🐱 Cats Only
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Uniform Categories Grid */}
+                    <div className="grid grid-cols-2 gap-3">
+                      {unifiedCategories.map((c) => {
+                        const Icon = c.icon;
+                        return (
+                          <Link
+                            key={`mega-item-${c.slug}`}
+                            href={`/products?category=${c.slug}`}
+                            onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
+                            className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-secondary/60 text-accent group-hover:bg-accent group-hover:text-white flex items-center justify-center flex-shrink-0 transition-colors mt-0.5 shadow-xs">
+                              <Icon size={16} />
+                            </div>
+                            <div className="overflow-hidden">
+                              <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
+                              <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+
+                    {/* Bottom Action Footer */}
+                    <div className="mt-4 pt-3 border-t border-secondary/40 flex items-center justify-between">
+                      <p className="text-[11px] text-text-muted">
+                        Direct islandwide delivery across Sri Lanka
+                      </p>
+                      <Link
+                        href="/products"
+                        onClick={() => { setCurrentCategory(null); closeDropdown(); }}
+                        className="text-xs font-bold text-accent hover:underline flex items-center gap-1.5"
+                      >
+                        <span>Browse Complete Store Catalog</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* 2. Dogs Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => handleMouseEnter('dog')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveDropdown(activeDropdown === 'dog' ? null : 'dog')}
+                className={`px-3 py-2 rounded-lg flex items-center gap-1.5 category-nav-link text-xs font-bold transition-all ${
+                  activeDropdown === 'dog'
+                    ? 'bg-secondary text-accent'
+                    : 'text-text hover:bg-secondary/60 hover:text-accent'
+                }`}
+              >
+                <span>🐶 Dogs</span>
+                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === 'dog' ? 'rotate-180' : ''}`} />
+              </button>
+
+              <AnimatePresence>
+                {activeDropdown === 'dog' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute left-0 top-full mt-1.5 w-72 bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-3 z-50 glass-strong"
+                  >
+                    <div className="px-3 py-1.5 mb-1.5 border-b border-secondary/30 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">For Dogs</span>
+                      <span className="text-[10px] font-semibold text-accent">6 Categories</span>
+                    </div>
+
+                    <div className="space-y-1">
+                      {unifiedCategories.map((c) => {
+                        const Icon = c.icon;
+                        return (
+                          <Link
+                            key={`dog-item-${c.slug}`}
+                            href={`/products?category=${c.slug}&pet_type=Dog`}
+                            onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
+                            className="flex items-center gap-2.5 px-3 py-2 text-xs text-text hover:text-accent hover:bg-secondary/40 rounded-xl transition-all font-medium group"
+                          >
+                            <div className="p-1 bg-secondary/50 rounded-lg text-accent group-hover:bg-accent group-hover:text-white transition-colors flex-shrink-0">
+                              <Icon size={14} />
+                            </div>
+                            <span className="truncate">{c.name}</span>
+                          </Link>
+                        );
+                      })}
+                      
+                      <div className="pt-2 mt-2 border-t border-secondary/30">
+                        <Link
+                          href="/products?pet_type=Dog"
+                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
+                          className="flex items-center justify-between px-3 py-2 text-xs font-bold text-accent hover:bg-accent/10 rounded-xl transition-colors"
+                        >
+                          <span>View All Dog Products</span>
+                          <ArrowRight size={13} />
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* 3. Cats Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => handleMouseEnter('cat')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveDropdown(activeDropdown === 'cat' ? null : 'cat')}
+                className={`px-3 py-2 rounded-lg flex items-center gap-1.5 category-nav-link text-xs font-bold transition-all ${
+                  activeDropdown === 'cat'
+                    ? 'bg-secondary text-accent'
+                    : 'text-text hover:bg-secondary/60 hover:text-accent'
+                }`}
+              >
+                <span>🐱 Cats</span>
+                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === 'cat' ? 'rotate-180' : ''}`} />
+              </button>
+
+              <AnimatePresence>
+                {activeDropdown === 'cat' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute left-0 top-full mt-1.5 w-72 bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-3 z-50 glass-strong"
+                  >
+                    <div className="px-3 py-1.5 mb-1.5 border-b border-secondary/30 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">For Cats</span>
+                      <span className="text-[10px] font-semibold text-accent">6 Categories</span>
+                    </div>
+
+                    <div className="space-y-1">
+                      {unifiedCategories.map((c) => {
+                        const Icon = c.icon;
+                        return (
+                          <Link
+                            key={`cat-item-${c.slug}`}
+                            href={`/products?category=${c.slug}&pet_type=Cat`}
+                            onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
+                            className="flex items-center gap-2.5 px-3 py-2 text-xs text-text hover:text-accent hover:bg-secondary/40 rounded-xl transition-all font-medium group"
+                          >
+                            <div className="p-1 bg-secondary/50 rounded-lg text-accent group-hover:bg-accent group-hover:text-white transition-colors flex-shrink-0">
+                              <Icon size={14} />
+                            </div>
+                            <span className="truncate">{c.name}</span>
+                          </Link>
+                        );
+                      })}
+                      
+                      <div className="pt-2 mt-2 border-t border-secondary/30">
+                        <Link
+                          href="/products?pet_type=Cat"
+                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
+                          className="flex items-center justify-between px-3 py-2 text-xs font-bold text-accent hover:bg-accent/10 rounded-xl transition-colors"
+                        >
+                          <span>View All Cat Products</span>
+                          <ArrowRight size={13} />
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* 4. Pharmacy & Care Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => handleMouseEnter('pharmacy')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveDropdown(activeDropdown === 'pharmacy' ? null : 'pharmacy')}
+                className={`px-3 py-2 rounded-lg flex items-center gap-1.5 category-nav-link text-xs font-bold transition-all ${
+                  activeDropdown === 'pharmacy'
+                    ? 'bg-secondary text-accent'
+                    : 'text-text hover:bg-secondary/60 hover:text-accent'
+                }`}
+              >
+                <span>💊 Pharmacy & Care</span>
+                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === 'pharmacy' ? 'rotate-180' : ''}`} />
+              </button>
+
+              <AnimatePresence>
+                {activeDropdown === 'pharmacy' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute left-0 top-full mt-1.5 w-72 bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-3 z-50 glass-strong"
+                  >
+                    <div className="px-3 py-1.5 mb-1.5 border-b border-secondary/30 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Clinical Care</span>
+                      <span className="text-[10px] font-semibold text-accent">Authorized</span>
+                    </div>
+
+                    <div className="space-y-1">
+                      {pharmacyCategories.map((c) => {
+                        const Icon = c.icon;
+                        return (
+                          <Link
+                            key={`pharm-item-${c.slug}`}
+                            href={`/products?category=${c.slug}`}
+                            onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
+                            className="flex items-start gap-2.5 px-3 py-2 text-text hover:text-accent hover:bg-secondary/40 rounded-xl transition-all group"
+                          >
+                            <div className="p-1.5 bg-secondary/50 rounded-lg text-accent group-hover:bg-accent group-hover:text-white transition-colors mt-0.5 flex-shrink-0">
+                              <Icon size={14} />
+                            </div>
+                            <div className="overflow-hidden">
+                              <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
+                              <p className="text-[10px] text-text-muted truncate">{c.desc}</p>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Direct Quick Links */}
+            <div className="h-4 w-px bg-secondary-alt/40 mx-1" />
+
+            <Link
+              href="/products?category=dry-wet-pet-food"
+              onClick={() => setCurrentCategory('dry-wet-pet-food')}
+              className={`px-3 py-2 rounded-lg category-nav-link text-xs font-semibold transition-all hover:bg-secondary/60 hover:text-accent ${
+                currentCategory === 'dry-wet-pet-food' ? 'text-accent font-bold bg-secondary/60' : 'text-text'
+              }`}
+            >
+              Pet Food
+            </Link>
+
+            <Link
+              href="/products?category=medicated-shampoos-grooming"
+              onClick={() => setCurrentCategory('medicated-shampoos-grooming')}
+              className={`px-3 py-2 rounded-lg category-nav-link text-xs font-semibold transition-all hover:bg-secondary/60 hover:text-accent ${
+                currentCategory === 'medicated-shampoos-grooming' ? 'text-accent font-bold bg-secondary/60' : 'text-text'
+              }`}
+            >
+              Shampoos & Grooming
+            </Link>
+
+            <Link
+              href="/products?category=cat-litter-hygiene"
+              onClick={() => setCurrentCategory('cat-litter-hygiene')}
+              className={`px-3 py-2 rounded-lg category-nav-link text-xs font-semibold transition-all hover:bg-secondary/60 hover:text-accent ${
+                currentCategory === 'cat-litter-hygiene' ? 'text-accent font-bold bg-secondary/60' : 'text-text'
+              }`}
+            >
+              Cat Litter
+            </Link>
+
+            {/* Explore / Shop All */}
+            <div className="ml-auto flex items-center">
+              <Link
+                href="/products"
+                onClick={() => setCurrentCategory(null)}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  pathname === '/products' && !currentCategory && !searchQuery
+                    ? 'bg-accent text-white shadow-xs'
+                    : 'bg-white border border-secondary-alt/40 text-text hover:border-accent hover:text-accent'
+                }`}
+              >
+                <span>Browse All</span>
+                <ArrowRight size={12} />
+              </Link>
+            </div>
+
           </nav>
         </div>
 
@@ -371,22 +684,22 @@ export default function Header() {
         onOpenCart={() => setIsCartOpen(true)}
       />
 
-      {/* Cart drawer */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      {/* Cart Drawer */}
+      <CartDrawer 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+      />
 
       {/* Mobile Nav Drawer */}
-      <MobileNav isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} categories={categories} />
-
-      <style jsx global>{`
-        @keyframes header-marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-header-marquee {
-          display: inline-block;
-          animation: header-marquee 28s linear infinite;
-        }
-      `}</style>
+      <MobileNav
+        isOpen={isMobileNavOpen}
+        onClose={() => setIsMobileNavOpen(false)}
+        categories={{
+          dog: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
+          cat: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
+          both: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
+        }}
+      />
     </>
   );
 }
