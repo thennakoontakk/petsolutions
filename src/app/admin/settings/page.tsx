@@ -11,9 +11,6 @@ interface SettingItem {
 }
 
 export default function AdminSettingsPage() {
-  const [promoText, setPromoText] = useState('✨ Free Delivery on orders over Rs. 5,000!   |   🐾 100% Genuine Pet Care Products');
-  const [isPromoEnabled, setIsPromoEnabled] = useState(true);
-
   const [tagline, setTagline] = useState('Premium Pet Store');
   const [isTaglineEnabled, setIsTaglineEnabled] = useState(true);
 
@@ -38,10 +35,7 @@ export default function AdminSettingsPage() {
 
       if (data) {
         data.forEach((item: SettingItem) => {
-          if (item.key === 'promo_text') {
-            setPromoText(item.value);
-            setIsPromoEnabled(item.is_enabled);
-          } else if (item.key === 'tagline') {
+          if (item.key === 'tagline') {
             setTagline(item.value);
             setIsTaglineEnabled(item.is_enabled);
           } else if (item.key === 'hotline') {
@@ -71,7 +65,7 @@ export default function AdminSettingsPage() {
       const supabase = createBrowserClient();
       
       const updates = [
-        { key: 'promo_text', value: promoText, is_enabled: isPromoEnabled, updated_at: new Date().toISOString() },
+        { key: 'promo_text', value: '', is_enabled: false, updated_at: new Date().toISOString() },
         { key: 'tagline', value: tagline, is_enabled: isTaglineEnabled, updated_at: new Date().toISOString() },
         { key: 'hotline', value: hotline, is_enabled: isHotlineEnabled, updated_at: new Date().toISOString() }
       ];
@@ -101,7 +95,7 @@ export default function AdminSettingsPage() {
             <Settings className="text-accent" /> Store & Header Settings
           </h1>
           <p className="text-xs text-text-muted mt-1">
-            Configure the running promotional texts, header tagline details, and hotlines displayed on the storefront.
+            Configure header tagline details and hotlines displayed on the storefront.
           </p>
         </div>
         <button
@@ -115,7 +109,7 @@ export default function AdminSettingsPage() {
 
       {loading ? (
         <div className="flex flex-col gap-6">
-          {[1, 2, 3].map((i) => (
+          {[1, 2].map((i) => (
             <div key={i} className="glass p-6 rounded-2xl h-36 animate-pulse" />
           ))}
         </div>
@@ -133,45 +127,6 @@ export default function AdminSettingsPage() {
               Settings updated successfully! Changes will reflect in the header immediately.
             </div>
           )}
-
-          {/* Setting 1: Promo Ticker Text */}
-          <div className="glass p-6 rounded-[24px] border border-white/50 space-y-4 shadow-sm bg-white/40">
-            <div className="flex justify-between items-center pb-2 border-b border-secondary-alt/25">
-              <div>
-                <h3 className="font-heading font-bold text-xs text-text">Top Promo Ticker Bar</h3>
-                <p className="text-[10px] text-text-muted mt-0.5">The moving notification banner displayed at the absolute top.</p>
-              </div>
-              <button
-                onClick={() => setIsPromoEnabled(!isPromoEnabled)}
-                className="flex items-center gap-1 text-xs font-bold text-text-muted hover:text-text transition-colors"
-              >
-                {isPromoEnabled ? (
-                  <div className="flex items-center gap-1.5 text-accent">
-                    <ToggleRight size={28} />
-                    <span>Enabled</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-1.5 text-text-muted">
-                    <ToggleLeft size={28} />
-                    <span>Disabled</span>
-                  </div>
-                )}
-              </button>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-text-muted block uppercase">Marquee Text</label>
-              <textarea
-                value={promoText}
-                onChange={(e) => setPromoText(e.target.value)}
-                disabled={!isPromoEnabled}
-                rows={2}
-                className="w-full bg-white/80 border border-secondary-alt/40 focus:border-accent text-text text-xs rounded-xl p-3 outline-none transition-all disabled:opacity-50 disabled:bg-secondary-alt/10"
-                placeholder="Enter the scrolling message text..."
-              />
-              <p className="text-[9px] text-text-muted italic">Multiple messages can be separated with '   |   ' separators.</p>
-            </div>
-          </div>
 
           {/* Setting 2: Brand Tagline */}
           <div className="glass p-6 rounded-[24px] border border-white/50 space-y-4 shadow-sm bg-white/40">
