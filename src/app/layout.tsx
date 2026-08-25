@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Outfit, Inter } from 'next/font/google';
 import { AuthProvider } from '@/lib/hooks/useAuth';
 import { CartProvider } from '@/lib/hooks/useCart';
+import FloatingActions from '@/components/layout/FloatingActions';
 import './globals.css';
 
 /* --------------------------------------------------------------------------
@@ -75,15 +76,16 @@ export const viewport: Viewport = {
    -------------------------------------------------------------------------- */
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
-      <body>
+      <body className="min-h-screen bg-dominant font-body text-text antialiased">
         <AuthProvider>
           <CartProvider>
             {children}
+            <FloatingActions />
           </CartProvider>
         </AuthProvider>
       </body>
