@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, ShoppingCart, Users, ClipboardList, TrendingUp, Clock, CheckCircle, Plus, ListCollapse, Tag, Settings } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Users, ClipboardList, TrendingUp, Clock, CheckCircle, Plus, ListCollapse, Settings } from 'lucide-react';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { formatPrice } from '@/lib/utils/formatPrice';
 
@@ -169,16 +169,6 @@ export default function AdminDashboard() {
             <div>
               <h4 className="font-heading font-bold text-xs text-text">Product Categories</h4>
               <p className="text-[10px] text-text-muted mt-0.5">Manage pet types, sections, and ordering.</p>
-            </div>
-          </Link>
-
-          <Link href="/admin/offers" className="glass p-5 rounded-2xl border border-white/40 flex items-start gap-4 text-left hover:scale-[1.02] transition-transform duration-300">
-            <div className="p-3 bg-error-light/20 text-error rounded-xl">
-              <Tag size={18} />
-            </div>
-            <div>
-              <h4 className="font-heading font-bold text-xs text-text">Offers & Discounts</h4>
-              <p className="text-[10px] text-text-muted mt-0.5">Create active coupon codes and banners.</p>
             </div>
           </Link>
 

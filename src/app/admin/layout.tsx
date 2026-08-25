@@ -7,7 +7,7 @@ import AdminSidebar from '@/components/layout/AdminSidebar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShieldAlert, Menu, X, LayoutDashboard, ShoppingCart, 
-  ListCollapse, Tag, ClipboardList, Settings, LogOut, ArrowLeft 
+  ListCollapse, ClipboardList, Settings, LogOut, ArrowLeft 
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -22,7 +22,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { name: 'Products', path: '/admin/products', icon: ShoppingCart },
     { name: 'Categories', path: '/admin/categories', icon: ListCollapse },
-    { name: 'Offers & Discounts', path: '/admin/offers', icon: Tag },
     { name: 'Orders List', path: '/admin/orders', icon: ClipboardList },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
