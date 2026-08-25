@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, ShoppingCart, ListCollapse, Tag, ClipboardList, ShieldAlert, LogOut, ArrowLeft, Settings } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, ListCollapse, ClipboardList, ShieldAlert, LogOut, ArrowLeft, Settings, Flame } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function AdminSidebar() {
@@ -13,9 +13,9 @@ export default function AdminSidebar() {
 
   const menuItems = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+    { name: 'Weekly Deals', path: '/admin/deals', icon: Flame },
     { name: 'Products', path: '/admin/products', icon: ShoppingCart },
     { name: 'Categories', path: '/admin/categories', icon: ListCollapse },
-    { name: 'Offers & Discounts', path: '/admin/offers', icon: Tag },
     { name: 'Orders List', path: '/admin/orders', icon: ClipboardList },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
