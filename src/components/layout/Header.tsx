@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, User, Phone, Menu, ChevronDown, LayoutGrid, Sparkles, Shield, Pill, ArrowRight, Activity, Bone, Box } from 'lucide-react';
+import { ShoppingBag, Search, User, Phone, Menu, ChevronDown, LayoutGrid, Sparkles, Shield, Pill, ArrowRight, Activity, Bone, Box, X } from 'lucide-react';
 import { useCart } from '@/lib/hooks/useCart';
 import { useAuth } from '@/lib/hooks/useAuth';
 import CartDrawer from '../cart/CartDrawer';
@@ -182,9 +182,67 @@ export default function Header() {
     setActiveDropdown(null);
   };
 
+  const [showRibbon, setShowRibbon] = useState(true);
+
   return (
     <>
       <div className="w-full bg-white border-b border-secondary/40 z-40 relative">
+
+        {/* 1. TOP ANNOUNCEMENT RIBBON BANNER (Dismissible + Animated Marquee) */}
+        <AnimatePresence>
+          {showRibbon && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="w-full overflow-hidden relative border-b border-black/5 shadow-xs"
+              style={{ backgroundColor: '#FFC800', color: '#005980' }}
+            >
+              <div className="flex items-center justify-between py-1.5 px-4 text-xs font-bold" style={{ color: '#005980' }}>
+                
+                {/* Continuous marquee ticker */}
+                <div className="flex-1 overflow-hidden whitespace-nowrap relative select-none mr-3">
+                  <div className="animate-marquee flex gap-10 items-center" style={{ color: '#005980' }}>
+                    <span className="flex items-center gap-6">
+                      <span>Islandwide Express Doorstep Delivery Across Sri Lanka</span>
+                      <span className="opacity-40">•</span>
+                      <span>100% Genuine & Authorized Veterinary Products</span>
+                      <span className="opacity-40">•</span>
+                      <span>Order Hotline: +94 77 123 4567 (8:30 AM – 8:30 PM)</span>
+                      <span className="opacity-40">•</span>
+                      <span>Cash on Delivery (COD) & Secure Online Payments</span>
+                      <span className="opacity-40">•</span>
+                      <span>Direct Authentic Brands & Veterinary Nutrition</span>
+                    </span>
+                    <span className="flex items-center gap-6" aria-hidden="true">
+                      <span>Islandwide Express Doorstep Delivery Across Sri Lanka</span>
+                      <span className="opacity-40">•</span>
+                      <span>100% Genuine & Authorized Veterinary Products</span>
+                      <span className="opacity-40">•</span>
+                      <span>Order Hotline: +94 77 123 4567 (8:30 AM – 8:30 PM)</span>
+                      <span className="opacity-40">•</span>
+                      <span>Cash on Delivery (COD) & Secure Online Payments</span>
+                      <span className="opacity-40">•</span>
+                      <span>Direct Authentic Brands & Veterinary Nutrition</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Close Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowRibbon(false)}
+                  className="p-1 rounded-full hover:bg-black/10 transition-colors flex-shrink-0"
+                  style={{ color: '#005980' }}
+                  aria-label="Close announcement banner"
+                  title="Close Banner"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* 2. MIDDLE BRANDING & ACTIONS BAR */}
         <div className="container mx-auto px-4 header-middle-bar">
@@ -209,10 +267,11 @@ export default function Header() {
               />
               <Image 
                 src="/logo-text.png" 
-                width={120} 
-                height={32} 
+                width={220} 
+                height={55} 
                 alt="PetSolutions.lk" 
-                className="h-7 sm:h-8 md:h-9 w-auto object-contain"
+                className="h-8 sm:h-9 md:h-10 w-auto object-contain flex-shrink-0"
+                style={{ width: 'auto', maxWidth: '220px' }}
                 priority
               />
             </Link>
@@ -328,7 +387,7 @@ export default function Header() {
 
         {/* 3. CATEGORY NAVIGATION BAR (Hidden on mobile) */}
         <div className="w-full bg-secondary-alt/15 border-t border-secondary/40 mobile-hidden relative">
-          <nav className="container mx-auto px-4 flex items-center gap-1 py-1">
+          <nav className="container mx-auto px-4 flex items-center justify-between py-2 flex-wrap">
             
             {/* 1. All Categories (Mega Menu Trigger) */}
             <div 
@@ -339,15 +398,14 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setActiveDropdown(activeDropdown === 'all' ? null : 'all')}
-                className={`px-3 py-2 rounded-lg flex items-center gap-2 category-nav-link text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 category-nav-link text-[19px] lg:text-[20px] font-bold transition-all ${
                   activeDropdown === 'all'
                     ? 'bg-accent text-white shadow-sm'
                     : 'text-text hover:bg-secondary/60 hover:text-accent'
                 }`}
               >
-                <LayoutGrid size={15} />
                 <span>All Categories</span>
-                <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === 'all' ? 'rotate-180' : ''}`} />
+                <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === 'all' ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Mega Dropdown Menu */}
@@ -358,68 +416,42 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute left-0 top-full mt-1.5 w-[720px] bg-white rounded-2xl shadow-2xl border border-secondary-alt/40 p-6 z-50 glass-strong"
+                    className="absolute left-0 top-full mt-1.5 w-[640px] max-w-[95vw] bg-white rounded-2xl shadow-2xl border border-secondary-alt/40 p-6 z-50 glass-strong"
                   >
                     {/* Top Pet Filters Header */}
-                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-secondary/50">
-                      <div>
-                        <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-text flex items-center gap-1.5">
-                          <LayoutGrid size={14} className="text-accent" />
-                          <span>Shop by Category</span>
-                        </h4>
-                        <p className="text-[11px] text-text-muted mt-0.5">Explore our complete catalog of authorized veterinary pet essentials</p>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href="/products?pet_type=Dog"
-                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
-                          className="px-2.5 py-1 bg-secondary/60 hover:bg-accent hover:text-white rounded-lg text-[11px] font-bold text-text transition-colors"
-                        >
-                          🐶 Dogs Only
-                        </Link>
-                        <Link
-                          href="/products?pet_type=Cat"
-                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
-                          className="px-2.5 py-1 bg-secondary/60 hover:bg-accent hover:text-white rounded-lg text-[11px] font-bold text-text transition-colors"
-                        >
-                          🐱 Cats Only
-                        </Link>
-                      </div>
+                    <div className="pb-3 mb-4 border-b border-secondary/50">
+                      <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-text">
+                        Shop by Category
+                      </h4>
+                      <p className="text-[11px] text-text-muted mt-0.5">Explore our complete catalog of authorized veterinary pet essentials</p>
                     </div>
 
                     {/* Uniform Categories Grid */}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {unifiedCategories.map((c) => {
-                        const Icon = c.icon;
                         return (
                           <Link
                             key={`mega-item-${c.slug}`}
                             href={`/products?category=${c.slug}`}
                             onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
-                            className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group"
+                            className="p-2.5 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group block"
                           >
-                            <div className="w-8 h-8 rounded-lg bg-secondary/60 text-accent group-hover:bg-accent group-hover:text-white flex items-center justify-center flex-shrink-0 transition-colors mt-0.5 shadow-xs">
-                              <Icon size={16} />
-                            </div>
-                            <div className="overflow-hidden">
-                              <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
-                              <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
-                            </div>
+                            <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
+                            <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
                           </Link>
                         );
                       })}
                     </div>
 
                     {/* Bottom Action Footer */}
-                    <div className="mt-4 pt-3 border-t border-secondary/40 flex items-center justify-between">
+                    <div className="mt-4 pt-3 border-t border-secondary/40 flex flex-col gap-2 w-full">
                       <p className="text-[11px] text-text-muted">
                         Direct islandwide delivery across Sri Lanka
                       </p>
                       <Link
                         href="/products"
                         onClick={() => { setCurrentCategory(null); closeDropdown(); }}
-                        className="text-xs font-bold text-accent hover:underline flex items-center gap-1.5"
+                        className="text-xs font-bold text-accent hover:underline flex items-center justify-between w-full"
                       >
                         <span>Browse Complete Store Catalog</span>
                         <ArrowRight size={13} />
@@ -439,14 +471,14 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setActiveDropdown(activeDropdown === 'dog' ? null : 'dog')}
-                className={`px-3 py-2 rounded-lg flex items-center gap-1.5 category-nav-link text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 category-nav-link text-[19px] lg:text-[20px] font-bold transition-all ${
                   activeDropdown === 'dog'
                     ? 'bg-secondary text-accent'
                     : 'text-text hover:bg-secondary/60 hover:text-accent'
                 }`}
               >
-                <span>🐶 Dogs</span>
-                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === 'dog' ? 'rotate-180' : ''}`} />
+                <span>Dogs</span>
+                <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === 'dog' ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -456,36 +488,33 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute left-0 top-full mt-1.5 w-72 bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-3 z-50 glass-strong"
+                    className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-80 max-w-[95vw] bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-4 z-50 glass-strong"
                   >
-                    <div className="px-3 py-1.5 mb-1.5 border-b border-secondary/30 flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">For Dogs</span>
-                      <span className="text-[10px] font-semibold text-accent">6 Categories</span>
+                    <div className="pb-2.5 mb-2.5 border-b border-secondary/40">
+                      <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-text">For Dogs</h4>
+                      <p className="text-[11px] text-text-muted mt-0.5">Explore dog nutrition and healthcare</p>
                     </div>
 
                     <div className="space-y-1">
                       {unifiedCategories.map((c) => {
-                        const Icon = c.icon;
                         return (
                           <Link
                             key={`dog-item-${c.slug}`}
                             href={`/products?category=${c.slug}&pet_type=Dog`}
                             onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
-                            className="flex items-center gap-2.5 px-3 py-2 text-xs text-text hover:text-accent hover:bg-secondary/40 rounded-xl transition-all font-medium group"
+                            className="p-2 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group block"
                           >
-                            <div className="p-1 bg-secondary/50 rounded-lg text-accent group-hover:bg-accent group-hover:text-white transition-colors flex-shrink-0">
-                              <Icon size={14} />
-                            </div>
-                            <span className="truncate">{c.name}</span>
+                            <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
+                            <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
                           </Link>
                         );
                       })}
                       
-                      <div className="pt-2 mt-2 border-t border-secondary/30">
+                      <div className="pt-2.5 mt-2.5 border-t border-secondary/40 w-full">
                         <Link
                           href="/products?pet_type=Dog"
                           onClick={() => { setCurrentCategory(null); closeDropdown(); }}
-                          className="flex items-center justify-between px-3 py-2 text-xs font-bold text-accent hover:bg-accent/10 rounded-xl transition-colors"
+                          className="text-xs font-bold text-accent hover:underline flex items-center justify-between w-full py-1"
                         >
                           <span>View All Dog Products</span>
                           <ArrowRight size={13} />
@@ -506,14 +535,14 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setActiveDropdown(activeDropdown === 'cat' ? null : 'cat')}
-                className={`px-3 py-2 rounded-lg flex items-center gap-1.5 category-nav-link text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 category-nav-link text-[19px] lg:text-[20px] font-bold transition-all ${
                   activeDropdown === 'cat'
                     ? 'bg-secondary text-accent'
                     : 'text-text hover:bg-secondary/60 hover:text-accent'
                 }`}
               >
-                <span>🐱 Cats</span>
-                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === 'cat' ? 'rotate-180' : ''}`} />
+                <span>Cats</span>
+                <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === 'cat' ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -523,36 +552,33 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute left-0 top-full mt-1.5 w-72 bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-3 z-50 glass-strong"
+                    className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-80 max-w-[95vw] bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-4 z-50 glass-strong"
                   >
-                    <div className="px-3 py-1.5 mb-1.5 border-b border-secondary/30 flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">For Cats</span>
-                      <span className="text-[10px] font-semibold text-accent">6 Categories</span>
+                    <div className="pb-2.5 mb-2.5 border-b border-secondary/40">
+                      <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-text">For Cats</h4>
+                      <p className="text-[11px] text-text-muted mt-0.5">Explore cat food, litter and hygiene</p>
                     </div>
 
                     <div className="space-y-1">
                       {unifiedCategories.map((c) => {
-                        const Icon = c.icon;
                         return (
                           <Link
                             key={`cat-item-${c.slug}`}
                             href={`/products?category=${c.slug}&pet_type=Cat`}
                             onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
-                            className="flex items-center gap-2.5 px-3 py-2 text-xs text-text hover:text-accent hover:bg-secondary/40 rounded-xl transition-all font-medium group"
+                            className="p-2 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group block"
                           >
-                            <div className="p-1 bg-secondary/50 rounded-lg text-accent group-hover:bg-accent group-hover:text-white transition-colors flex-shrink-0">
-                              <Icon size={14} />
-                            </div>
-                            <span className="truncate">{c.name}</span>
+                            <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
+                            <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
                           </Link>
                         );
                       })}
                       
-                      <div className="pt-2 mt-2 border-t border-secondary/30">
+                      <div className="pt-2.5 mt-2.5 border-t border-secondary/40 w-full">
                         <Link
                           href="/products?pet_type=Cat"
                           onClick={() => { setCurrentCategory(null); closeDropdown(); }}
-                          className="flex items-center justify-between px-3 py-2 text-xs font-bold text-accent hover:bg-accent/10 rounded-xl transition-colors"
+                          className="text-xs font-bold text-accent hover:underline flex items-center justify-between w-full py-1"
                         >
                           <span>View All Cat Products</span>
                           <ArrowRight size={13} />
@@ -573,14 +599,14 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setActiveDropdown(activeDropdown === 'pharmacy' ? null : 'pharmacy')}
-                className={`px-3 py-2 rounded-lg flex items-center gap-1.5 category-nav-link text-xs font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 category-nav-link text-[19px] lg:text-[20px] font-bold transition-all ${
                   activeDropdown === 'pharmacy'
                     ? 'bg-secondary text-accent'
                     : 'text-text hover:bg-secondary/60 hover:text-accent'
                 }`}
               >
-                <span>💊 Pharmacy & Care</span>
-                <ChevronDown size={13} className={`transition-transform duration-200 ${activeDropdown === 'pharmacy' ? 'rotate-180' : ''}`} />
+                <span>Pharmacy & Care</span>
+                <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === 'pharmacy' ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -590,33 +616,38 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute left-0 top-full mt-1.5 w-72 bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-3 z-50 glass-strong"
+                    className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-80 max-w-[95vw] bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-4 z-50 glass-strong"
                   >
-                    <div className="px-3 py-1.5 mb-1.5 border-b border-secondary/30 flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Clinical Care</span>
-                      <span className="text-[10px] font-semibold text-accent">Authorized</span>
+                    <div className="pb-2.5 mb-2.5 border-b border-secondary/40">
+                      <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-text">Clinical Care & Pharmacy</h4>
+                      <p className="text-[11px] text-text-muted mt-0.5">Authorized veterinary supplies & treatments</p>
                     </div>
 
                     <div className="space-y-1">
                       {pharmacyCategories.map((c) => {
-                        const Icon = c.icon;
                         return (
                           <Link
                             key={`pharm-item-${c.slug}`}
                             href={`/products?category=${c.slug}`}
                             onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
-                            className="flex items-start gap-2.5 px-3 py-2 text-text hover:text-accent hover:bg-secondary/40 rounded-xl transition-all group"
+                            className="p-2 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group block"
                           >
-                            <div className="p-1.5 bg-secondary/50 rounded-lg text-accent group-hover:bg-accent group-hover:text-white transition-colors mt-0.5 flex-shrink-0">
-                              <Icon size={14} />
-                            </div>
-                            <div className="overflow-hidden">
-                              <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
-                              <p className="text-[10px] text-text-muted truncate">{c.desc}</p>
-                            </div>
+                            <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
+                            <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
                           </Link>
                         );
                       })}
+
+                      <div className="pt-2.5 mt-2.5 border-t border-secondary/40 w-full">
+                        <Link
+                          href="/products"
+                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
+                          className="text-xs font-bold text-accent hover:underline flex items-center justify-between w-full py-1"
+                        >
+                          <span>Browse All Care Products</span>
+                          <ArrowRight size={13} />
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -624,12 +655,10 @@ export default function Header() {
             </div>
 
             {/* Direct Quick Links */}
-            <div className="h-4 w-px bg-secondary-alt/40 mx-1" />
-
             <Link
               href="/products?category=dry-wet-pet-food"
               onClick={() => setCurrentCategory('dry-wet-pet-food')}
-              className={`px-3 py-2 rounded-lg category-nav-link text-xs font-semibold transition-all hover:bg-secondary/60 hover:text-accent ${
+              className={`px-3 py-1.5 rounded-lg category-nav-link text-[19px] lg:text-[20px] font-bold transition-all hover:bg-secondary/60 hover:text-accent ${
                 currentCategory === 'dry-wet-pet-food' ? 'text-accent font-bold bg-secondary/60' : 'text-text'
               }`}
             >
@@ -639,7 +668,7 @@ export default function Header() {
             <Link
               href="/products?category=medicated-shampoos-grooming"
               onClick={() => setCurrentCategory('medicated-shampoos-grooming')}
-              className={`px-3 py-2 rounded-lg category-nav-link text-xs font-semibold transition-all hover:bg-secondary/60 hover:text-accent ${
+              className={`px-3 py-1.5 rounded-lg category-nav-link text-[19px] lg:text-[20px] font-bold transition-all hover:bg-secondary/60 hover:text-accent ${
                 currentCategory === 'medicated-shampoos-grooming' ? 'text-accent font-bold bg-secondary/60' : 'text-text'
               }`}
             >
@@ -649,7 +678,7 @@ export default function Header() {
             <Link
               href="/products?category=cat-litter-hygiene"
               onClick={() => setCurrentCategory('cat-litter-hygiene')}
-              className={`px-3 py-2 rounded-lg category-nav-link text-xs font-semibold transition-all hover:bg-secondary/60 hover:text-accent ${
+              className={`px-3 py-1.5 rounded-lg category-nav-link text-[19px] lg:text-[20px] font-bold transition-all hover:bg-secondary/60 hover:text-accent ${
                 currentCategory === 'cat-litter-hygiene' ? 'text-accent font-bold bg-secondary/60' : 'text-text'
               }`}
             >
@@ -657,20 +686,18 @@ export default function Header() {
             </Link>
 
             {/* Explore / Shop All */}
-            <div className="ml-auto flex items-center">
-              <Link
-                href="/products"
-                onClick={() => setCurrentCategory(null)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
-                  pathname === '/products' && !currentCategory && !searchQuery
-                    ? 'bg-accent text-white shadow-xs'
-                    : 'bg-white border border-secondary-alt/40 text-text hover:border-accent hover:text-accent'
-                }`}
-              >
-                <span>Browse All</span>
-                <ArrowRight size={12} />
-              </Link>
-            </div>
+            <Link
+              href="/products"
+              onClick={() => setCurrentCategory(null)}
+              className={`px-4 py-1.5 rounded-full text-[17px] lg:text-[18px] font-bold transition-all flex items-center gap-1.5 ${
+                pathname === '/products' && !currentCategory && !searchQuery
+                  ? 'bg-accent text-white shadow-xs'
+                  : 'bg-white border border-secondary-alt/40 text-text hover:border-accent hover:text-accent'
+              }`}
+            >
+              <span>Browse All</span>
+              <ArrowRight size={15} />
+            </Link>
 
           </nav>
         </div>
