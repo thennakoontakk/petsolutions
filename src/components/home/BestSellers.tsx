@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '../products/ProductCard';
 import { createBrowserClient } from '@/lib/supabase/client';
@@ -74,23 +74,16 @@ export default function BestSellers() {
       <div className="container mx-auto px-4">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
-          <div className="text-center md:text-left">
-            <div className="inline-flex items-center gap-1 px-3 py-1 bg-error-light text-error text-[10px] font-bold uppercase tracking-wider rounded-full mb-2">
-              <Flame size={12} className="animate-pulse" /> Popular Choices
-            </div>
-            <h2 className="font-heading font-extrabold text-2xl md:text-3xl text-text">
-              Best Selling Products
-            </h2>
-            <p className="text-xs text-text-muted mt-1">Customers' favorite foods, litters, and medical care essentials</p>
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="inline-flex items-center px-3.5 py-1 bg-error-light text-error text-xs font-bold uppercase tracking-wider rounded-full mb-3">
+            <span>Popular Choices</span>
           </div>
-          
-          <Link 
-            href="/products" 
-            className="btn btn-outline btn-sm text-xs font-bold flex items-center gap-1.5"
-          >
-            View All Catalog <ArrowRight size={14} />
-          </Link>
+          <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-text">
+            Best Selling Products
+          </h2>
+          <p className="text-sm md:text-base text-text-muted mt-2">
+            Customers' favorite foods, litters, and medical care essentials
+          </p>
         </div>
 
         {/* Product Cards Grid */}
@@ -102,6 +95,17 @@ export default function BestSellers() {
               index={idx}
             />
           ))}
+        </div>
+
+        {/* View All Button */}
+        <div className="text-center mt-10">
+          <Link 
+            href="/products" 
+            className="btn btn-outline btn-md text-sm font-bold inline-flex items-center gap-2 px-6 py-2.5 rounded-full hover:bg-accent hover:text-text hover:border-accent transition-all"
+          >
+            <span>View All Catalog</span>
+            <ArrowRight size={16} />
+          </Link>
         </div>
 
       </div>

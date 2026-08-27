@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Flame, ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import ProductCard from '../products/ProductCard';
 import { createBrowserClient } from '@/lib/supabase/client';
 import type { Product } from '@/lib/types';
@@ -151,22 +151,7 @@ export default function WeeklyDeals() {
             background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 248, 214, 0.65) 100%)',
           }}
         >
-          {/* Top Tag & Info row */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-            {/* Deal Badge with Single Clean Flame Icon and Zero Wrapping */}
-            <div 
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-accent text-text text-xs font-bold uppercase tracking-wider rounded-full shadow-xs flex-shrink-0"
-              style={{ whiteSpace: 'nowrap', lineHeight: 1 }}
-            >
-              <Flame size={14} className="text-error flex-shrink-0" />
-              <span style={{ whiteSpace: 'nowrap' }}>{cleanBadgeText}</span>
-            </div>
 
-            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-text-muted bg-white/80 px-3 py-1 rounded-full border border-secondary-alt/40">
-              <Clock size={13} className="text-accent" />
-              <span>Refreshed Weekly · Direct Islandwide Delivery</span>
-            </div>
-          </div>
 
           {/* Heading & CTA */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

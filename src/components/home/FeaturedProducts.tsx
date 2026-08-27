@@ -77,12 +77,12 @@ export default function FeaturedProducts() {
       <div className="container mx-auto px-4">
         
         {/* Section Header */}
-        <div className="text-center max-w-xl mx-auto mb-10">
-          <h2 className="font-heading font-extrabold text-2xl md:text-3xl text-text mb-2 animate-fade-in">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-text mb-2">
             Featured Products
           </h2>
           <div className="w-16 h-1 bg-accent mx-auto rounded-full mb-3" />
-          <p className="text-xs text-text-muted">
+          <p className="text-sm md:text-base text-text-muted">
             Explore our handpicked premium selections recommended for your pets.
           </p>
         </div>
