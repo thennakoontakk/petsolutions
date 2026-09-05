@@ -63,6 +63,17 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: [
+      { url: '/logo-icon.png' },
+      { url: '/logo-icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo-icon.png', sizes: '192x192', type: 'image/png' },
+    ],
+    shortcut: '/logo-icon.png',
+    apple: [
+      { url: '/logo-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
