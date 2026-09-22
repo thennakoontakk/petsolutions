@@ -26,7 +26,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, 'Adult Cat (3 pipettes pack)', 1980.00, 2200.00, 120, true);
+    VALUES (pid, 'Adult Cat (3 pipettes pack)', 1980.00, NULL, 120, true);
   END IF;
 
   -- [Product #2]: TixFree Spot-On for Dogs
@@ -45,13 +45,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '02 - 10 Kg (3 pipettes)', 2700.00, 2950.00, 85, true);
+    VALUES (pid, '02 - 10 Kg (3 pipettes)', 2700.00, NULL, 85, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 - 20 Kg (3 pipettes)', 3060.00, 3350.00, 65, true);
+    VALUES (pid, '10 - 20 Kg (3 pipettes)', 3060.00, NULL, 65, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '20 - 40 Kg (3 pipettes)', 3570.00, 3900.00, 45, true);
+    VALUES (pid, '20 - 40 Kg (3 pipettes)', 3570.00, NULL, 45, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '40 - 60 Kg (3 pipettes)', 4680.00, 5100.00, 30, true);
+    VALUES (pid, '40 - 60 Kg (3 pipettes)', 4680.00, NULL, 30, true);
   END IF;
 
   -- [Product #3]: Antick 10%
@@ -70,9 +70,9 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 ml Bottle', 775.00, 850.00, 100, true);
+    VALUES (pid, '10 ml Bottle', 775.00, NULL, 100, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1 Litre Pack', 56500.00, 59000.00, 15, true);
+    VALUES (pid, '1 Litre Pack', 56500.00, NULL, 15, true);
   END IF;
 
   -- [Product #4]: Tickamit 12.5
@@ -91,11 +91,11 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 ml Bottle', 990.00, 1100.00, 90, true);
+    VALUES (pid, '10 ml Bottle', 990.00, NULL, 90, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '100 ml Bottle', 9450.00, 9900.00, 25, true);
+    VALUES (pid, '100 ml Bottle', 9450.00, NULL, 25, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1 Litre Pack', 76000.00, 80000.00, 10, true);
+    VALUES (pid, '1 Litre Pack', 76000.00, NULL, 10, true);
   END IF;
 
   -- [Product #5]: Rapimec - Ivermectin 10 mg Tablets
@@ -114,7 +114,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10''s Pack', 1100.00, 1250.00, 80, true);
+    VALUES (pid, '10''s Pack', 1100.00, NULL, 80, true);
   END IF;
 
   -- [Product #6]: Petfat Liquid 200 ml
@@ -133,7 +133,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Bottle', 2150.00, 2300.00, 75, true);
+    VALUES (pid, '200 ml Bottle', 2150.00, NULL, 75, true);
   END IF;
 
   -- [Product #7]: Vetgrow Red Dogs 200 ml
@@ -152,7 +152,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Bottle', 1500.00, 1650.00, 60, true);
+    VALUES (pid, '200 ml Bottle', 1500.00, NULL, 60, true);
   END IF;
 
   -- [Product #8]: Orcalmin Suspension 200 ml
@@ -171,7 +171,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Suspension', 925.00, 1050.00, 90, true);
+    VALUES (pid, '200 ml Suspension', 925.00, NULL, 90, true);
   END IF;
 
   -- [Product #9]: Bones-Up 200 g
@@ -190,7 +190,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 g Container', 1400.00, 1550.00, 80, true);
+    VALUES (pid, '200 g Container', 1400.00, NULL, 80, true);
   END IF;
 
   -- [Product #10]: Liv.52 Pet Liquid 200 ml
@@ -209,7 +209,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Bottle', 1200.00, 1350.00, 150, true);
+    VALUES (pid, '200 ml Bottle', 1200.00, NULL, 150, true);
   END IF;
 
   -- [Product #11]: Digyton Drops 30 ml
@@ -228,7 +228,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '30 ml Drops', 383.00, 420.00, 110, true);
+    VALUES (pid, '30 ml Drops', 383.00, NULL, 110, true);
   END IF;
 
   -- [Product #12]: aRBCe PET 200 ml
@@ -247,7 +247,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Bottle', 1625.00, 1800.00, 70, true);
+    VALUES (pid, '200 ml Bottle', 1625.00, NULL, 70, true);
   END IF;
 
   -- [Product #13]: Vi-Sorbits Tablets 50s
@@ -266,7 +266,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '50 Tablets Pack', 9375.00, 9900.00, 40, true);
+    VALUES (pid, '50 Tablets Pack', 9375.00, NULL, 40, true);
   END IF;
 
   -- [Product #14]: Scavon VET Spray 100 ml
@@ -285,7 +285,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '100 ml Spray', 1331.00, 1450.00, 95, true);
+    VALUES (pid, '100 ml Spray', 1331.00, NULL, 95, true);
   END IF;
 
   -- [Product #15]: Scavon VET Cream 50 g
@@ -304,7 +304,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '50 g Tube', 793.00, 880.00, 85, true);
+    VALUES (pid, '50 g Tube', 793.00, NULL, 85, true);
   END IF;
 
   -- [Product #16]: SANPET-PLUS Broad Spectrum Deworming Tablets
@@ -323,7 +323,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 kg Tablet', 360.00, 400.00, 200, true);
+    VALUES (pid, '10 kg Tablet', 360.00, NULL, 200, true);
   END IF;
 
   -- [Product #17]: Wolfo Flea & Tick Powder
@@ -342,7 +342,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '75 g Talc Powder', 590.00, 650.00, 100, true);
+    VALUES (pid, '75 g Talc Powder', 590.00, NULL, 100, true);
   END IF;
 
   -- [Product #18]: Woofy Medicated Neem Soap 70 g
@@ -361,7 +361,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '70 g Soap Bar', 450.00, 500.00, 120, true);
+    VALUES (pid, '70 g Soap Bar', 450.00, NULL, 120, true);
   END IF;
 
   -- [Product #19]: Woofy Lavender Soap 70 g
@@ -380,7 +380,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '70 g Soap Bar', 450.00, 500.00, 120, true);
+    VALUES (pid, '70 g Soap Bar', 450.00, NULL, 120, true);
   END IF;
 
   -- [Product #20]: Permvet Medicated Dog Soap 70 g
@@ -399,7 +399,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '70 g Soap Bar', 650.00, 720.00, 100, true);
+    VALUES (pid, '70 g Soap Bar', 650.00, NULL, 100, true);
   END IF;
 
   -- [Product #21]: Nutricoat Advance
@@ -418,7 +418,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 g Bottle', 2990.00, 3200.00, 65, true);
+    VALUES (pid, '200 g Bottle', 2990.00, NULL, 65, true);
   END IF;
 
   -- [Product #22]: Nutricoat Syrup
@@ -437,7 +437,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 g Bottle', 2680.00, 2900.00, 70, true);
+    VALUES (pid, '200 g Bottle', 2680.00, NULL, 70, true);
   END IF;
 
   -- [Product #23]: Negasunt Powder
@@ -456,7 +456,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '40 g Container', 1290.00, 1400.00, 80, true);
+    VALUES (pid, '40 g Container', 1290.00, NULL, 80, true);
   END IF;
 
   -- [Product #24]: Aluspray AWD
@@ -475,7 +475,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '125 ml Aerosol', 1980.00, 2200.00, 70, true);
+    VALUES (pid, '125 ml Aerosol', 1980.00, NULL, 70, true);
   END IF;
 
   -- [Product #25]: Petmend Spray
@@ -494,7 +494,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '150 ml Spray', 980.00, 1100.00, 85, true);
+    VALUES (pid, '150 ml Spray', 980.00, NULL, 85, true);
   END IF;
 
   -- [Product #26]: Drontal Plus Tasty
@@ -513,9 +513,9 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '2''s Pack', 990.00, 1100.00, 100, true);
+    VALUES (pid, '2''s Pack', 990.00, NULL, 100, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '12''s Carton', 5450.00, 5900.00, 40, true);
+    VALUES (pid, '12''s Carton', 5450.00, NULL, 40, true);
   END IF;
 
   -- [Product #27]: Dermitol Shampoo
@@ -534,7 +534,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '250 ml Bottle', 3980.00, 4200.00, 60, true);
+    VALUES (pid, '250 ml Bottle', 3980.00, NULL, 60, true);
   END IF;
 
   -- [Product #28]: Furr-Fresh Medicated Shampoo 100 ml
@@ -553,7 +553,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Bottle', 1300.00, 1450.00, 75, true);
+    VALUES (pid, '200 ml Bottle', 1300.00, NULL, 75, true);
   END IF;
 
   -- [Product #29]: Ticks & Fleas Shampoo 225 ml
@@ -572,7 +572,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '225 ml Bottle', 800.00, 900.00, 80, true);
+    VALUES (pid, '225 ml Bottle', 800.00, NULL, 80, true);
   END IF;
 
   -- [Product #30]: Aloe Vera Shampoo & Conditioner 225 ml
@@ -591,7 +591,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '225 ml Bottle', 650.00, 750.00, 90, true);
+    VALUES (pid, '225 ml Bottle', 650.00, NULL, 90, true);
   END IF;
 
   -- [Product #31]: Malaseb Shampoo 200 ml
@@ -610,7 +610,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Bottle', 1140.00, 1250.00, 70, true);
+    VALUES (pid, '200 ml Bottle', 1140.00, NULL, 70, true);
   END IF;
 
   -- [Product #32]: Petvit Liquid 200 ml
@@ -629,7 +629,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Bottle', 1490.00, 1600.00, 60, true);
+    VALUES (pid, '200 ml Bottle', 1490.00, NULL, 60, true);
   END IF;
 
   -- [Product #33]: Vetgrow Meat in Feet 400 g
@@ -648,7 +648,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g Pack', 350.00, 400.00, 120, true);
+    VALUES (pid, '400 g Pack', 350.00, NULL, 120, true);
   END IF;
 
   -- [Product #34]: Vetgrow Kick in Punch 300 ml
@@ -667,7 +667,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '300 ml Bottle', 450.00, 500.00, 100, true);
+    VALUES (pid, '300 ml Bottle', 450.00, NULL, 100, true);
   END IF;
 
   -- [Product #35]: Vetgrow Meowghurt 200 g
@@ -686,7 +686,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 g Tub', 450.00, 500.00, 90, true);
+    VALUES (pid, '200 g Tub', 450.00, NULL, 90, true);
   END IF;
 
   -- [Product #36]: Vetgrow Doghurt 200 g
@@ -705,7 +705,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 g Tub', 450.00, 500.00, 90, true);
+    VALUES (pid, '200 g Tub', 450.00, NULL, 90, true);
   END IF;
 
   -- [Product #37]: Classic Pet Puppy – Milk Flavor
@@ -724,13 +724,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g', 650.00, 720.00, 80, true);
+    VALUES (pid, '400 g', 650.00, NULL, 80, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '500 g', 850.00, 950.00, 60, true);
+    VALUES (pid, '500 g', 850.00, NULL, 60, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '2 Kg', 3150.00, 3400.00, 40, true);
+    VALUES (pid, '2 Kg', 3150.00, NULL, 40, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Kg', 13690.00, 14500.00, 20, true);
+    VALUES (pid, '10 Kg', 13690.00, NULL, 20, true);
   END IF;
 
   -- [Product #38]: Classic Pet Adult Dog – Chicken Flavour
@@ -749,13 +749,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g', 560.00, 620.00, 80, true);
+    VALUES (pid, '400 g', 560.00, NULL, 80, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '2 Kg', 2800.00, 3050.00, 50, true);
+    VALUES (pid, '2 Kg', 2800.00, NULL, 50, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3.5 Kg', 4650.00, 4950.00, 35, true);
+    VALUES (pid, '3.5 Kg', 4650.00, NULL, 35, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Kg', 12050.00, 12800.00, 25, true);
+    VALUES (pid, '10 Kg', 12050.00, NULL, 25, true);
   END IF;
 
   -- [Product #39]: Classic Pet Adult Dog – Beef Flavour
@@ -774,11 +774,11 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '2 Kg', 2800.00, 3050.00, 50, true);
+    VALUES (pid, '2 Kg', 2800.00, NULL, 50, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3.5 Kg', 4650.00, 4950.00, 35, true);
+    VALUES (pid, '3.5 Kg', 4650.00, NULL, 35, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Kg', 12050.00, 12800.00, 25, true);
+    VALUES (pid, '10 Kg', 12050.00, NULL, 25, true);
   END IF;
 
   -- [Product #40]: SmartHeart Puppy – Chicken, Egg & Milk
@@ -797,13 +797,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '500 g', 930.00, 1020.00, 60, true);
+    VALUES (pid, '500 g', 930.00, NULL, 60, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.3 Kg', 2550.00, 2750.00, 40, true);
+    VALUES (pid, '1.3 Kg', 2550.00, NULL, 40, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '2.7 Kg', 4460.00, 4800.00, 30, true);
+    VALUES (pid, '2.7 Kg', 4460.00, NULL, 30, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '8 Kg', 12800.00, 13600.00, 15, true);
+    VALUES (pid, '8 Kg', 12800.00, NULL, 15, true);
   END IF;
 
   -- [Product #41]: SmartHeart Adult Dog – Chicken & Egg
@@ -822,13 +822,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '500 g', 930.00, 1020.00, 60, true);
+    VALUES (pid, '500 g', 930.00, NULL, 60, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.5 Kg', 2550.00, 2750.00, 45, true);
+    VALUES (pid, '1.5 Kg', 2550.00, NULL, 45, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 4460.00, 4800.00, 35, true);
+    VALUES (pid, '3 Kg', 4460.00, NULL, 35, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Kg', 12800.00, 13600.00, 20, true);
+    VALUES (pid, '10 Kg', 12800.00, NULL, 20, true);
   END IF;
 
   -- [Product #42]: SmartHeart Adult Dog – Chicken & Liver
@@ -847,13 +847,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '500 g', 930.00, 1020.00, 60, true);
+    VALUES (pid, '500 g', 930.00, NULL, 60, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.5 Kg', 2550.00, 2750.00, 45, true);
+    VALUES (pid, '1.5 Kg', 2550.00, NULL, 45, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 4460.00, 4800.00, 35, true);
+    VALUES (pid, '3 Kg', 4460.00, NULL, 35, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Kg', 12800.00, 13600.00, 20, true);
+    VALUES (pid, '10 Kg', 12800.00, NULL, 20, true);
   END IF;
 
   -- [Product #43]: SmartHeart Power Pack – Puppy
@@ -872,11 +872,11 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1 Kg', 2140.00, 2300.00, 50, true);
+    VALUES (pid, '1 Kg', 2140.00, NULL, 50, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 5670.00, 6100.00, 35, true);
+    VALUES (pid, '3 Kg', 5670.00, NULL, 35, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Kg', 17690.00, 18800.00, 20, true);
+    VALUES (pid, '10 Kg', 17690.00, NULL, 20, true);
   END IF;
 
   -- [Product #44]: SmartHeart Power Pack – Adult
@@ -895,11 +895,11 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1 Kg', 2050.00, 2250.00, 55, true);
+    VALUES (pid, '1 Kg', 2050.00, NULL, 55, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 5310.00, 5750.00, 40, true);
+    VALUES (pid, '3 Kg', 5310.00, NULL, 40, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Kg', 16490.00, 17500.00, 20, true);
+    VALUES (pid, '10 Kg', 16490.00, NULL, 20, true);
   END IF;
 
   -- [Product #45]: SmartHeart Mother & Baby Dog
@@ -918,11 +918,11 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.3 Kg', 2720.00, 2950.00, 45, true);
+    VALUES (pid, '1.3 Kg', 2720.00, NULL, 45, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '2.6 Kg', 5200.00, 5600.00, 30, true);
+    VALUES (pid, '2.6 Kg', 5200.00, NULL, 30, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '8 Kg', 13500.00, 14200.00, 15, true);
+    VALUES (pid, '8 Kg', 13500.00, NULL, 15, true);
   END IF;
 
   -- [Product #46]: Me-O Kitten – Ocean Fish
@@ -941,11 +941,11 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g', 1450.00, 1600.00, 70, true);
+    VALUES (pid, '400 g', 1450.00, NULL, 70, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.1 Kg', 3250.00, 3500.00, 40, true);
+    VALUES (pid, '1.1 Kg', 3250.00, NULL, 40, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '7 Kg', 14950.00, 15800.00, 15, true);
+    VALUES (pid, '7 Kg', 14950.00, NULL, 15, true);
   END IF;
 
   -- [Product #47]: Me-O Creamy Treats – Bonito Flavor
@@ -964,7 +964,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '4 x 15 g Pack', 630.00, 700.00, 120, true);
+    VALUES (pid, '4 x 15 g Pack', 630.00, NULL, 120, true);
   END IF;
 
   -- [Product #48]: Me-O Creamy Treats – Chicken & Liver Flavor
@@ -983,7 +983,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '4 x 15 g Pack', 630.00, 700.00, 120, true);
+    VALUES (pid, '4 x 15 g Pack', 630.00, NULL, 120, true);
   END IF;
 
   -- [Product #49]: Me-O Creamy Treats – Crab Flavor
@@ -1002,7 +1002,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '4 x 15 g Pack', 630.00, 700.00, 120, true);
+    VALUES (pid, '4 x 15 g Pack', 630.00, NULL, 120, true);
   END IF;
 
   -- [Product #50]: Me-O Creamy Treats – Salmon Flavor
@@ -1021,7 +1021,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '4 x 15 g Pack', 630.00, 700.00, 120, true);
+    VALUES (pid, '4 x 15 g Pack', 630.00, NULL, 120, true);
   END IF;
 
   -- [Product #51]: Me-O Pouch – Tuna in Jelly
@@ -1040,7 +1040,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '80 g Pouch', 390.00, 440.00, 150, true);
+    VALUES (pid, '80 g Pouch', 390.00, NULL, 150, true);
   END IF;
 
   -- [Product #52]: Me-O Pouch – Ocean Fish in Jelly
@@ -1059,7 +1059,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '80 g Pouch', 390.00, 440.00, 150, true);
+    VALUES (pid, '80 g Pouch', 390.00, NULL, 150, true);
   END IF;
 
   -- [Product #53]: Me-O Pouch – Tuna with Sardine in Jelly (Kitten)
@@ -1078,11 +1078,11 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g', 1450.00, 1600.00, 70, true);
+    VALUES (pid, '400 g', 1450.00, NULL, 70, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.1 Kg', 3250.00, 3500.00, 40, true);
+    VALUES (pid, '1.1 Kg', 3250.00, NULL, 40, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '7 Kg', 14950.00, 15800.00, 15, true);
+    VALUES (pid, '7 Kg', 14950.00, NULL, 15, true);
   END IF;
 
   -- [Product #54]: Me-O Pouch – Tuna Topping with White Fish
@@ -1101,7 +1101,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '80 g Pouch', 390.00, 440.00, 150, true);
+    VALUES (pid, '80 g Pouch', 390.00, NULL, 150, true);
   END IF;
 
   -- [Product #55]: Catron Bentonite Cat Litter – Grey Control
@@ -1120,7 +1120,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Litre Bag', 4500.00, 4800.00, 60, true);
+    VALUES (pid, '10 Litre Bag', 4500.00, NULL, 60, true);
   END IF;
 
   -- [Product #56]: Catron Bentonite Cat Litter – Lavender
@@ -1139,7 +1139,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Litre Bag', 3250.00, 3600.00, 70, true);
+    VALUES (pid, '10 Litre Bag', 3250.00, NULL, 70, true);
   END IF;
 
   -- [Product #57]: Limoxin-25 Spray
@@ -1158,7 +1158,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '200 ml Spray', 1650.00, 1800.00, 50, true);
+    VALUES (pid, '200 ml Spray', 1650.00, NULL, 50, true);
   END IF;
 
   -- [Product #58]: Me-O Adult Cat Dry Food - Tuna Flavour
@@ -1177,13 +1177,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '450 g', 1450.00, 1600.00, 80, true);
+    VALUES (pid, '450 g', 1450.00, NULL, 80, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.2 Kg', 3250.00, 3500.00, 50, true);
+    VALUES (pid, '1.2 Kg', 3250.00, NULL, 50, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 6490.00, 6950.00, 30, true);
+    VALUES (pid, '3 Kg', 6490.00, NULL, 30, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '7 Kg', 13250.00, 14100.00, 20, true);
+    VALUES (pid, '7 Kg', 13250.00, NULL, 20, true);
   END IF;
 
   -- [Product #59]: Me-O Adult Cat Dry Food - Seafood Flavour
@@ -1202,13 +1202,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '450 g', 1450.00, 1600.00, 80, true);
+    VALUES (pid, '450 g', 1450.00, NULL, 80, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.2 Kg', 3250.00, 3500.00, 50, true);
+    VALUES (pid, '1.2 Kg', 3250.00, NULL, 50, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 6490.00, 6950.00, 30, true);
+    VALUES (pid, '3 Kg', 6490.00, NULL, 30, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '7 Kg', 13250.00, 14100.00, 20, true);
+    VALUES (pid, '7 Kg', 13250.00, NULL, 20, true);
   END IF;
 
   -- [Product #60]: Me-O Adult Cat Dry Food - Mackerel Flavour
@@ -1227,13 +1227,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '450 g', 1450.00, 1600.00, 80, true);
+    VALUES (pid, '450 g', 1450.00, NULL, 80, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.2 Kg', 3250.00, 3500.00, 50, true);
+    VALUES (pid, '1.2 Kg', 3250.00, NULL, 50, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 6490.00, 6950.00, 30, true);
+    VALUES (pid, '3 Kg', 6490.00, NULL, 30, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '7 Kg', 13250.00, 14100.00, 20, true);
+    VALUES (pid, '7 Kg', 13250.00, NULL, 20, true);
   END IF;
 
   -- [Product #61]: Me-O Adult Cat Dry Food - Chicken & Vegetables
@@ -1252,13 +1252,13 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '450 g', 1450.00, 1600.00, 80, true);
+    VALUES (pid, '450 g', 1450.00, NULL, 80, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.2 Kg', 3250.00, 3500.00, 50, true);
+    VALUES (pid, '1.2 Kg', 3250.00, NULL, 50, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '3 Kg', 6490.00, 6950.00, 30, true);
+    VALUES (pid, '3 Kg', 6490.00, NULL, 30, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '7 Kg', 13250.00, 14100.00, 20, true);
+    VALUES (pid, '7 Kg', 13250.00, NULL, 20, true);
   END IF;
 
   -- [Product #62]: Me-O Persian Cat Food - Anti-Hairball Formula
@@ -1277,9 +1277,9 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g', 1450.00, 1600.00, 75, true);
+    VALUES (pid, '400 g', 1450.00, NULL, 75, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.1 Kg', 3250.00, 3500.00, 45, true);
+    VALUES (pid, '1.1 Kg', 3250.00, NULL, 45, true);
   END IF;
 
   -- [Product #63]: Catron Bentonite Cat Litter - Baby Powder
@@ -1298,7 +1298,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Litre Bag', 3250.00, 3600.00, 70, true);
+    VALUES (pid, '10 Litre Bag', 3250.00, NULL, 70, true);
   END IF;
 
   -- [Product #64]: Catron Bentonite Cat Litter - Marseille Soap
@@ -1317,7 +1317,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Litre Bag', 3250.00, 3600.00, 70, true);
+    VALUES (pid, '10 Litre Bag', 3250.00, NULL, 70, true);
   END IF;
 
   -- [Product #65]: Catron Bentonite Cat Litter - Green Apple
@@ -1336,7 +1336,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Litre Bag', 3250.00, 3600.00, 70, true);
+    VALUES (pid, '10 Litre Bag', 3250.00, NULL, 70, true);
   END IF;
 
   -- [Product #66]: Catron Bentonite Cat Litter - Coconut & Vanilla
@@ -1355,7 +1355,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Litre Bag', 3250.00, 3600.00, 70, true);
+    VALUES (pid, '10 Litre Bag', 3250.00, NULL, 70, true);
   END IF;
 
   -- [Product #67]: Catron Bentonite Cat Litter - Cappuccino
@@ -1374,7 +1374,7 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '10 Litre Bag', 3250.00, 3600.00, 70, true);
+    VALUES (pid, '10 Litre Bag', 3250.00, NULL, 70, true);
   END IF;
 
   -- [Product #68]: Me-O Persian Kitten
@@ -1393,9 +1393,9 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g', 1490.00, 1650.00, 65, true);
+    VALUES (pid, '400 g', 1490.00, NULL, 65, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.1 Kg', 3300.00, 3550.00, 40, true);
+    VALUES (pid, '1.1 Kg', 3300.00, NULL, 40, true);
   END IF;
 
   -- [Product #69]: Me-O Mother and Baby Cat
@@ -1414,9 +1414,9 @@ BEGIN
     -- Replace variants with true Excel priced variants
     DELETE FROM product_variants WHERE product_id = pid;
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '400 g', 1550.00, 1700.00, 60, true);
+    VALUES (pid, '400 g', 1550.00, NULL, 60, true);
     INSERT INTO product_variants (product_id, size_label, price, compare_at_price, stock, is_active)
-    VALUES (pid, '1.1 Kg', 3400.00, 3700.00, 35, true);
+    VALUES (pid, '1.1 Kg', 3400.00, NULL, 35, true);
   END IF;
 
 END $$;

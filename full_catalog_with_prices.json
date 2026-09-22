@@ -1,0 +1,2041 @@
+[
+  {
+    "number": 1,
+    "name": "TixFree Spot-On for Adult Cats",
+    "slug": "tixfree-spot-on-for-adult-cats",
+    "pet_type": "Cat",
+    "brand": "TixFree",
+    "category": {
+      "name": "Anti-Tick & Parasite Care",
+      "slug": "anti-tick-parasite-care",
+      "order": 1
+    },
+    "description": "TixFree Spot-On for Adult Cats contains fipronil 10% w/v for topical control of common external parasites including fleas, ticks and biting lice. Apply the complete pipette directly to the skin at the back of the neck, following the pack instructions for retreatment intervals. The adult-cat presentation is 0.5 ml and is available as individual pipettes and multi-dose retail packs. For veterinary use only; avoid contact with the eyes and mouth and follow all label precautions.",
+    "ingredients": "Fipronil 10% w/v. It is marketed for control of fleas, ticks and biting lice on cats.",
+    "indications": "",
+    "directions": "Apply the complete single-dose pipette directly to exposed skin at the base/back of the neck where the cat cannot readily lick it. The local retailer instructions describe monthly protection and recommend keeping the animal dry for about 48 hours after application.",
+    "packaging": "A small single-use plastic spot-on pipette, sold individually or as a three-dose carton.",
+    "storage_safety": "The detailed local listing says to avoid use in sick or convalescent animals and rabbits, avoid the eyes and mouth, prevent children from handling the application area, and store below 30°C in a dry place; the formulation should be treated as flammable until dry.",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "Adult Cat (3 pipettes pack)",
+        "price": 1980,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 2,
+    "name": "TixFree Spot-On for Dogs",
+    "slug": "tixfree-spot-on-for-dogs",
+    "pet_type": "Dog",
+    "brand": "TixFree",
+    "category": {
+      "name": "Anti-Tick & Parasite Care",
+      "slug": "anti-tick-parasite-care",
+      "order": 1
+    },
+    "description": "TixFree Spot-On for Dogs contains fipronil 10% and provides topical protection against common external parasites such as fleas and ticks. The range includes weight-specific presentations for dogs from 2-10 kg through to over 40 kg, with individual and three-dose packs available. Apply the full contents of the appropriate pipette directly onto exposed skin according to the label. Always select the exact weight category shown on the pack rather than adjusting another size.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "Select the presentation for the dog's body weight, part the hair and empty the complete pipette onto the skin rather than the coat. The local retailer instructions emphasize using the correct weight-specific dose.",
+    "packaging": "Weight-coded single-dose pipettes, sold individually or in three-dose boxes.",
+    "storage_safety": "Detailed storage information for every dog SKU was not recovered; use only the correctly labeled canine weight range and follow the pack's external-use precautions. Do not calculate a different dose from the concentration when a weight-specific pipette is available.",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "02 - 10 Kg (3 pipettes)",
+        "price": 2700,
+        "stock": 85
+      },
+      {
+        "size_label": "10 - 20 Kg (3 pipettes)",
+        "price": 3060,
+        "stock": 65
+      },
+      {
+        "size_label": "20 - 40 Kg (3 pipettes)",
+        "price": 3570,
+        "stock": 45
+      },
+      {
+        "size_label": "40 - 60 Kg (3 pipettes)",
+        "price": 4680,
+        "stock": 30
+      }
+    ]
+  },
+  {
+    "number": 3,
+    "name": "Antick 10%",
+    "slug": "antick-10",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Anti-Tick & Parasite Care",
+      "slug": "anti-tick-parasite-care",
+      "order": 1
+    },
+    "description": "Antick 10% contains cypermethrin 10 g/100 ml and is designed for external parasite control in dogs and several livestock species. Controls ticks, fleas, lice and flies among its target parasites. The published dilution is 1 ml in 1 L of water for whole-body spraying, subject to the individual product label. Available pack sizes are 10 ml and 1 L.",
+    "ingredients": "The official listing gives cypermethrin 10 g per 100 ml, equivalent to a 10% formulation, in solvent/emulsifying vehicle.",
+    "indications": "",
+    "directions": "",
+    "packaging": "Small concentrate bottles in the 10-ml sizes and a larger 1-L bottle.",
+    "storage_safety": "",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "10 ml Bottle",
+        "price": 775,
+        "stock": 100
+      },
+      {
+        "size_label": "1 Litre Pack",
+        "price": 56500,
+        "stock": 15
+      }
+    ]
+  },
+  {
+    "number": 4,
+    "name": "Tickamit 12.5",
+    "slug": "tickamit-12-5",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Anti-Tick & Parasite Care",
+      "slug": "anti-tick-parasite-care",
+      "order": 1
+    },
+    "description": "Calier Tickamit 12.5 is a concentrated amitraz-based ectoparasiticide for management of ticks, lice and mites in dogs and selected livestock species. Sri Lankan listings identify 10 ml, 100 ml and 1 L packs. As the product is a concentrate, dilution and application must follow the exact veterinary label for the intended animal. Do not transfer dosage instructions from a different market or species without veterinary confirmation.",
+    "ingredients": "",
+    "indications": "Marketed for control of ticks, lice and mites in animals including dogs and several livestock species; the product information also refers to ectoparasites resistant to some phosphorate/pyrethroid treatments.",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 ml Bottle",
+        "price": 990,
+        "stock": 90
+      },
+      {
+        "size_label": "100 ml Bottle",
+        "price": 9450,
+        "stock": 25
+      },
+      {
+        "size_label": "1 Litre Pack",
+        "price": 76000,
+        "stock": 10
+      }
+    ]
+  },
+  {
+    "number": 5,
+    "name": "Rapimec - Ivermectin 10 mg Tablets",
+    "slug": "rapimec-ivermectin-10-mg-tablets",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Anti-Tick & Parasite Care",
+      "slug": "anti-tick-parasite-care",
+      "order": 1
+    },
+    "description": "Rapimec is a veterinary ivermectin tablet containing 10 mg ivermectin per tablet. The product is for management of generalized demodicosis in dogs and supplies it in a 1 × 10-tablet presentation. Because ivermectin dosing depends on the animal and clinical indication, the manufacturer's listing directs users to follow veterinary-practitioner instructions.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "As directed by the veterinary practitioner rather than giving a consumer self-dosing schedule.",
+    "packaging": "Ten tablets, normally presented as a blister/strip within retail packaging.",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10's Pack",
+        "price": 1100,
+        "stock": 80
+      }
+    ]
+  },
+  {
+    "number": 6,
+    "name": "Petfat Liquid 200 ml",
+    "slug": "petfat-liquid-200-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "Petfat Liquid provides concentrated omega-3 triglycerides with EPA and DHA for nutritional skin and coat support. Each 2 g serving contains at least 440 mg total omega-3 triglycerides, including at least 280 mg EPA and 160 mg DHA. Hayleys lists a daily feeding rate of 2 g per 5 kg body weight, with one pump delivering approximately 2 g. The product is supplied in a 200 ml bottle for convenient addition to food.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "2 g per 5 kg body weight daily, administered through feed; one pump = 2 g according to the product listing.",
+    "packaging": "200-ml dispensing bottle, with a pump calibrated to approximately 2 g per actuation.",
+    "storage_safety": "Specific storage conditions were unspecified. Use as a feed supplement at the recommended amount.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Bottle",
+        "price": 2150,
+        "stock": 75
+      }
+    ]
+  },
+  {
+    "number": 7,
+    "name": "Vetgrow Red Dogs 200 ml",
+    "slug": "vetgrow-red-dogs-200-ml",
+    "pet_type": "Dog",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "Vetgrow Red Dogs is a veterinary-developed nutritional liquid for dogs, providing essential fatty acids including DHA, DPA and EPA. It is designed to support healthy skin, a glossy coat and everyday energy and activity. A local product listing recommends 5 ml per 10 kg body weight daily, given directly or with food. Retail presentations include 200 ml.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "A detailed local listing gives 5 ml per 10 kg body weight daily, mixed with food or given directly.",
+    "packaging": "200-ml liquid bottle; larger 1-L bottle",
+    "storage_safety": "Store cool and dry, away from direct sunlight, and keep the bottle tightly closed.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Bottle",
+        "price": 1500,
+        "stock": 60
+      }
+    ]
+  },
+  {
+    "number": 8,
+    "name": "Orcalmin Suspension 200 ml",
+    "slug": "orcalmin-suspension-200-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "Orcalmin is a mineral-support suspension formulated around Microcrystalline Hydroxyapatite Complex. Each 5 ml provides calcium equivalent to 33 mg, phosphorus 15 mg and vitamin D 100 IU. The combination is intended to provide nutritional support for normal bone structure and healthy teeth. The verified presentation is 200 ml; follow the current product label for species-appropriate feeding directions.",
+    "ingredients": "",
+    "indications": "Nutritional support for healthy bone structure and teeth.",
+    "directions": "Exact species/weight dosage was unspecified in the retrieved official result; use as directed on the bottle or by the veterinarian.",
+    "packaging": "200-ml oral-suspension bottle.",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Suspension",
+        "price": 925,
+        "stock": 90
+      }
+    ]
+  },
+  {
+    "number": 9,
+    "name": "Bones-Up 200 g",
+    "slug": "bones-up-200-g",
+    "pet_type": "Cat/Dog",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "Bones-Up is a Vetgrow mineral and vitamin supplement formulated to support bone and dental nutrition in dogs and cats, including growing, pregnant and lactating animals. The formula is rich in calcium, phosphorus and magnesium together with key vitamins, and Vetgrow emphasizes the bioavailability of its mineral sources. It is particularly positioned to support skeletal development in large-breed dogs. Feed one 5 g teaspoonful per 10 kg body weight daily according to the manufacturer's guidance.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "One teaspoonful / 5 g per 10 kg body weight daily.",
+    "packaging": "Powder supplement in 200-g and 900-g consumer containers.",
+    "storage_safety": "Specific storage conditions unspecified.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 g Container",
+        "price": 1400,
+        "stock": 80
+      }
+    ]
+  },
+  {
+    "number": 10,
+    "name": "Liv.52 Pet Liquid 200 ml",
+    "slug": "liv-52-pet-liquid-200-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "Himalaya",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "Liv.52 pet is Himalaya's companion-animal herbal liquid for appetite and liver support. Its key botanical ingredients are Caper Bush and Chicory, herbs used by Himalaya in its hepatoprotective formulation. The manufacturer's current guidance lists 5-8 ml twice daily for small-breed dogs and 10-15 ml twice daily for large breeds, with adjustment according to veterinary advice. The official pack contains 200 ml.",
+    "ingredients": "",
+    "indications": "Liv.52 pet as an appetite stimulant and hepatoprotective product, with the herbal ingredients positioned for liver-support applications.",
+    "directions": "Small-breed dogs: 5-8 ml twice daily; large-breed dogs: 10-15 ml twice daily. Himalaya states that dosage may be altered for breed/severity or as directed by a veterinarian.",
+    "packaging": "200-ml labeled liquid bottle.",
+    "storage_safety": "",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "200 ml Bottle",
+        "price": 1200,
+        "stock": 150
+      }
+    ]
+  },
+  {
+    "number": 11,
+    "name": "Digyton Drops 30 ml",
+    "slug": "digyton-drops-30-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "Himalaya",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "Digyton Drops is Himalaya's companion-animal digestive support formulation containing cardamom and dill oil. The product is designed to facilitate secretion of proteolytic, amylolytic and lipolytic enzymes involved in food digestion while supporting bowel regulation. Dosage should be selected according to the animal's breed, condition and veterinary advice rather than extrapolated from another Digyton product. The official presentation is a 30 ml bottle.",
+    "ingredients": "Cardamom and Dill Oil, with concentrations unspecified.",
+    "indications": "",
+    "directions": "As directed by a veterinarian.",
+    "packaging": "30-ml dropper-style veterinary bottle.",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "30 ml Drops",
+        "price": 383,
+        "stock": 110
+      }
+    ]
+  },
+  {
+    "number": 12,
+    "name": "aRBCe PET 200 ml",
+    "slug": "arbce-pet-200-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "aRBCe PET is palatable haematinic supplement formulated with bioavailable glycine-chelated minerals. Its confirmed components include chelated iron, copper and cobalt together with vitamins B2 and B3, providing nutritional support for haemoglobin formation and recovery from nutritional deficiency. Veterinary retailers also position the product for supportive use during anaemia, debility and convalescence. The verified pack size is 200 ml; dosing should follow the local pack or veterinarian.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "Dogs: 5 ml per 20 kg body weight twice daily; cats: 0.5 ml per 5 kg twice daily, directly or mixed with food.",
+    "packaging": "200-ml palatable oral-liquid bottle.",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Bottle",
+        "price": 1625,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 13,
+    "name": "Vi-Sorbits Tablets 50s",
+    "slug": "vi-sorbits-tablets-50s",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Tonics, Vitamins & Supplements",
+      "slug": "tonics-vitamins-supplements",
+      "order": 2
+    },
+    "description": "Vi-Sorbits provides a broad spectrum of vitamins and minerals in a palatable tablet formulated for dogs. The formula includes vitamins A, D, E and B-complex nutrients together with iron, copper, calcium, phosphorus and other essential minerals. Give one tablet daily, either whole or crumbled over food, unless otherwise directed by a veterinarian. Store between 15°C and 30°C and keep out of children's reach.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "One tablet daily, given whole or crumbled onto food.",
+    "packaging": "Tablet bottle, with count varying by market.",
+    "storage_safety": "Store at 15-30°C and keep out of reach of children.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "50 Tablets Pack",
+        "price": 9375,
+        "stock": 40
+      }
+    ]
+  },
+  {
+    "number": 14,
+    "name": "Scavon VET Spray 100 ml",
+    "slug": "scavon-vet-spray-100-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "Himalaya",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Scavon VET Spray is Himalaya's topical veterinary wound-care formulation for traumatic, surgical and infected wounds. Its ingredient blend includes Atasi, eucalyptus, camphor, Tulasi and Vacha components together with Yashada bhasma. Clean the wound and apply the required amount according to the veterinary label, generally twice daily for companion-animal applications. Store the 100 ml spray away from direct heat and sunlight and keep out of children's reach.",
+    "ingredients": "",
+    "indications": "Traumatic and surgical wounds, maggot-infested or infected wounds, bacterial/fungal wound conditions and selected livestock lesions.",
+    "directions": "Clip hair where necessary, clean the affected area and apply the required quantity, generally twice daily for companion-animal wound care according to the manufacturer's instructions.",
+    "packaging": "100-ml labeled spray container.",
+    "storage_safety": "Store dry, away from direct heat and sunlight; do not refrigerate; keep away from children and do not expose the container above 50°C. For animal use only.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "100 ml Spray",
+        "price": 1331,
+        "stock": 95
+      }
+    ]
+  },
+  {
+    "number": 15,
+    "name": "Scavon VET Cream 50 g",
+    "slug": "scavon-vet-cream-50-g",
+    "pet_type": "Cat/Dog",
+    "brand": "Himalaya",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Scavon VET Cream provides Himalaya's antimicrobial and wound-support formulation in a convenient topical cream. It combines herbal ingredients including Atasi, eucalyptus, camphor, Tulasi and Vacha with Yashada bhasma and is intended for a range of traumatic and infected wounds. Clean the affected area before application and use at the frequency shown on the label or prescribed by a veterinarian. The product is supplied in a 50 g presentation and should be protected from direct heat and sunlight.",
+    "ingredients": "The cream uses the Scavon herbal/mineral wound-care combination, including Atasi, eucalyptus/Tailapatra, Karpura, Tulasi, Vacha and Yashada bhasma.",
+    "indications": "",
+    "directions": "",
+    "packaging": "50-g topical cream tube, normally within labeled retail packaging.",
+    "storage_safety": "Dry storage away from direct heat and sunlight; do not refrigerate; keep out of children's reach; animal use only.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "50 g Tube",
+        "price": 793,
+        "stock": 85
+      }
+    ]
+  },
+  {
+    "number": 16,
+    "name": "SANPET-PLUS Broad Spectrum Deworming Tablets",
+    "slug": "sanpet-plus-broad-spectrum-deworming-tablets",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "SANPET-PLUS",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 kg Tablet",
+        "price": 360,
+        "stock": 200
+      }
+    ]
+  },
+  {
+    "number": 17,
+    "name": "Wolfo Flea & Tick Powder",
+    "slug": "wolfo-flea-tick-powder",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Wolfo is a propoxur 1% w/w flea-and-tick powder designed for topical use on dogs and cats. The fine powder is distributed through the coat to reach the skin, with the local product instructions describing weekly use. It may also be used on specified pet resting areas according to the label. Because the product is classified as a poison and is harmful if ingested, use gloves and follow all handling precautions carefully.",
+    "ingredients": "Propoxur 1% w/w.",
+    "indications": "",
+    "directions": "",
+    "packaging": "Shaker-style veterinary powder container; exact net weight unspecified.",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "75 g Talc Powder",
+        "price": 590,
+        "stock": 100
+      }
+    ]
+  },
+  {
+    "number": 18,
+    "name": "Woofy Medicated Neem Soap 70 g",
+    "slug": "woofy-medicated-neem-soap-70-g",
+    "pet_type": "Cat",
+    "brand": "Seepet",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Woofy Medicated Neem Soap provides convenient routine cleansing for pets in a 70 g bar. Its neem-focused formulation is marketed for hygienic and antibacterial-support grooming while helping keep the coat clean and fresh. Wet the coat thoroughly, massage the lather through the fur and rinse well, taking care around the eyes and ears. Suitable species should always be confirmed from the individual pack label.",
+    "ingredients": "Neem is the identified featured ingredient; a quantified full ingredient composition was unspecified.",
+    "indications": "",
+    "directions": "Wet the coat, work the soap into a lather and massage through the coat while avoiding the eyes and ears, then rinse thoroughly.",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "70 g Soap Bar",
+        "price": 450,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 19,
+    "name": "Woofy Lavender Soap 70 g",
+    "slug": "woofy-lavender-soap-70-g",
+    "pet_type": "Cat/Dog",
+    "brand": "Seepet",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Woofy Lavender Soap is a routine pet-grooming bar designed to cleanse the skin and coat while providing a pleasant lavender fragrance. It is listed for puppies, adult dogs and cats. Work the bar into a lather on a thoroughly wet coat, massage gently and rinse well while avoiding the eyes and ears. The retail presentation is a 70 g bar.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "Wet the coat, lather and massage, avoiding eyes and ears, then rinse completely.",
+    "packaging": "Individually packaged 70-g soap bar.",
+    "storage_safety": "Unspecified; keep the soap dry between uses and use externally as a grooming product.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "70 g Soap Bar",
+        "price": 450,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 20,
+    "name": "Permvet Medicated Dog Soap 70 g",
+    "slug": "permvet-medicated-dog-soap-70-g",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Permvet is a medicated soap formulated specifically for dogs and contains permethrin 1%. It combines coat cleansing with topical flea-and-tick control and may help reduce discomfort associated with parasite infestation. Apply only according to the manufacturer's dog-use directions and rinse as instructed on the pack. Do not extend use to other species unless their use is explicitly stated on the physical label.",
+    "ingredients": "",
+    "indications": "Marketed to help control fleas and ticks while cleansing the coat and helping with parasite-associated itch.",
+    "directions": "",
+    "packaging": "Medicated soap bar, normally individually boxed/wrapped.",
+    "storage_safety": "Specific storage is unspecified. Because the verified listing explicitly identifies this as a dog soap, the website should not imply feline use unless the actual label specifically authorizes it.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "70 g Soap Bar",
+        "price": 650,
+        "stock": 100
+      }
+    ]
+  },
+  {
+    "number": 21,
+    "name": "Nutricoat Advance",
+    "slug": "nutricoat-advance",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Nutricoat Advance delivers concentrated essential fatty acids, including Omega-6 linoleic acid and Omega-3 linolenic acid, to support the skin barrier and coat condition of dogs and cats. It is used as nutritional support in a range of dermatological conditions including pyoderma, mange, fungal disease and Malassezia-associated dermatitis. Additional formulation listings identify supportive nutrients such as zinc, biotin, selenium and selected vitamins. Available in 200 g and 400 g packs; follow the feeding instructions printed on the exact market pack because dosage conventions vary between presentations.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "Product listings vary: local information includes 5 g/day for dogs and 10 g/day for pregnant/nursing bitches, while some international labels express dosing in ml/body weight. Therefore, the exact local bottle instruction should be used.",
+    "packaging": "Viscous liquid/oil supplement in bottles labeled by net weight, commonly 200 g or 400 g.",
+    "storage_safety": "Store in a cool, dry place; a local listing additionally advises cool/dark storage with the container closed.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 g Bottle",
+        "price": 2990,
+        "stock": 65
+      }
+    ]
+  },
+  {
+    "number": 22,
+    "name": "Nutricoat Syrup",
+    "slug": "nutricoat-syrup",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Nutricoat is formulated to provide fatty-acid nutrition for pets with dry, dull or scaly coats and is used as supportive nutrition in a variety of skin conditions. Its ingredient profile includes linoleic, linolenic and oleic acids. Hayleys publishes separate feeding amounts for puppies, adult dogs, pregnant or nursing dogs and cats, so the dose should be matched to the animal and local label. The Sri Lankan distributor lists a 200 g pack, while 400 g is also documented internationally.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "puppies 2.5 ml twice daily; adult dogs 5 ml twice daily; pregnant/nursing bitches 5-10 ml twice daily; cats 2.5-5 ml twice daily.",
+    "packaging": "Palatable liquid/tonic in a bottle labeled by net weight, usually 200 g",
+    "storage_safety": "Specific storage on the Hayleys excerpt was unspecified; keep the container appropriately closed and follow the label.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 g Bottle",
+        "price": 2680,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 23,
+    "name": "Negasunt Powder",
+    "slug": "negasunt-powder",
+    "pet_type": "Cat/Dog",
+    "brand": "Bayer / Elanco",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Negasunt combines coumaphos 30 mg/g, propoxur 20 mg/g and sulfanilamide 50 mg/g in a topical veterinary wound powder. It is intended for maggoticidal and bacteriostatic wound dressing in dogs and various livestock species. Before application, clean the wound thoroughly and dust enough powder to cover both the affected area and its immediate surroundings. The locally listed presentation is a 40 g bottle.",
+    "ingredients": "",
+    "indications": "Wound dressing where maggot control and bacteriostatic action are required in dogs and several livestock species.",
+    "directions": "Clean the wound thoroughly and dust Negasunt over the wound, ensuring that the surrounding area is also covered.",
+    "packaging": "40-g dusting/shaker bottle.",
+    "storage_safety": "Specific storage conditions were unspecified in the retrieved page. Treat as a veterinary medicated powder and avoid inhalation, ingestion and unnecessary skin contact.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "40 g Container",
+        "price": 1290,
+        "stock": 80
+      }
+    ]
+  },
+  {
+    "number": 24,
+    "name": "Aluspray AWD",
+    "slug": "aluspray-awd",
+    "pet_type": "Cat/Dog",
+    "brand": "Bayer / Elanco",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Aluspray AWD is formulated for topical protection of superficial wounds, abrasions and cuts. Each gram contains neomycin 3,400 units, polymyxin B 5,000 units and bacitracin 400 units. Applying a fine superficial coating once or twice daily, subject to the veterinarian's directions. The verified local pack size is 125 ml.",
+    "ingredients": "Hayleys gives, per gram, neomycin 3,400 units, polymyxin B 5,000 units and bacitracin 400 units, plus excipients.",
+    "indications": "",
+    "directions": "",
+    "packaging": "125-ml spray/aerosol-style container.",
+    "storage_safety": "Unspecified in the retrieved listing; external veterinary use only.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "125 ml Aerosol",
+        "price": 1980,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 25,
+    "name": "Petmend Spray",
+    "slug": "petmend-spray",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Petmend Spray is designed for topical management of traumatic and surgical wounds, including wounds affected by maggot infestation. The Hayleys formulation information confirms Pinus longifolia at 4 g per 100 ml as one component. The product is supplied in a convenient 150 ml spray presentation. Clean and treat the affected area only according to the current product label or veterinarian's instructions.",
+    "ingredients": "Pinus longifolia 4 g per 100 ml as part of the composition",
+    "indications": "All types of traumatic and surgical wounds, including maggot/worm-infested wounds.",
+    "directions": "Exact application frequency was unspecified in the retrieved official evidence; use according to label/veterinary instructions.",
+    "packaging": "150-ml labeled spray container.",
+    "storage_safety": "Unspecified; external veterinary use only.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "150 ml Spray",
+        "price": 980,
+        "stock": 85
+      }
+    ]
+  },
+  {
+    "number": 26,
+    "name": "Drontal Plus Tasty",
+    "slug": "drontal-plus-tasty",
+    "pet_type": "Cat/Dog",
+    "brand": "Bayer / Elanco",
+    "category": {
+      "name": "Wound Care & Deworming",
+      "slug": "wound-care-deworming",
+      "order": 3
+    },
+    "description": "Drontal Plus Tasty combines praziquantel 50 mg, pyrantel embonate 144 mg and febantel 150 mg in each tablet for broad-spectrum intestinal worm control in dogs. It targets major roundworm and tapeworm groups including hookworms and whipworms. Hayleys lists a dosage of one tablet per 10 kg body weight, given directly or with food, without a fasting requirement. The official local presentation reviewed contains 12 tablets.",
+    "ingredients": "Praziquantel 50 mg, pyrantel embonate 144 mg and febantel 150 mg.",
+    "indications": "Control of common canine ascarids/roundworms, hookworms, whipworms and tapeworms.",
+    "directions": "One tablet per 10 kg body weight; tablets may be administered directly or in food, and Hayleys states that pre-treatment starvation is unnecessary.",
+    "packaging": "",
+    "storage_safety": "Detailed storage instructions were unspecified in the retrieved local page. Dosing should be based on current body weight and the pack label.",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "2's Pack",
+        "price": 990,
+        "stock": 100
+      },
+      {
+        "size_label": "12's Carton",
+        "price": 5450,
+        "stock": 40
+      }
+    ]
+  },
+  {
+    "number": 27,
+    "name": "Dermitol Shampoo",
+    "slug": "dermitol-shampoo",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Medicated & Grooming Shampoos",
+      "slug": "medicated-grooming-shampoos",
+      "order": 4
+    },
+    "description": "Dermitol is a veterinary dermatological shampoo designed to provide hygienic cleansing while helping moisturize and condition abnormal or seborrheic skin. Hayleys describes the formula as using soft surfactants together with Ichtyol liposome technology. It can be used as supportive topical care for dry or oily scaling conditions under veterinary guidance. The locally listed pack size is 250 ml.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "Twice weekly for several weeks, allowing brief skin contact before rinsing; because regimen may vary by market, publish label/veterinary directions rather than a fixed treatment course.",
+    "packaging": "250-ml dermatological shampoo bottle.",
+    "storage_safety": "Unspecified; external veterinary use only, avoid eyes.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "250 ml Bottle",
+        "price": 3980,
+        "stock": 60
+      }
+    ]
+  },
+  {
+    "number": 28,
+    "name": "Furr-Fresh Medicated Shampoo 100 ml",
+    "slug": "furr-fresh-medicated-shampoo-100-ml",
+    "pet_type": "Cat",
+    "brand": "Furr-Fresh",
+    "category": {
+      "name": "Medicated & Grooming Shampoos",
+      "slug": "medicated-grooming-shampoos",
+      "order": 4
+    },
+    "description": "Furr-Fresh Medicated Shampoo is a veterinary-strength cleansing formula containing ketoconazole and chlorhexidine gluconate. The combination provides antifungal and antibacterial activity and is marketed for pets with yeast, fungal and bacterial skin problems. Apply and leave on only for the contact time specified on the current label or by a veterinarian, then rinse thoroughly.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "Exact contact time/frequency unspecified; follow the pack or veterinarian rather than borrowing instructions from another ketoconazole/chlorhexidine brand.",
+    "packaging": "100-ml shampoo bottle.",
+    "storage_safety": "Unspecified; external use only, avoid eyes, ears and ingestion.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Bottle",
+        "price": 1300,
+        "stock": 75
+      }
+    ]
+  },
+  {
+    "number": 29,
+    "name": "Ticks & Fleas Shampoo 225 ml",
+    "slug": "ticks-fleas-shampoo-225-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Medicated & Grooming Shampoos",
+      "slug": "medicated-grooming-shampoos",
+      "order": 4
+    },
+    "description": "Dymec Ticks & Fleas Shampoo is formulated for dogs using a shampoo base with citronella, lemongrass, eucalyptus, neem and cinnamon oils. The botanical blend is intended for routine cleansing while supporting flea-and-tick-focused grooming. Wet and shampoo the animal only according to the directions printed on the product pack, taking care around the eyes. The verified presentation is a 225 ml bottle.",
+    "ingredients": "citronella oil, lemongrass oil, eucalyptus oil, neem oil and cinnamon oil. Concentrations are unspecified.",
+    "indications": "Routine shampooing where flea/tick-focused botanical grooming is desired. The clearest current product title says for dogs.",
+    "directions": "",
+    "packaging": "225-ml plastic shampoo bottle.",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "225 ml Bottle",
+        "price": 800,
+        "stock": 80
+      }
+    ]
+  },
+  {
+    "number": 30,
+    "name": "Aloe Vera Shampoo & Conditioner 225 ml",
+    "slug": "aloe-vera-shampoo-conditioner-225-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Medicated & Grooming Shampoos",
+      "slug": "medicated-grooming-shampoos",
+      "order": 4
+    },
+    "description": "Dymec Aloe Vera Shampoo & Conditioner combines routine cleansing with coat-conditioning ingredients including aloe vera extract and vitamin E. It is marketed for both dogs and cats and is designed to leave the coat clean, conditioned and well groomed. Apply and rinse according to the directions on the physical bottle while avoiding the eyes. The standard pack is 225 ml,",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "225-ml shampoo bottle",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "225 ml Bottle",
+        "price": 650,
+        "stock": 90
+      }
+    ]
+  },
+  {
+    "number": 31,
+    "name": "Malaseb Shampoo 200 ml",
+    "slug": "malaseb-shampoo-200-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Medicated & Grooming Shampoos",
+      "slug": "medicated-grooming-shampoos",
+      "order": 4
+    },
+    "description": "SeePet-Malaseb combines miconazole nitrate 2% w/v with chlorhexidine gluconate 2% w/v to provide dual antifungal and antibacterial cleansing. It is marketed for dogs and cats and is used as medicated support in skin conditions involving microbial overgrowth, seborrhea and itching. Use at the contact time and frequency specified on the SeePet label or by your veterinarian. Local retailers list  200 ml.",
+    "ingredients": "Miconazole nitrate 2% w/v plus chlorhexidine gluconate 2% w/v.",
+    "indications": "Antifungal, antibacterial, keratolytic and antipruritic medicated cleansing, including supportive care for seborrheic dermatitis and dermatophilosis-associated skin problems.",
+    "directions": "Exact contact time and treatment frequency for this SeePet formulation were unspecified in the retrieved evidence; follow the bottle or veterinarian.",
+    "packaging": "",
+    "storage_safety": "Unspecified; external veterinary use only, avoid eyes and ingestion.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Bottle",
+        "price": 1140,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 32,
+    "name": "Petvit Liquid 200 ml",
+    "slug": "petvit-liquid-200-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Health Treats & Specialized Food",
+      "slug": "health-treats-specialized-food",
+      "order": 5
+    },
+    "description": "Petvit Liquid is an oral multivitamin formulation for companion animals. Each 5 ml provides confirmed nutrients including vitamin A, vitamin D3, vitamin C and vitamins B1, B2 and B6. Hayleys lists the product for general nutritional supplementation and malnutrition, with a published puppy/kitten amount of 1-2 ml daily.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "puppies and kittens: 1-2 ml daily. Other species/age doses were unspecified in the retrieved evidence.",
+    "packaging": "200-ml oral vitamin-liquid bottle.",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Bottle",
+        "price": 1490,
+        "stock": 60
+      }
+    ]
+  },
+  {
+    "number": 33,
+    "name": "Vetgrow Meat in Feet 400 g",
+    "slug": "vetgrow-meat-in-feet-400-g",
+    "pet_type": "Cat/Dog",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Health Treats & Specialized Food",
+      "slug": "health-treats-specialized-food",
+      "order": 5
+    },
+    "description": "Vetgrow Meat in Feet is a shaped chew/treat for dogs that encourages chewing and jaw activity while providing a source of calcium and phosphorus. Retail product information also positions the formula around dental cleaning and joint-support ingredients including glucosamine and chondroitin. It is sold in a 12-piece format, while a 400 g listing is also documented locally. Offer as a supplementary treat rather than a complete diet and supervise the dog during chewing.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "Approximately 1-2 pieces per day depending on size/activity, but this is not a manufacturer-verified feeding instruction in the retrieved material; therefore the pack should remain the authority.",
+    "packaging": "",
+    "storage_safety": "Retail advice is cool, dry storage and resealing after opening.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "400 g Pack",
+        "price": 350,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 34,
+    "name": "Vetgrow Kick in Punch 300 ml",
+    "slug": "vetgrow-kick-in-punch-300-ml",
+    "pet_type": "Cat/Dog",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Health Treats & Specialized Food",
+      "slug": "health-treats-specialized-food",
+      "order": 5
+    },
+    "description": "Kick in Punch is a Vetgrow supplementary beverage formulated for both dogs and cats. It is produced from hydrolyzed chicken meat and hydrolyzed whey protein and is suitable for pets across different ages and life stages. Vetgrow's published daily feeding guidance is one 300 ml tin per 10 kg body weight. Use it as a supplementary nutritional product alongside an appropriately balanced diet.",
+    "ingredients": "Hydrolyzed chicken meat and hydrolyzed whey protein. Quantitative nutrient concentrations are unspecified.",
+    "indications": "",
+    "directions": "Manufacturer-listed daily dose: one tin per 10 kg body weight.",
+    "packaging": "300-ml tin/can.",
+    "storage_safety": "Specific storage instructions are unspecified on the current product page. It should be presented as a supplementary food/beverage rather than a nutritionally complete diet unless the label says otherwise.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "300 ml Bottle",
+        "price": 450,
+        "stock": 100
+      }
+    ]
+  },
+  {
+    "number": 35,
+    "name": "Vetgrow Meowghurt 200 g",
+    "slug": "vetgrow-meowghurt-200-g",
+    "pet_type": "Cat",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Health Treats & Specialized Food",
+      "slug": "health-treats-specialized-food",
+      "order": 5
+    },
+    "description": "Meowghurt is Vetgrow's milk-free yoghurt-equivalent food designed specifically for cats. Its proteins are hydrolyzed into amino acids and short peptides, lipids into free fatty acids and starch into simpler carbohydrate forms, together with an appropriate fibre component. The formula is enriched with taurine, arachidonic acid and vitamin A to reflect key feline nutritional needs. It is supplied in a 200 g presentation and should be fed according to the product label.",
+    "ingredients": "",
+    "indications": "",
+    "directions": "A specific numerical daily dose was not published on the current manufacturer page retrieved.",
+    "packaging": "200-g tin/can.",
+    "storage_safety": "Unspecified in the manufacturer text reviewed.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 g Tub",
+        "price": 450,
+        "stock": 90
+      }
+    ]
+  },
+  {
+    "number": 36,
+    "name": "Vetgrow Doghurt 200 g",
+    "slug": "vetgrow-doghurt-200-g",
+    "pet_type": "Dog",
+    "brand": "Vetgrow",
+    "category": {
+      "name": "Health Treats & Specialized Food",
+      "slug": "health-treats-specialized-food",
+      "order": 5
+    },
+    "description": "Doghurt is Vetgrow's hydrolyzed dog food designed to provide nutritional support when normal digestion or intake is compromised. Protein is supplied as amino acids and short peptides, fats as free fatty acids and carbohydrates as monosaccharides, together with fibre. Vetgrow lists uses ranging from digestive disorders and poor appetite to pregnancy, ageing and post-surgical or illness recovery. The manufacturer recommends one 200 g tin per 10 kg body weight daily, subject to veterinary guidance for animals with clinical disease.",
+    "ingredients": "",
+    "indications": "Vetgrow positions Doghurt for nutritional support during digestive disorders including EPI and IBD, pregnancy, senility, post-surgical recovery, growth retardation, anorectic conditions and recovery from systemic illness, among other supportive situations.",
+    "directions": "Manufacturer-listed daily dose: one tin per 10 kg body weight.",
+    "packaging": "200-g tin/can.",
+    "storage_safety": "Specific storage conditions unspecified on the current page. Disease-related use should remain under veterinary guidance rather than positioning Doghurt as a replacement for diagnosis or medical treatment.",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 g Tub",
+        "price": 450,
+        "stock": 90
+      }
+    ]
+  },
+  {
+    "number": 37,
+    "name": "Classic Pet Puppy – Milk Flavor",
+    "slug": "classic-pet-puppy-milk-flavor",
+    "pet_type": "Dog",
+    "brand": "Classic Pet",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "Classic Pet Puppy – Milk Flavor",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "400 g",
+        "price": 650,
+        "stock": 80
+      },
+      {
+        "size_label": "500 g",
+        "price": 850,
+        "stock": 60
+      },
+      {
+        "size_label": "2 Kg",
+        "price": 3150,
+        "stock": 40
+      },
+      {
+        "size_label": "10 Kg",
+        "price": 13690,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 38,
+    "name": "Classic Pet Adult Dog – Chicken Flavour",
+    "slug": "classic-pet-adult-dog-chicken-flavour",
+    "pet_type": "Dog",
+    "brand": "Classic Pet",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "Classic Pet Adult Dog – Chicken Flavour",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "400 g",
+        "price": 560,
+        "stock": 80
+      },
+      {
+        "size_label": "2 Kg",
+        "price": 2800,
+        "stock": 50
+      },
+      {
+        "size_label": "3.5 Kg",
+        "price": 4650,
+        "stock": 35
+      },
+      {
+        "size_label": "10 Kg",
+        "price": 12050,
+        "stock": 25
+      }
+    ]
+  },
+  {
+    "number": 39,
+    "name": "Classic Pet Adult Dog – Beef Flavour",
+    "slug": "classic-pet-adult-dog-beef-flavour",
+    "pet_type": "Dog",
+    "brand": "Classic Pet",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "Classic Pet Adult Dog – Beef Flavour",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "2 Kg",
+        "price": 2800,
+        "stock": 50
+      },
+      {
+        "size_label": "3.5 Kg",
+        "price": 4650,
+        "stock": 35
+      },
+      {
+        "size_label": "10 Kg",
+        "price": 12050,
+        "stock": 25
+      }
+    ]
+  },
+  {
+    "number": 40,
+    "name": "SmartHeart Puppy – Chicken, Egg & Milk",
+    "slug": "smartheart-puppy-chicken-egg-milk",
+    "pet_type": "Dog",
+    "brand": "SmartHeart",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "SmartHeart Puppy – Chicken, Egg & Milk",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "500 g",
+        "price": 930,
+        "stock": 60
+      },
+      {
+        "size_label": "1.3 Kg",
+        "price": 2550,
+        "stock": 40
+      },
+      {
+        "size_label": "2.7 Kg",
+        "price": 4460,
+        "stock": 30
+      },
+      {
+        "size_label": "8 Kg",
+        "price": 12800,
+        "stock": 15
+      }
+    ]
+  },
+  {
+    "number": 41,
+    "name": "SmartHeart Adult Dog – Chicken & Egg",
+    "slug": "smartheart-adult-dog-chicken-egg",
+    "pet_type": "Dog",
+    "brand": "SmartHeart",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "SmartHeart Adult Dog – Chicken & Egg",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "500 g",
+        "price": 930,
+        "stock": 60
+      },
+      {
+        "size_label": "1.5 Kg",
+        "price": 2550,
+        "stock": 45
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 4460,
+        "stock": 35
+      },
+      {
+        "size_label": "10 Kg",
+        "price": 12800,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 42,
+    "name": "SmartHeart Adult Dog – Chicken & Liver",
+    "slug": "smartheart-adult-dog-chicken-liver",
+    "pet_type": "Dog",
+    "brand": "SmartHeart",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "SmartHeart Adult Dog – Chicken & Liver",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "500 g",
+        "price": 930,
+        "stock": 60
+      },
+      {
+        "size_label": "1.5 Kg",
+        "price": 2550,
+        "stock": 45
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 4460,
+        "stock": 35
+      },
+      {
+        "size_label": "10 Kg",
+        "price": 12800,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 43,
+    "name": "SmartHeart Power Pack – Puppy",
+    "slug": "smartheart-power-pack-puppy",
+    "pet_type": "Dog",
+    "brand": "SmartHeart",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "SmartHeart Power Pack – Puppy",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "1 Kg",
+        "price": 2140,
+        "stock": 50
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 5670,
+        "stock": 35
+      },
+      {
+        "size_label": "10 Kg",
+        "price": 17690,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 44,
+    "name": "SmartHeart Power Pack – Adult",
+    "slug": "smartheart-power-pack-adult",
+    "pet_type": "Dog",
+    "brand": "SmartHeart",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "SmartHeart Power Pack – Adult",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "1 Kg",
+        "price": 2050,
+        "stock": 55
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 5310,
+        "stock": 40
+      },
+      {
+        "size_label": "10 Kg",
+        "price": 16490,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 45,
+    "name": "SmartHeart Mother & Baby Dog",
+    "slug": "smartheart-mother-baby-dog",
+    "pet_type": "Dog",
+    "brand": "SmartHeart",
+    "category": {
+      "name": "Dog Food & Puppy Nutrition",
+      "slug": "dog-food-puppy-nutrition",
+      "order": 6
+    },
+    "description": "SmartHeart Mother & Baby Dog",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "1.3 Kg",
+        "price": 2720,
+        "stock": 45
+      },
+      {
+        "size_label": "2.6 Kg",
+        "price": 5200,
+        "stock": 30
+      },
+      {
+        "size_label": "8 Kg",
+        "price": 13500,
+        "stock": 15
+      }
+    ]
+  },
+  {
+    "number": 46,
+    "name": "Me-O Kitten – Ocean Fish",
+    "slug": "me-o-kitten-ocean-fish",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Kitten – Ocean Fish",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "400 g",
+        "price": 1450,
+        "stock": 70
+      },
+      {
+        "size_label": "1.1 Kg",
+        "price": 3250,
+        "stock": 40
+      },
+      {
+        "size_label": "7 Kg",
+        "price": 14950,
+        "stock": 15
+      }
+    ]
+  },
+  {
+    "number": 47,
+    "name": "Me-O Creamy Treats – Bonito Flavor",
+    "slug": "me-o-creamy-treats-bonito-flavor",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Creamy Treats – Bonito Flavor",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "4 x 15 g Pack",
+        "price": 630,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 48,
+    "name": "Me-O Creamy Treats – Chicken & Liver Flavor",
+    "slug": "me-o-creamy-treats-chicken-liver-flavor",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Creamy Treats – Chicken & Liver Flavor",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "4 x 15 g Pack",
+        "price": 630,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 49,
+    "name": "Me-O Creamy Treats – Crab Flavor",
+    "slug": "me-o-creamy-treats-crab-flavor",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Creamy Treats – Crab Flavor",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "4 x 15 g Pack",
+        "price": 630,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 50,
+    "name": "Me-O Creamy Treats – Salmon Flavor",
+    "slug": "me-o-creamy-treats-salmon-flavor",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Creamy Treats – Salmon Flavor",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "4 x 15 g Pack",
+        "price": 630,
+        "stock": 120
+      }
+    ]
+  },
+  {
+    "number": 51,
+    "name": "Me-O Pouch – Tuna in Jelly",
+    "slug": "me-o-pouch-tuna-in-jelly",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Pouch – Tuna in Jelly",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "80 g Pouch",
+        "price": 390,
+        "stock": 150
+      }
+    ]
+  },
+  {
+    "number": 52,
+    "name": "Me-O Pouch – Ocean Fish in Jelly",
+    "slug": "me-o-pouch-ocean-fish-in-jelly",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Pouch – Ocean Fish in Jelly",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "80 g Pouch",
+        "price": 390,
+        "stock": 150
+      }
+    ]
+  },
+  {
+    "number": 53,
+    "name": "Me-O Pouch – Tuna with Sardine in Jelly (Kitten)",
+    "slug": "me-o-pouch-tuna-with-sardine-in-jelly-kitten",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Pouch – Tuna with Sardine in Jelly (Kitten)",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "400 g",
+        "price": 1450,
+        "stock": 70
+      },
+      {
+        "size_label": "1.1 Kg",
+        "price": 3250,
+        "stock": 40
+      },
+      {
+        "size_label": "7 Kg",
+        "price": 14950,
+        "stock": 15
+      }
+    ]
+  },
+  {
+    "number": 54,
+    "name": "Me-O Pouch – Tuna Topping with White Fish",
+    "slug": "me-o-pouch-tuna-topping-with-white-fish",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Pouch – Tuna Topping with White Fish",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "80 g Pouch",
+        "price": 390,
+        "stock": 150
+      }
+    ]
+  },
+  {
+    "number": 55,
+    "name": "Catron Bentonite Cat Litter – Grey Control",
+    "slug": "catron-bentonite-cat-litter-grey-control",
+    "pet_type": "Cat",
+    "brand": "Catron",
+    "category": {
+      "name": "Cat Litter & Hygiene",
+      "slug": "cat-litter-hygiene",
+      "order": 8
+    },
+    "description": "Catron Bentonite Cat Litter – Grey Control",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 Litre Bag",
+        "price": 4500,
+        "stock": 60
+      }
+    ]
+  },
+  {
+    "number": 56,
+    "name": "Catron Bentonite Cat Litter – Lavender",
+    "slug": "catron-bentonite-cat-litter-lavender",
+    "pet_type": "Cat",
+    "brand": "Catron",
+    "category": {
+      "name": "Cat Litter & Hygiene",
+      "slug": "cat-litter-hygiene",
+      "order": 8
+    },
+    "description": "Catron Bentonite Cat Litter – Lavender",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 Litre Bag",
+        "price": 3250,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 57,
+    "name": "Limoxin-25 Spray",
+    "slug": "limoxin-25-spray",
+    "pet_type": "Cat/Dog",
+    "brand": "PetSolutions Pharmacy",
+    "category": {
+      "name": "Clinical Antibiotics & Sprays",
+      "slug": "clinical-antibiotics-sprays",
+      "order": 9
+    },
+    "description": "Limoxin-25 Spray",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "200 ml Spray",
+        "price": 1650,
+        "stock": 50
+      }
+    ]
+  },
+  {
+    "number": 58,
+    "name": "Me-O Adult Cat Dry Food - Tuna Flavour",
+    "slug": "me-o-adult-cat-dry-food-tuna-flavour",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Adult Cat Dry Food - Tuna Flavour",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "450 g",
+        "price": 1450,
+        "stock": 80
+      },
+      {
+        "size_label": "1.2 Kg",
+        "price": 3250,
+        "stock": 50
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 6490,
+        "stock": 30
+      },
+      {
+        "size_label": "7 Kg",
+        "price": 13250,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 59,
+    "name": "Me-O Adult Cat Dry Food - Seafood Flavour",
+    "slug": "me-o-adult-cat-dry-food-seafood-flavour",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Adult Cat Dry Food - Seafood Flavour",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "450 g",
+        "price": 1450,
+        "stock": 80
+      },
+      {
+        "size_label": "1.2 Kg",
+        "price": 3250,
+        "stock": 50
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 6490,
+        "stock": 30
+      },
+      {
+        "size_label": "7 Kg",
+        "price": 13250,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 60,
+    "name": "Me-O Adult Cat Dry Food - Mackerel Flavour",
+    "slug": "me-o-adult-cat-dry-food-mackerel-flavour",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Adult Cat Dry Food - Mackerel Flavour",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "450 g",
+        "price": 1450,
+        "stock": 80
+      },
+      {
+        "size_label": "1.2 Kg",
+        "price": 3250,
+        "stock": 50
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 6490,
+        "stock": 30
+      },
+      {
+        "size_label": "7 Kg",
+        "price": 13250,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 61,
+    "name": "Me-O Adult Cat Dry Food - Chicken & Vegetables",
+    "slug": "me-o-adult-cat-dry-food-chicken-vegetables",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Adult Cat Dry Food - Chicken & Vegetables",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "450 g",
+        "price": 1450,
+        "stock": 80
+      },
+      {
+        "size_label": "1.2 Kg",
+        "price": 3250,
+        "stock": 50
+      },
+      {
+        "size_label": "3 Kg",
+        "price": 6490,
+        "stock": 30
+      },
+      {
+        "size_label": "7 Kg",
+        "price": 13250,
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "number": 62,
+    "name": "Me-O Persian Cat Food - Anti-Hairball Formula",
+    "slug": "me-o-persian-cat-food-anti-hairball-formula",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Persian Cat Food - Anti-Hairball Formula",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "400 g",
+        "price": 1450,
+        "stock": 75
+      },
+      {
+        "size_label": "1.1 Kg",
+        "price": 3250,
+        "stock": 45
+      }
+    ]
+  },
+  {
+    "number": 63,
+    "name": "Catron Bentonite Cat Litter - Baby Powder",
+    "slug": "catron-bentonite-cat-litter-baby-powder",
+    "pet_type": "Cat",
+    "brand": "Catron",
+    "category": {
+      "name": "Cat Litter & Hygiene",
+      "slug": "cat-litter-hygiene",
+      "order": 8
+    },
+    "description": "Catron Bentonite Cat Litter - Baby Powder",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": true,
+    "variants": [
+      {
+        "size_label": "10 Litre Bag",
+        "price": 3250,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 64,
+    "name": "Catron Bentonite Cat Litter - Marseille Soap",
+    "slug": "catron-bentonite-cat-litter-marseille-soap",
+    "pet_type": "Cat",
+    "brand": "Catron",
+    "category": {
+      "name": "Cat Litter & Hygiene",
+      "slug": "cat-litter-hygiene",
+      "order": 8
+    },
+    "description": "Catron Bentonite Cat Litter - Marseille Soap",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 Litre Bag",
+        "price": 3250,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 65,
+    "name": "Catron Bentonite Cat Litter - Green Apple",
+    "slug": "catron-bentonite-cat-litter-green-apple",
+    "pet_type": "Cat",
+    "brand": "Catron",
+    "category": {
+      "name": "Cat Litter & Hygiene",
+      "slug": "cat-litter-hygiene",
+      "order": 8
+    },
+    "description": "Catron Bentonite Cat Litter - Green Apple",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 Litre Bag",
+        "price": 3250,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 66,
+    "name": "Catron Bentonite Cat Litter - Coconut & Vanilla",
+    "slug": "catron-bentonite-cat-litter-coconut-vanilla",
+    "pet_type": "Cat",
+    "brand": "Catron",
+    "category": {
+      "name": "Cat Litter & Hygiene",
+      "slug": "cat-litter-hygiene",
+      "order": 8
+    },
+    "description": "Catron Bentonite Cat Litter - Coconut & Vanilla",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 Litre Bag",
+        "price": 3250,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 67,
+    "name": "Catron Bentonite Cat Litter - Cappuccino",
+    "slug": "catron-bentonite-cat-litter-cappuccino",
+    "pet_type": "Cat",
+    "brand": "Catron",
+    "category": {
+      "name": "Cat Litter & Hygiene",
+      "slug": "cat-litter-hygiene",
+      "order": 8
+    },
+    "description": "Catron Bentonite Cat Litter - Cappuccino",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "10 Litre Bag",
+        "price": 3250,
+        "stock": 70
+      }
+    ]
+  },
+  {
+    "number": 68,
+    "name": "Me-O Persian Kitten",
+    "slug": "me-o-persian-kitten",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Persian Kitten",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "400 g",
+        "price": 1490,
+        "stock": 65
+      },
+      {
+        "size_label": "1.1 Kg",
+        "price": 3300,
+        "stock": 40
+      }
+    ]
+  },
+  {
+    "number": 69,
+    "name": "Me-O Mother and Baby Cat",
+    "slug": "me-o-mother-and-baby-cat",
+    "pet_type": "Cat",
+    "brand": "Me-O",
+    "category": {
+      "name": "Cat Food & Creamy Treats",
+      "slug": "cat-food-creamy-treats",
+      "order": 7
+    },
+    "description": "Me-O Mother and Baby Cat",
+    "ingredients": "",
+    "indications": "",
+    "directions": "",
+    "packaging": "",
+    "storage_safety": "",
+    "is_featured": false,
+    "variants": [
+      {
+        "size_label": "400 g",
+        "price": 1550,
+        "stock": 60
+      },
+      {
+        "size_label": "1.1 Kg",
+        "price": 3400,
+        "stock": 35
+      }
+    ]
+  }
+]
