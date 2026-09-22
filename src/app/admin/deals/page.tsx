@@ -16,39 +16,46 @@ import {
   ToggleRight,
   Package,
   Layers,
+  Tag,
+  Percent,
+  Eye,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { formatPrice } from '@/lib/utils/formatPrice';
-import type { Product } from '@/lib/types';
+import type { Product, WeeklyDealItem, WeeklyDealsConfig } from '@/lib/types';
 
-interface WeeklyDealsConfig {
-  is_enabled: boolean;
-  banner_title: string;
-  banner_subtitle: string;
-  badge_text: string;
-  deal_product_ids: string[];
-}
+const PRESET_OFFER_LABELS = [
+  'Buy 1 get 2 FREE',
+  'Buy 1 get 1 FREE',
+  '20% OFF',
+  '30% OFF',
+  'Save LKR 1,500',
+  'Special Combo',
+  'Deal of the Week',
+];
 
 export default function AdminDealsPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Deals Settings State
   const [isEnabled, setIsEnabled] = useState(true);
-  const [bannerTitle, setBannerTitle] = useState('Weekly Deals & Special Offers');
-  const [bannerSubtitle, setBannerSubtitle] = useState('Limited-time discounts on top veterinary care & pet food essentials');
+  const [bannerTitle, setBannerTitle] = useState('DEALS OF THE WEEK');
+  const [bannerSubtitle, setBannerSubtitle] = useState(
+    'While supplies last. Limited quantities on top veterinary care & pet food essentials.'
+  );
   const [badgeText, setBadgeText] = useState('Deal of the Week');
-  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+
+  // Curated Deal Items with Offer Customization
+  const [deals, setDeals] = useState<WeeklyDealItem[]>([]);
 
   // Search in product catalog
   const [searchQuery, setSearchQuery] = useState('');
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3500);
-  };
+  // Active expanded deal item for editing
+  const [activeEditIndex, setActiveEditIndex] = useState<number | null>(0);
 
   useEffect(() => {
     async function loadData() {
@@ -56,7 +63,7 @@ export default function AdminDealsPage() {
       try {
         const supabase = createBrowserClient();
 
-        // 1. Fetch all products
+        // 1. Fetch all active products
         const { data: prodsData, error: prodsError } = await supabase
           .from('products')
           .select('*, categories(*), product_variants(*)')
@@ -74,7 +81,7 @@ export default function AdminDealsPage() {
           setAllProducts(formatted);
         }
 
-        // 2. Fetch weekly deals settings
+        // 2. Fetch weekly deals configuration
         const { data: settingData } = await supabase
           .from('store_settings')
           .select('value, is_enabled')
@@ -82,18 +89,31 @@ export default function AdminDealsPage() {
           .single();
 
         if (settingData) {
-          const enabledStatus = settingData.is_enabled !== false;
-          setIsEnabled(enabledStatus);
+          setIsEnabled(settingData.is_enabled !== false);
 
           if (settingData.value) {
             try {
-              const config: WeeklyDealsConfig = typeof settingData.value === 'string' ? JSON.parse(settingData.value) : settingData.value;
+              const config: any =
+                typeof settingData.value === 'string'
+                  ? JSON.parse(settingData.value)
+                  : settingData.value;
+
               setIsEnabled(settingData.is_enabled !== false && config.is_enabled !== false);
               if (config.banner_title) setBannerTitle(config.banner_title);
               if (config.banner_subtitle !== undefined) setBannerSubtitle(config.banner_subtitle);
-              if (config.badge_text) setBadgeText(config.badge_text.replace(/^[🔥⚡✨🎉\s]+/, '').trim() || config.badge_text);
-              if (Array.isArray(config.deal_product_ids)) {
-                setSelectedProductIds(config.deal_product_ids);
+              if (config.badge_text) setBadgeText(config.badge_text);
+
+              if (Array.isArray(config.deals) && config.deals.length > 0) {
+                setDeals(config.deals);
+              } else if (Array.isArray(config.deal_product_ids) && config.deal_product_ids.length > 0) {
+                setDeals(
+                  config.deal_product_ids.map((id: string) => ({
+                    product_id: id,
+                    offer_label: 'Deal of the Week',
+                    deal_price: null,
+                    promo_subtext: 'While supplies last',
+                  }))
+                );
               }
             } catch {
               // fallback
@@ -102,6 +122,7 @@ export default function AdminDealsPage() {
         }
       } catch (err) {
         console.error('Error loading deals manager data:', err);
+        toast.error('Failed to load deals data.');
       } finally {
         setLoading(false);
       }
@@ -112,31 +133,52 @@ export default function AdminDealsPage() {
 
   // Handlers for managing selected deal products
   const handleAddProduct = (productId: string) => {
-    if (!selectedProductIds.includes(productId)) {
-      setSelectedProductIds([...selectedProductIds, productId]);
+    if (!deals.some((d) => d.product_id === productId)) {
+      const newDeal: WeeklyDealItem = {
+        product_id: productId,
+        offer_label: 'Buy 1 get 2 FREE',
+        deal_price: null,
+        promo_subtext: 'While supplies last',
+      };
+      const updated = [...deals, newDeal];
+      setDeals(updated);
+      setActiveEditIndex(updated.length - 1);
+      toast.success('Product added to Weekly Deals.');
     }
   };
 
   const handleRemoveProduct = (productId: string) => {
-    setSelectedProductIds(selectedProductIds.filter((id) => id !== productId));
+    const updated = deals.filter((d) => d.product_id !== productId);
+    setDeals(updated);
+    if (activeEditIndex !== null && activeEditIndex >= updated.length) {
+      setActiveEditIndex(updated.length > 0 ? updated.length - 1 : null);
+    }
   };
 
   const handleMoveUp = (index: number) => {
     if (index === 0) return;
-    const newIds = [...selectedProductIds];
-    const temp = newIds[index - 1];
-    newIds[index - 1] = newIds[index];
-    newIds[index] = temp;
-    setSelectedProductIds(newIds);
+    const newDeals = [...deals];
+    const temp = newDeals[index - 1];
+    newDeals[index - 1] = newDeals[index];
+    newDeals[index] = temp;
+    setDeals(newDeals);
+    setActiveEditIndex(index - 1);
   };
 
   const handleMoveDown = (index: number) => {
-    if (index === selectedProductIds.length - 1) return;
-    const newIds = [...selectedProductIds];
-    const temp = newIds[index + 1];
-    newIds[index + 1] = newIds[index];
-    newIds[index] = temp;
-    setSelectedProductIds(newIds);
+    if (index === deals.length - 1) return;
+    const newDeals = [...deals];
+    const temp = newDeals[index + 1];
+    newDeals[index + 1] = newDeals[index];
+    newDeals[index] = temp;
+    setDeals(newDeals);
+    setActiveEditIndex(index + 1);
+  };
+
+  const updateDealItem = (index: number, patch: Partial<WeeklyDealItem>) => {
+    const newDeals = [...deals];
+    newDeals[index] = { ...newDeals[index], ...patch };
+    setDeals(newDeals);
   };
 
   const handleSave = async (e?: React.FormEvent) => {
@@ -147,10 +189,11 @@ export default function AdminDealsPage() {
       const supabase = createBrowserClient();
       const payload: WeeklyDealsConfig = {
         is_enabled: isEnabled,
-        banner_title: bannerTitle.trim() || 'Weekly Deals & Special Offers',
+        banner_title: bannerTitle.trim() || 'DEALS OF THE WEEK',
         banner_subtitle: bannerSubtitle.trim(),
         badge_text: badgeText.trim() || 'Deal of the Week',
-        deal_product_ids: selectedProductIds,
+        deal_product_ids: deals.map((d) => d.product_id),
+        deals: deals,
       };
 
       const { error } = await supabase
@@ -166,21 +209,26 @@ export default function AdminDealsPage() {
         );
 
       if (error) throw error;
-      showToast('Weekly Deals updated and published successfully!');
+      toast.success('Weekly Deals & Offers updated and published successfully!');
     } catch (err: any) {
       console.error('Error saving deals settings:', err);
-      alert(err.message || 'Error saving weekly deals.');
+      toast.error(err.message || 'Error saving weekly deals.');
     } finally {
       setSaving(false);
     }
   };
 
-  // Get full product objects for selected IDs
-  const selectedProducts = selectedProductIds
-    .map((id) => allProducts.find((p) => p.id === id))
-    .filter(Boolean) as Product[];
+  // Selected product objects mapping
+  const dealProductsWithMeta = deals
+    .map((deal) => {
+      const prod = allProducts.find((p) => p.id === deal.product_id);
+      return prod ? { product: prod, deal } : null;
+    })
+    .filter(Boolean) as { product: Product; deal: WeeklyDealItem }[];
 
-  // Filter available products for the picker
+  const selectedProductIds = deals.map((d) => d.product_id);
+
+  // Filter available products for the catalog picker
   const filteredCatalog = allProducts.filter((p) => {
     if (selectedProductIds.includes(p.id)) return false;
     if (!searchQuery.trim()) return true;
@@ -193,30 +241,23 @@ export default function AdminDealsPage() {
   });
 
   return (
-    <div className="space-y-8">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-6 right-6 z-50 bg-success text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2 font-bold text-xs animate-slide-down">
-          <CheckCircle size={16} />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      {/* Header */}
+    <div className="space-y-8 pb-16 max-w-6xl mx-auto">
+      {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-heading font-extrabold text-2xl text-text flex items-center gap-2">
+          <h1 className="font-heading font-black text-2xl sm:text-3xl text-text flex items-center gap-2.5">
             <Flame className="text-error" /> Weekly Deals & Advertising Offers
           </h1>
-          <p className="text-xs text-text-muted mt-1">
-            Curate weekly featured deal products displayed on the Homepage below the Hero banner.
+          <p className="text-xs text-text-muted mt-1 max-w-2xl">
+            Curate products, specify custom promotion badges (e.g. &ldquo;Buy 1 get 2 FREE&rdquo;),
+            deal prices, and reorder the smooth left-to-right carousel displayed on the homepage.
           </p>
         </div>
 
         <button
           onClick={handleSave}
           disabled={saving}
-          className="btn btn-primary text-xs font-bold py-2.5 px-6 flex items-center gap-2 shadow-md hover:shadow-lg self-start sm:self-auto"
+          className="btn btn-primary text-xs font-black py-2.5 px-6 flex items-center gap-2 shadow-md hover:shadow-lg self-start sm:self-auto cursor-pointer"
         >
           {saving ? (
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
@@ -229,17 +270,21 @@ export default function AdminDealsPage() {
       </div>
 
       {loading ? (
-        <div className="py-12 text-center text-xs text-text-muted">Loading Weekly Deals Configuration...</div>
+        <div className="py-16 text-center text-xs text-text-muted">
+          Loading Weekly Deals Configuration...
+        </div>
       ) : (
-        <form onSubmit={handleSave} className="space-y-8">
+        <div className="space-y-8">
           
-          {/* 1. Banner Settings Card */}
-          <div className="glass p-6 rounded-2xl border border-white/40 space-y-4">
+          {/* ================================================================
+              1. PROMOTIONAL BANNER SETTINGS CARD
+              ================================================================ */}
+          <div className="glass p-6 rounded-3xl border border-white/40 space-y-4 shadow-xs">
             <div className="flex items-center justify-between border-b border-secondary/40 pb-3">
               <h3 className="font-heading font-bold text-sm text-text flex items-center gap-2">
                 <Sparkles size={16} className="text-accent" /> Promotional Banner Settings
               </h3>
-              
+
               {/* Enable / Disable Toggle */}
               <button
                 type="button"
@@ -257,134 +302,281 @@ export default function AdminDealsPage() {
               </button>
             </div>
 
-            <div className="grid grid-1 md:grid-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="label">Promo Badge Label</label>
+                <label className="label text-xs font-bold">Badge Text</label>
                 <input
                   type="text"
                   value={badgeText}
                   onChange={(e) => setBadgeText(e.target.value)}
-                  placeholder="e.g. 🔥 Deal of the Week"
+                  placeholder="e.g. Deal of the Week"
                   className="input w-full text-xs font-semibold"
                 />
               </div>
 
               <div className="md:col-span-2">
-                <label className="label">Banner Title</label>
+                <label className="label text-xs font-bold">Banner Heading Title</label>
                 <input
                   type="text"
                   value={bannerTitle}
                   onChange={(e) => setBannerTitle(e.target.value)}
-                  placeholder="e.g. Weekly Deals & Special Offers"
-                  className="input w-full text-xs font-bold"
+                  placeholder="e.g. DEALS OF THE WEEK"
+                  className="input w-full text-xs font-black"
                 />
               </div>
 
               <div className="md:col-span-3">
-                <label className="label">Banner Subtitle / Description</label>
+                <label className="label text-xs font-bold">Banner Subtitle / Promotional Subline</label>
                 <input
                   type="text"
                   value={bannerSubtitle}
                   onChange={(e) => setBannerSubtitle(e.target.value)}
-                  placeholder="e.g. Limited-time discounts on top veterinary care & pet food essentials"
+                  placeholder="e.g. While supplies last. Limited quantities on top veterinary care & pet food essentials."
                   className="input w-full text-xs"
                 />
               </div>
             </div>
           </div>
 
-          {/* 2. Selected Weekly Deal Products */}
-          <div className="glass p-6 rounded-2xl border border-white/40 space-y-4">
-            <div className="flex items-center justify-between border-b border-secondary/40 pb-3">
+          {/* ================================================================
+              2. CURATED DEALS & CUSTOM OFFER SPECIFICATIONS
+              ================================================================ */}
+          <div className="glass p-6 rounded-3xl border border-white/40 space-y-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-secondary/40 pb-3">
               <div>
                 <h3 className="font-heading font-bold text-sm text-text flex items-center gap-2">
-                  <Flame size={16} className="text-error" /> Selected Deal Products ({selectedProducts.length})
+                  <Flame size={16} className="text-error" /> Curated Deal Products ({dealProductsWithMeta.length})
                 </h3>
                 <p className="text-[11px] text-text-muted mt-0.5">
-                  These 4-5 products will be displayed on the homepage deals showcase in this exact order.
+                  Customize the offer tag, promotional price, and sequence for each product in the carousel.
                 </p>
               </div>
+
+              {dealProductsWithMeta.length > 0 && (
+                <span className="text-[11px] font-bold text-accent bg-accent/10 px-2.5 py-1 rounded-full self-start sm:self-auto">
+                  {dealProductsWithMeta.length} active in carousel
+                </span>
+              )}
             </div>
 
-            {selectedProducts.length === 0 ? (
-              <div className="py-8 text-center bg-secondary/15 rounded-2xl border border-dashed border-secondary-alt/40">
-                <Package size={28} className="mx-auto text-text-light mb-2" />
+            {dealProductsWithMeta.length === 0 ? (
+              <div className="py-12 text-center bg-secondary/15 rounded-2xl border border-dashed border-secondary-alt/40">
+                <Package size={32} className="mx-auto text-text-light mb-2" />
                 <p className="text-xs font-bold text-text">No products added to Weekly Deals yet.</p>
-                <p className="text-[11px] text-text-muted mt-1">Pick products from the catalog below to add them to this week's offers.</p>
+                <p className="text-[11px] text-text-muted mt-1">
+                  Use the product picker below to select products and attach special offers.
+                </p>
               </div>
             ) : (
-              <div className="space-y-2.5">
-                {selectedProducts.map((product, idx) => {
-                  const minPrice = product.variants && product.variants.length > 0
-                    ? Math.min(...product.variants.map((v) => Number(v.price)))
-                    : 0;
-                  const comparePrice = product.variants && product.variants.length > 0
-                    ? product.variants[0].compare_at_price
-                    : null;
+              <div className="space-y-4">
+                {dealProductsWithMeta.map(({ product, deal }, idx) => {
+                  const minPrice =
+                    product.variants && product.variants.length > 0
+                      ? Math.min(...product.variants.map((v) => Number(v.price)))
+                      : 0;
+
+                  const isExpanded = activeEditIndex === idx;
+
+                  // Calculate discount percentage if deal_price set
+                  const hasCustomPrice = deal.deal_price && deal.deal_price > 0;
+                  const discountPercent =
+                    hasCustomPrice && minPrice > (deal.deal_price || 0)
+                      ? Math.round(((minPrice - (deal.deal_price || 0)) / minPrice) * 100)
+                      : null;
 
                   return (
                     <div
-                      key={`selected-deal-${product.id}`}
-                      className="p-3.5 bg-white/70 hover:bg-white rounded-2xl border border-secondary-alt/30 flex items-center justify-between gap-4 transition-all shadow-xs"
+                      key={`deal-item-${product.id}`}
+                      className={`rounded-2xl border transition-all ${
+                        isExpanded
+                          ? 'bg-white border-accent shadow-sm'
+                          : 'bg-white/70 hover:bg-white border-secondary-alt/30 shadow-2xs'
+                      }`}
                     >
-                      {/* Order number & Thumbnail */}
-                      <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 rounded-full bg-accent/20 text-accent font-extrabold text-xs flex items-center justify-center flex-shrink-0">
-                          {idx + 1}
-                        </span>
+                      {/* Deal Header Row */}
+                      <div className="p-3.5 flex items-center justify-between gap-3">
+                        <div
+                          className="flex items-center gap-3 overflow-hidden cursor-pointer flex-1"
+                          onClick={() => setActiveEditIndex(isExpanded ? null : idx)}
+                        >
+                          <span className="w-6 h-6 rounded-full bg-[#16335B] text-[#FFD800] font-black text-xs flex items-center justify-center shrink-0">
+                            {idx + 1}
+                          </span>
 
-                        <div className="w-12 h-12 bg-white rounded-xl border border-secondary-alt/30 p-1 flex-shrink-0 overflow-hidden flex items-center justify-center relative">
-                          <Image
-                            src={product.image_url || '/placeholder.png'}
-                            alt={product.name}
-                            width={48}
-                            height={48}
-                            className="object-contain w-full h-full"
-                          />
-                        </div>
+                          <div className="w-12 h-12 bg-[#FEFCF3] rounded-xl border border-secondary-alt/30 p-1 shrink-0 overflow-hidden flex items-center justify-center relative">
+                            <Image
+                              src={product.image_url || '/placeholder.png'}
+                              alt={product.name}
+                              width={44}
+                              height={44}
+                              className="object-contain w-full h-full"
+                            />
+                          </div>
 
-                        <div>
-                          <p className="text-xs font-bold text-text line-clamp-1">{product.name}</p>
-                          <div className="flex items-center gap-2 mt-0.5 text-[10px] text-text-muted">
-                            {product.category && <span className="font-semibold text-accent">{product.category.name}</span>}
-                            <span>·</span>
-                            <span className="font-bold text-text">{formatPrice(minPrice)}</span>
-                            {comparePrice && comparePrice > minPrice && (
-                              <span className="line-through text-text-light">{formatPrice(comparePrice)}</span>
-                            )}
+                          <div className="overflow-hidden">
+                            <div className="flex items-center gap-2">
+                              <p className="text-xs font-bold text-text truncate">{product.name}</p>
+                              {deal.offer_label && (
+                                <span className="bg-[#16335B] text-[#FFD800] text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
+                                  {deal.offer_label}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 mt-0.5 text-[11px] text-text-muted">
+                              <span>Regular: {formatPrice(minPrice)}</span>
+                              {hasCustomPrice && (
+                                <>
+                                  <span>·</span>
+                                  <span className="font-bold text-rose-600">
+                                    Deal: {formatPrice(deal.deal_price!)} ({discountPercent}% OFF)
+                                  </span>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
+
+                        {/* Controls: Reorder, Expand/Collapse & Delete */}
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleMoveUp(idx)}
+                            disabled={idx === 0}
+                            className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-secondary/40 disabled:opacity-20 cursor-pointer"
+                            title="Move Up in Carousel"
+                          >
+                            <ArrowUp size={15} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleMoveDown(idx)}
+                            disabled={idx === dealProductsWithMeta.length - 1}
+                            className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-secondary/40 disabled:opacity-20 cursor-pointer"
+                            title="Move Down in Carousel"
+                          >
+                            <ArrowDown size={15} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setActiveEditIndex(isExpanded ? null : idx)}
+                            className="px-2.5 py-1 text-xs font-bold text-accent hover:bg-accent/10 rounded-lg transition-colors cursor-pointer"
+                          >
+                            {isExpanded ? 'Done' : 'Edit Offer'}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveProduct(product.id)}
+                            className="p-1.5 rounded-lg text-error hover:bg-error-light transition-colors ml-1 cursor-pointer"
+                            title="Remove from Deals"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
                       </div>
 
-                      {/* Reorder and Delete Actions */}
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => handleMoveUp(idx)}
-                          disabled={idx === 0}
-                          className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-secondary/40 disabled:opacity-30 disabled:hover:bg-transparent"
-                          title="Move Up"
-                        >
-                          <ArrowUp size={15} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleMoveDown(idx)}
-                          disabled={idx === selectedProducts.length - 1}
-                          className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-secondary/40 disabled:opacity-30 disabled:hover:bg-transparent"
-                          title="Move Down"
-                        >
-                          <ArrowDown size={15} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveProduct(product.id)}
-                          className="p-1.5 rounded-lg text-error hover:bg-error-light transition-colors ml-1"
-                          title="Remove from Deals"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
+                      {/* Expanded Offer Customization Panel */}
+                      {isExpanded && (
+                        <div className="p-4 pt-1 border-t border-secondary/40 bg-secondary/10 rounded-b-2xl space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            
+                            {/* Offer Label Input & Preset Chips */}
+                            <div className="md:col-span-2 space-y-2">
+                              <label className="label text-xs font-bold flex items-center gap-1.5">
+                                <Tag size={13} className="text-accent" /> Offer Callout Tag
+                              </label>
+                              <input
+                                type="text"
+                                value={deal.offer_label || ''}
+                                onChange={(e) =>
+                                  updateDealItem(idx, { offer_label: e.target.value })
+                                }
+                                placeholder="e.g. Buy 1 get 2 FREE, 25% OFF, Save LKR 1,500"
+                                className="input w-full text-xs font-black uppercase"
+                              />
+
+                              {/* Preset Chips */}
+                              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                                <span className="text-[10px] text-text-muted font-semibold mr-1">Presets:</span>
+                                {PRESET_OFFER_LABELS.map((preset) => (
+                                  <button
+                                    key={preset}
+                                    type="button"
+                                    onClick={() => updateDealItem(idx, { offer_label: preset })}
+                                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all cursor-pointer ${
+                                      deal.offer_label === preset
+                                        ? 'bg-[#16335B] text-[#FFD800] border-[#16335B]'
+                                        : 'bg-white text-text-muted border-secondary-alt/40 hover:border-accent hover:text-text'
+                                    }`}
+                                  >
+                                    {preset}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Promotional Deal Price Override */}
+                            <div className="space-y-2">
+                              <label className="label text-xs font-bold flex items-center gap-1.5">
+                                <Percent size={13} className="text-rose-600" /> Deal Price (LKR)
+                              </label>
+                              <input
+                                type="number"
+                                value={deal.deal_price ?? ''}
+                                onChange={(e) =>
+                                  updateDealItem(idx, {
+                                    deal_price: e.target.value ? parseFloat(e.target.value) : null,
+                                  })
+                                }
+                                placeholder={`Regular: ${minPrice}`}
+                                className="input w-full text-xs font-bold"
+                              />
+                              <p className="text-[10px] text-text-muted">
+                                {hasCustomPrice
+                                  ? `Overrides price to ${formatPrice(deal.deal_price!)} (Regular: ${formatPrice(minPrice)})`
+                                  : `Leave blank to use catalog regular price (${formatPrice(minPrice)})`}
+                              </p>
+                            </div>
+
+                            {/* Promotional Subtext */}
+                            <div className="md:col-span-3">
+                              <label className="label text-xs font-bold">
+                                Promotional Subtext (Optional)
+                              </label>
+                              <input
+                                type="text"
+                                value={deal.promo_subtext || ''}
+                                onChange={(e) =>
+                                  updateDealItem(idx, { promo_subtext: e.target.value })
+                                }
+                                placeholder="e.g. Earn 2x loyalty points · Limited stock available"
+                                className="input w-full text-xs"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Live Visual Card Preview */}
+                          <div className="mt-3 p-3 bg-white rounded-xl border border-secondary-alt/30 flex items-center gap-3">
+                            <Eye size={16} className="text-accent shrink-0" />
+                            <span className="text-[11px] font-bold text-text shrink-0">Live Preview:</span>
+                            <div className="flex items-center gap-2 overflow-hidden text-xs">
+                              <span className="w-8 h-8 rounded-full bg-[#FFD800] border border-dashed border-amber-600 flex flex-col items-center justify-center text-[5px] font-black uppercase text-[#16335B] shrink-0">
+                                <span>Deal</span>
+                              </span>
+                              <span className="font-bold text-[#16335B] truncate">{product.name}</span>
+                              {deal.offer_label && (
+                                <span className="px-2 py-0.5 rounded bg-[#16335B] text-[#FFD800] text-[9px] font-black uppercase">
+                                  {deal.offer_label}
+                                </span>
+                              )}
+                              <span className="font-black text-[#16335B]">
+                                {formatPrice(deal.deal_price ?? minPrice)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -392,21 +584,25 @@ export default function AdminDealsPage() {
             )}
           </div>
 
-          {/* 3. Catalog Product Picker */}
-          <div className="glass p-6 rounded-2xl border border-white/40 space-y-4">
+          {/* ================================================================
+              3. CATALOG PRODUCT PICKER
+              ================================================================ */}
+          <div className="glass p-6 rounded-3xl border border-white/40 space-y-4 shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-secondary/40 pb-3">
               <div>
                 <h3 className="font-heading font-bold text-sm text-text flex items-center gap-2">
                   <Layers size={16} className="text-accent" /> Add Products from Store Catalog
                 </h3>
-                <p className="text-[11px] text-text-muted mt-0.5">Search and click "Add to Deals" on any item.</p>
+                <p className="text-[11px] text-text-muted mt-0.5">
+                  Select products to feature in the Weekly Deals section.
+                </p>
               </div>
 
               {/* Search Bar */}
               <div className="relative max-w-xs w-full">
                 <input
                   type="text"
-                  placeholder="Search products to add..."
+                  placeholder="Search products by name or brand..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="input w-full text-xs pr-8 py-2"
@@ -416,42 +612,45 @@ export default function AdminDealsPage() {
             </div>
 
             {/* Available Products Grid */}
-            <div className="grid grid-1 sm:grid-2 lg:grid-3 gap-3 max-h-[420px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[440px] overflow-y-auto pr-1">
               {filteredCatalog.length === 0 ? (
-                <div className="col-span-full py-8 text-center text-xs text-text-muted">
+                <div className="col-span-full py-10 text-center text-xs text-text-muted">
                   No matching products found.
                 </div>
               ) : (
                 filteredCatalog.map((product) => {
-                  const minPrice = product.variants && product.variants.length > 0
-                    ? Math.min(...product.variants.map((v) => Number(v.price)))
-                    : 0;
+                  const minPrice =
+                    product.variants && product.variants.length > 0
+                      ? Math.min(...product.variants.map((v) => Number(v.price)))
+                      : 0;
 
                   return (
                     <div
                       key={`available-${product.id}`}
-                      className="p-3 bg-white/60 hover:bg-white rounded-xl border border-secondary-alt/25 flex items-center justify-between gap-2.5 transition-colors"
+                      className="p-3 bg-white/70 hover:bg-white rounded-2xl border border-secondary-alt/25 flex items-center justify-between gap-3 transition-colors shadow-2xs"
                     >
                       <div className="flex items-center gap-2.5 overflow-hidden">
-                        <div className="w-10 h-10 bg-white rounded-lg border border-secondary-alt/30 p-1 flex-shrink-0 flex items-center justify-center">
+                        <div className="w-11 h-11 bg-[#FEFCF3] rounded-xl border border-secondary-alt/30 p-1 shrink-0 flex items-center justify-center">
                           <Image
                             src={product.image_url || '/placeholder.png'}
                             alt={product.name}
-                            width={36}
-                            height={36}
+                            width={38}
+                            height={38}
                             className="object-contain w-full h-full"
                           />
                         </div>
                         <div className="overflow-hidden">
-                          <p className="text-xs font-semibold text-text truncate">{product.name}</p>
-                          <p className="text-[10px] text-accent font-bold mt-0.5">{formatPrice(minPrice)}</p>
+                          <p className="text-xs font-bold text-text truncate">{product.name}</p>
+                          <p className="text-[10px] text-accent font-black mt-0.5">
+                            {formatPrice(minPrice)}
+                          </p>
                         </div>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => handleAddProduct(product.id)}
-                        className="btn btn-outline btn-sm text-[11px] py-1.5 px-3 flex items-center gap-1 font-bold hover:bg-accent hover:text-white hover:border-accent flex-shrink-0"
+                        className="btn btn-outline btn-sm text-[11px] py-1.5 px-3 flex items-center gap-1 font-bold hover:bg-accent hover:text-white hover:border-accent shrink-0 cursor-pointer"
                       >
                         <Plus size={13} /> Add
                       </button>
@@ -462,7 +661,7 @@ export default function AdminDealsPage() {
             </div>
           </div>
 
-        </form>
+        </div>
       )}
     </div>
   );

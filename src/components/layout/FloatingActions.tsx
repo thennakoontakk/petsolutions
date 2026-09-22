@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { createBrowserClient } from '@/lib/supabase/client';
 
 export default function FloatingActions() {
+  const pathname = usePathname();
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [hotline, setHotline] = useState('+94771234567');
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
@@ -58,6 +60,10 @@ export default function FloatingActions() {
   const whatsappUrl = `https://wa.me/${hotline.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
     'Hello PetSolutions.lk! I need assistance with pet care products.'
   )}`;
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <div

@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, CheckCircle, CreditCard, Landmark, Truck } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, CheckCircle, CreditCard, Landmark, Truck, Tag, Sparkles, X } from 'lucide-react';
 import { useCart } from '@/lib/hooks/useCart';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { formatPrice } from '@/lib/utils/formatPrice';
 import { createBrowserClient } from '@/lib/supabase/client';
+import FreeDeliveryProgressBar from '@/components/cart/FreeDeliveryProgressBar';
 
 export default function CheckoutPage() {
   const { items, subtotal, totalItems, clearCart } = useCart();
@@ -29,6 +30,18 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Promo Code Engine State
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<{
+    code: string;
+    discountType: 'percentage' | 'fixed';
+    discountValue: number;
+    amount: number;
+    title: string;
+  } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
 
   // Fill in profile details if available
   useEffect(() => {
@@ -68,6 +81,93 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Delivery Fee calculation (Free above Rs. 10,000)
+  const deliveryFee = subtotal >= 10000 ? 0 : 450;
+  const discountAmount = appliedPromo ? appliedPromo.amount : 0;
+  const finalTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
+
+  const handleApplyPromo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanCode = promoCodeInput.trim().toUpperCase();
+    if (!cleanCode) return;
+
+    setIsApplyingPromo(true);
+    setPromoError(null);
+
+    try {
+      const supabase = createBrowserClient();
+      const { data: offerData } = await supabase
+        .from('offers')
+        .select('*')
+        .ilike('code', cleanCode)
+        .eq('is_active', true)
+        .single();
+
+      let validPromo = null;
+
+      if (offerData) {
+        if (offerData.min_order_amount && subtotal < Number(offerData.min_order_amount)) {
+          setPromoError(`Minimum order of Rs. ${Number(offerData.min_order_amount).toLocaleString()} required for this code.`);
+          setIsApplyingPromo(false);
+          return;
+        }
+
+        const discVal = Number(offerData.discount_value);
+        const calculatedDisc = offerData.discount_type === 'percentage' 
+          ? (subtotal * discVal) / 100 
+          : discVal;
+
+        validPromo = {
+          code: offerData.code || cleanCode,
+          discountType: offerData.discount_type as 'percentage' | 'fixed',
+          discountValue: discVal,
+          amount: Math.min(subtotal, calculatedDisc),
+          title: offerData.title,
+        };
+      } else {
+        // Built-in verified promo codes fallback
+        const builtIns: Record<string, { type: 'percentage' | 'fixed'; val: number; min: number; title: string }> = {
+          'WELCOME10': { type: 'percentage', val: 10, min: 2000, title: '10% Welcome Discount' },
+          'VETCARE500': { type: 'fixed', val: 500, min: 5000, title: 'Rs. 500 Vet Care Special' },
+          'SAVER15': { type: 'percentage', val: 15, min: 15000, title: '15% Mega Saver Discount' },
+        };
+
+        const found = builtIns[cleanCode];
+        if (found) {
+          if (subtotal < found.min) {
+            setPromoError(`Minimum order of Rs. ${found.min.toLocaleString()} required for code ${cleanCode}.`);
+            setIsApplyingPromo(false);
+            return;
+          }
+          const calc = found.type === 'percentage' ? (subtotal * found.val) / 100 : found.val;
+          validPromo = {
+            code: cleanCode,
+            discountType: found.type,
+            discountValue: found.val,
+            amount: Math.min(subtotal, calc),
+            title: found.title,
+          };
+        }
+      }
+
+      if (validPromo) {
+        setAppliedPromo(validPromo);
+        setPromoCodeInput('');
+      } else {
+        setPromoError('Invalid or expired promo code. Try WELCOME10 or VETCARE500.');
+      }
+    } catch {
+      setPromoError('Failed to validate promo code. Please try again.');
+    } finally {
+      setIsApplyingPromo(false);
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoError(null);
+  };
+
   const handlePaymentChange = (method: 'card' | 'cod' | 'bank') => {
     setFormData((prev) => ({ ...prev, paymentMethod: method }));
   };
@@ -85,10 +185,6 @@ export default function CheckoutPage() {
     try {
       const supabase = createBrowserClient();
       
-      // Calculate totals
-      const discount = 0; // Support promo codes later
-      const total = subtotal - discount;
-
       // Online card payments in test mode are marked as confirmed immediately
       const initialStatus = formData.paymentMethod === 'card' ? 'confirmed' : 'pending';
 
@@ -99,8 +195,8 @@ export default function CheckoutPage() {
           user_id: user.id,
           status: initialStatus,
           subtotal,
-          discount,
-          total,
+          discount: discountAmount,
+          total: finalTotal,
           customer_name: formData.name,
           customer_email: formData.email,
           customer_phone: formData.phone,
@@ -225,9 +321,12 @@ export default function CheckoutPage() {
             </Link>
           </div>
 
-          <h1 className="font-heading font-extrabold text-2xl md:text-3xl text-text mb-6">
+          <h1 className="font-heading font-extrabold text-2xl md:text-3xl text-text mb-4">
             Checkout
           </h1>
+
+          {/* Free Delivery Target Progress Bar */}
+          <FreeDeliveryProgressBar subtotal={subtotal} className="mb-6 max-w-4xl" />
 
           {items.length === 0 ? (
             <div className="glass p-12 text-center rounded-2xl max-w-md mx-auto space-y-4">
@@ -428,7 +527,7 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn btn-primary w-full py-4 text-sm font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                  className="btn btn-primary w-full py-4 text-sm font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all cursor-pointer"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
@@ -437,8 +536,8 @@ export default function CheckoutPage() {
                     </div>
                   ) : (
                     formData.paymentMethod === 'card' 
-                      ? `Pay Now & Place Order (${formatPrice(subtotal)})`
-                      : `Place Order (${formatPrice(subtotal)})`
+                      ? `Pay Now & Place Order (${formatPrice(finalTotal)})`
+                      : `Place Order (${formatPrice(finalTotal)})`
                   )}
                 </button>
 
@@ -464,19 +563,83 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
+                {/* Promo Coupon Engine Box */}
+                <div className="border-t border-secondary/50 pt-3">
+                  <label className="text-[11px] font-bold text-text mb-1.5 flex items-center gap-1">
+                    <Tag size={12} className="text-accent" /> Have a Promo Code?
+                  </label>
+                  
+                  {appliedPromo ? (
+                    <div className="p-2.5 bg-success/10 border border-success/30 rounded-xl flex items-center justify-between">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-mono font-bold text-success">{appliedPromo.code}</span>
+                          <span className="text-[9px] px-1.5 py-0.2 bg-success text-white rounded-md font-bold">APPLIED</span>
+                        </div>
+                        <p className="text-[10px] text-text-muted truncate mt-0.5">{appliedPromo.title}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRemovePromo}
+                        className="p-1 hover:bg-error/10 text-error rounded-md transition-colors"
+                        title="Remove coupon"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleApplyPromo} className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="e.g. WELCOME10"
+                        value={promoCodeInput}
+                        onChange={(e) => setPromoCodeInput(e.target.value)}
+                        className="input text-xs uppercase flex-1 py-2 px-3 tracking-wider font-mono"
+                      />
+                      <button
+                        type="submit"
+                        disabled={isApplyingPromo || !promoCodeInput.trim()}
+                        className="btn btn-primary btn-sm text-xs px-3 font-bold"
+                      >
+                        {isApplyingPromo ? '...' : 'Apply'}
+                      </button>
+                    </form>
+                  )}
+
+                  {promoError && (
+                    <p className="text-[10px] text-error mt-1.5 font-medium">{promoError}</p>
+                  )}
+                </div>
+
+                {/* Breakdown */}
                 <div className="border-t border-secondary/50 pt-3 space-y-2">
                   <div className="flex justify-between text-xs text-text-muted">
                     <span>Subtotal ({totalItems} items)</span>
                     <span>{formatPrice(subtotal)}</span>
                   </div>
+
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between text-xs text-success font-semibold">
+                      <span>Discount ({appliedPromo?.code})</span>
+                      <span>-{formatPrice(discountAmount)}</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between text-xs text-text-muted">
-                    <span>Shipping</span>
-                    <span className="text-success font-semibold">FREE</span>
+                    <span>Delivery</span>
+                    {deliveryFee === 0 ? (
+                      <span className="text-success font-semibold flex items-center gap-1">
+                        <Sparkles size={11} /> FREE
+                      </span>
+                    ) : (
+                      <span className="font-semibold text-text">{formatPrice(deliveryFee)}</span>
+                    )}
                   </div>
+
                   <hr className="border-secondary/40 my-2" />
                   <div className="flex justify-between font-heading font-bold text-sm">
                     <span>Total Amount</span>
-                    <span className="text-accent">{formatPrice(subtotal)}</span>
+                    <span className="text-accent text-base">{formatPrice(finalTotal)}</span>
                   </div>
                 </div>
               </aside>

@@ -136,20 +136,40 @@ export default function ProfileDrawer({ isOpen, onClose, onOpenCart }: ProfileDr
               {/* ── 2. Content Body ── */}
               <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(100vh-170px)]">
                 {user ? (
-                  <div className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-6">
                     {/* User Profile Card */}
                     <div className="glass p-5 rounded-2xl border border-secondary-alt/30 bg-white/60 shadow-sm flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-full bg-accent/20 border-2 border-accent text-accent font-heading font-extrabold text-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <div 
+                        className="w-14 h-14 rounded-full bg-accent/15 border-2 border-accent text-accent font-heading font-extrabold text-xl flex items-center justify-center flex-shrink-0 shadow-sm aspect-square"
+                        style={{
+                          width: '56px',
+                          height: '56px',
+                          minWidth: '56px',
+                          minHeight: '56px',
+                          borderRadius: '50%',
+                          aspectRatio: '1 / 1',
+                        }}
+                      >
                         {initials}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-heading font-bold text-base text-text truncate">
                             {profile?.full_name || 'Pet Parent'}
                           </h3>
                           {isAdmin && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent/15 text-accent border border-accent/30">
-                              <Shield size={10} /> Admin
+                            <span 
+                              className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-accent/15 text-accent border border-accent/30 flex-shrink-0 whitespace-nowrap"
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                whiteSpace: 'nowrap',
+                                flexShrink: 0
+                              }}
+                            >
+                              <Shield size={11} style={{ display: 'inline-block', flexShrink: 0 }} />
+                              <span>Admin</span>
                             </span>
                           )}
                         </div>
@@ -169,54 +189,60 @@ export default function ProfileDrawer({ isOpen, onClose, onOpenCart }: ProfileDr
                       </div>
                     </div>
 
-                    {/* Navigation Menu Options */}
-                    <div className="flex flex-col gap-2.5">
-                      <p className="text-[11px] uppercase tracking-wider font-extrabold text-text-light px-1">
-                        Quick Actions
-                      </p>
+                    {/* Navigation Menu Options (Quick Actions Cards) */}
+                    <div className="flex flex-col gap-3.5 mt-2">
+                      <div className="flex items-center justify-between px-1">
+                        <p className="text-[11px] uppercase tracking-wider font-extrabold text-text-light">
+                          Quick Actions
+                        </p>
+                      </div>
 
                       {isAdmin && (
                         <Link
                           href="/admin"
                           onClick={onClose}
-                          className="flex items-center justify-between p-3.5 rounded-xl bg-white hover:bg-accent/10 border border-secondary-alt/30 hover:border-accent/30 transition-all group shadow-xs"
+                          className="flex items-center justify-between p-4 rounded-2xl bg-white/80 hover:bg-white border border-secondary-alt/40 hover:border-accent/40 transition-all duration-200 group shadow-sm hover:shadow-md hover:-translate-y-0.5"
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-accent/15 text-accent rounded-lg group-hover:scale-110 transition-transform">
-                              <Shield size={18} />
+                          <div className="flex items-center gap-3.5">
+                            <div className="w-11 h-11 rounded-xl bg-accent/15 text-accent flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0 shadow-xs border border-accent/20">
+                              <Shield size={20} />
                             </div>
                             <div className="text-left">
                               <h4 className="text-xs font-bold text-text group-hover:text-accent transition-colors">
                                 Admin Console
                               </h4>
-                              <p className="text-[10px] text-text-muted">
+                              <p className="text-[11px] text-text-muted mt-0.5">
                                 Manage catalog, orders & settings
                               </p>
                             </div>
                           </div>
-                          <ChevronRight size={16} className="text-text-light group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                          <div className="w-7 h-7 rounded-full bg-secondary/30 group-hover:bg-accent/15 flex items-center justify-center transition-colors flex-shrink-0">
+                            <ChevronRight size={15} className="text-text-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                          </div>
                         </Link>
                       )}
 
                       <Link
                         href="/orders"
                         onClick={onClose}
-                        className="flex items-center justify-between p-3.5 rounded-xl bg-white hover:bg-accent/10 border border-secondary-alt/30 hover:border-accent/30 transition-all group shadow-xs"
+                        className="flex items-center justify-between p-4 rounded-2xl bg-white/80 hover:bg-white border border-secondary-alt/40 hover:border-accent/40 transition-all duration-200 group shadow-sm hover:shadow-md hover:-translate-y-0.5"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-secondary/60 text-text rounded-lg group-hover:scale-110 transition-transform">
-                            <Package size={18} />
+                        <div className="flex items-center gap-3.5">
+                          <div className="w-11 h-11 rounded-xl bg-[#00ACDF]/10 text-[#00ACDF] flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0 shadow-xs border border-[#00ACDF]/20">
+                            <Package size={20} />
                           </div>
                           <div className="text-left">
                             <h4 className="text-xs font-bold text-text group-hover:text-accent transition-colors">
                               Order History
                             </h4>
-                            <p className="text-[10px] text-text-muted">
+                            <p className="text-[11px] text-text-muted mt-0.5">
                               View past purchases & track packages
                             </p>
                           </div>
                         </div>
-                        <ChevronRight size={16} className="text-text-light group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                        <div className="w-7 h-7 rounded-full bg-secondary/30 group-hover:bg-accent/15 flex items-center justify-center transition-colors flex-shrink-0">
+                          <ChevronRight size={15} className="text-text-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                        </div>
                       </Link>
 
                       <button
@@ -224,48 +250,52 @@ export default function ProfileDrawer({ isOpen, onClose, onOpenCart }: ProfileDr
                           onClose();
                           if (onOpenCart) onOpenCart();
                         }}
-                        className="flex items-center justify-between p-3.5 rounded-xl bg-white hover:bg-accent/10 border border-secondary-alt/30 hover:border-accent/30 transition-all group shadow-xs text-left w-full"
+                        className="flex items-center justify-between p-4 rounded-2xl bg-white/80 hover:bg-white border border-secondary-alt/40 hover:border-accent/40 transition-all duration-200 group shadow-sm hover:shadow-md hover:-translate-y-0.5 text-left w-full cursor-pointer"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-secondary/60 text-text rounded-lg group-hover:scale-110 transition-transform">
-                            <ShoppingBag size={18} />
+                        <div className="flex items-center gap-3.5">
+                          <div className="w-11 h-11 rounded-xl bg-[#FF9800]/10 text-[#FF9800] flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0 shadow-xs border border-[#FF9800]/20">
+                            <ShoppingBag size={20} />
                           </div>
                           <div>
                             <h4 className="text-xs font-bold text-text group-hover:text-accent transition-colors flex items-center gap-2">
                               Shopping Cart
                               {totalItems > 0 && (
-                                <span className="px-1.5 py-0.2 bg-accent text-white text-[9px] font-extrabold rounded-full">
+                                <span className="px-1.5 py-0.5 bg-accent text-white text-[9px] font-extrabold rounded-full">
                                   {totalItems}
                                 </span>
                               )}
                             </h4>
-                            <p className="text-[10px] text-text-muted">
+                            <p className="text-[11px] text-text-muted mt-0.5">
                               {totalItems > 0 ? `${totalItems} items ready to checkout` : 'Your cart is empty'}
                             </p>
                           </div>
                         </div>
-                        <ChevronRight size={16} className="text-text-light group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                        <div className="w-7 h-7 rounded-full bg-secondary/30 group-hover:bg-accent/15 flex items-center justify-center transition-colors flex-shrink-0">
+                          <ChevronRight size={15} className="text-text-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                        </div>
                       </button>
 
                       <Link
                         href="/products"
                         onClick={onClose}
-                        className="flex items-center justify-between p-3.5 rounded-xl bg-white hover:bg-accent/10 border border-secondary-alt/30 hover:border-accent/30 transition-all group shadow-xs"
+                        className="flex items-center justify-between p-4 rounded-2xl bg-white/80 hover:bg-white border border-secondary-alt/40 hover:border-accent/40 transition-all duration-200 group shadow-sm hover:shadow-md hover:-translate-y-0.5"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-secondary/60 text-text rounded-lg group-hover:scale-110 transition-transform">
-                            <Sparkles size={18} />
+                        <div className="flex items-center gap-3.5">
+                          <div className="w-11 h-11 rounded-xl bg-[#8B5CF6]/10 text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0 shadow-xs border border-[#8B5CF6]/20">
+                            <Sparkles size={20} />
                           </div>
                           <div className="text-left">
                             <h4 className="text-xs font-bold text-text group-hover:text-accent transition-colors">
                               Explore Products
                             </h4>
-                            <p className="text-[10px] text-text-muted">
+                            <p className="text-[11px] text-text-muted mt-0.5">
                               Browse pet food, treatments & grooming
                             </p>
                           </div>
                         </div>
-                        <ChevronRight size={16} className="text-text-light group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                        <div className="w-7 h-7 rounded-full bg-secondary/30 group-hover:bg-accent/15 flex items-center justify-center transition-colors flex-shrink-0">
+                          <ChevronRight size={15} className="text-text-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                        </div>
                       </Link>
                     </div>
                   </div>

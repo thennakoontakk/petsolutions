@@ -11,6 +11,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import CartDrawer from '../cart/CartDrawer';
 import ProfileDrawer from './ProfileDrawer';
 import MobileNav from './MobileNav';
+import UtilityBar from './UtilityBar';
 import { createBrowserClient } from '@/lib/supabase/client';
 
 export default function Header() {
@@ -18,6 +19,10 @@ export default function Header() {
   const { user, profile } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+
+  // Scroll-triggered header styling
+  const [isScrolled, setIsScrolled] = useState(false);
+
   
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
@@ -101,6 +106,14 @@ export default function Header() {
     fetchHeaderData();
   }, []);
 
+  // Scroll listener — triggers header blur/shadow after 10px
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Sync search input with URL search parameter and handle auto-focus
   useEffect(() => {
     const handleUrlChange = () => {
@@ -182,98 +195,62 @@ export default function Header() {
     setActiveDropdown(null);
   };
 
-  const [showRibbon, setShowRibbon] = useState(true);
-
   return (
     <>
-      <div className="w-full bg-white border-b border-secondary/40 z-40 relative">
+      <div
+        className={`w-full z-40 relative transition-all duration-[280ms] ${
+          isScrolled
+            ? 'sticky top-0 bg-white/92 backdrop-blur-md border-b border-secondary/40 header-scrolled'
+            : 'bg-white border-b border-secondary/40'
+        }`}
+        style={{ willChange: 'box-shadow, background-color' }}
+      >
 
-        {/* 1. TOP ANNOUNCEMENT RIBBON BANNER (Dismissible + Animated Marquee) */}
-        <AnimatePresence>
-          {showRibbon && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="w-full overflow-hidden relative border-b border-black/5 shadow-xs"
-              style={{ backgroundColor: '#FFC800', color: '#005980' }}
-            >
-              <div className="flex items-center justify-between py-1.5 px-4 text-xs font-bold" style={{ color: '#005980' }}>
-                
-                {/* Continuous marquee ticker */}
-                <div className="flex-1 overflow-hidden whitespace-nowrap relative select-none mr-3">
-                  <div className="animate-marquee flex gap-10 items-center" style={{ color: '#005980' }}>
-                    <span className="flex items-center gap-6">
-                      <span>Islandwide Express Doorstep Delivery Across Sri Lanka</span>
-                      <span className="opacity-40">•</span>
-                      <span>100% Genuine & Authorized Veterinary Products</span>
-                      <span className="opacity-40">•</span>
-                      <span>Order Hotline: +94 77 123 4567 (8:30 AM – 8:30 PM)</span>
-                      <span className="opacity-40">•</span>
-                      <span>Cash on Delivery (COD) & Secure Online Payments</span>
-                      <span className="opacity-40">•</span>
-                      <span>Direct Authentic Brands & Veterinary Nutrition</span>
-                    </span>
-                    <span className="flex items-center gap-6" aria-hidden="true">
-                      <span>Islandwide Express Doorstep Delivery Across Sri Lanka</span>
-                      <span className="opacity-40">•</span>
-                      <span>100% Genuine & Authorized Veterinary Products</span>
-                      <span className="opacity-40">•</span>
-                      <span>Order Hotline: +94 77 123 4567 (8:30 AM – 8:30 PM)</span>
-                      <span className="opacity-40">•</span>
-                      <span>Cash on Delivery (COD) & Secure Online Payments</span>
-                      <span className="opacity-40">•</span>
-                      <span>Direct Authentic Brands & Veterinary Nutrition</span>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Close Button */}
-                <button
-                  type="button"
-                  onClick={() => setShowRibbon(false)}
-                  className="p-1 rounded-full hover:bg-black/10 transition-colors flex-shrink-0"
-                  style={{ color: '#005980' }}
-                  aria-label="Close announcement banner"
-                  title="Close Banner"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* 1. TOP ANNOUNCEMENT RIBBON BANNER (Contained 4s Cycling Pills) */}
+        <UtilityBar />
 
         {/* 2. MIDDLE BRANDING & ACTIONS BAR */}
         <div className="container mx-auto px-4 header-middle-bar">
           {/* Logo & Mobile Menu wrapper */}
-          <div className="flex items-center gap-1.5 header-logo-wrapper" style={{ gridColumn: 1 }}>
-            <button
+          <div className="flex items-center gap-1.5 header-logo-wrapper min-w-0 flex-shrink" style={{ gridColumn: 1 }}>
+            <motion.button
               onClick={() => setIsMobileNavOpen(true)}
-              className="btn btn-icon btn-ghost p-1.5 desktop-hidden"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.93 }}
+              className="btn btn-icon btn-ghost p-1.5 desktop-hidden flex-shrink-0"
               aria-label="Open navigation menu"
               style={{ color: 'var(--color-text)', padding: '6px' }}
             >
               <Menu size={22} />
-            </button>
-            <Link href="/" className="header-logo text-text hover:text-accent transition-colors" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            </motion.button>
+            <Link 
+              href="/" 
+              className="header-logo text-text hover:text-accent transition-colors min-w-0 flex-shrink" 
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
               <Image 
                 src="/logo-icon.png" 
-                width={56} 
-                height={56} 
+                width={46} 
+                height={46} 
                 alt="PetSolutions Icon" 
-                className="h-10 sm:h-12 md:h-14 w-auto object-contain"
+                className="header-logo-icon object-contain flex-shrink-0"
+                style={{ maxWidth: '46px', maxHeight: '46px' }}
                 priority
               />
+              {/* Full wordmark image on tablet and desktop (>=640px) */}
               <Image 
                 src="/logo-text.png" 
                 width={220} 
                 height={55} 
                 alt="PetSolutions.lk" 
-                className="h-8 sm:h-9 md:h-10 w-auto object-contain flex-shrink-0"
+                className="hidden sm:inline-block h-8 sm:h-9 md:h-10 w-auto object-contain flex-shrink-0"
                 style={{ width: 'auto', maxWidth: '220px' }}
                 priority
               />
+              {/* Responsive compact typography on mobile (<640px) for zero 390px collision */}
+              <span className="inline-block sm:hidden font-heading font-extrabold text-base text-text tracking-tight truncate min-w-0">
+                PetSolutions<span style={{ color: 'var(--color-brand-blue)' }}>.lk</span>
+              </span>
             </Link>
           </div>
 
@@ -293,8 +270,11 @@ export default function Header() {
             )}
 
             {/* Profile Drawer Button */}
-            <button
+            <motion.button
               onClick={() => setIsProfileDrawerOpen(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.93 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               className="p-2 rounded-full text-text hover:text-accent hover:bg-secondary/40 transition-colors flex items-center justify-center relative"
               aria-label="User Account"
               title={user ? (profile?.full_name || 'My Account') : 'Account'}
@@ -314,44 +294,54 @@ export default function Header() {
                   }}
                 />
               )}
-            </button>
+            </motion.button>
 
             {/* Cart Button */}
-            <button
+            <motion.button
               onClick={() => setIsCartOpen(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.93 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               className="p-2 rounded-full text-text hover:text-accent hover:bg-secondary/40 transition-colors relative flex items-center justify-center"
               aria-label="Shopping Cart"
               title="Cart"
             >
               <div className="relative flex items-center justify-center">
                 <ShoppingBag size={26} />
-                {totalItems > 0 && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '-6px',
-                      right: '-8px',
-                      backgroundColor: 'var(--color-accent)',
-                      color: 'var(--white)',
-                      fontWeight: 800,
-                      fontSize: '10px',
-                      minWidth: '18px',
-                      height: '18px',
-                      padding: '0 3px',
-                      borderRadius: '9999px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '2px solid var(--white)',
-                      zIndex: 10,
-                      lineHeight: 1,
-                    }}
-                  >
-                    {totalItems}
-                  </span>
-                )}
+                <AnimatePresence>
+                  {totalItems > 0 && (
+                    <motion.span
+                      key="cart-badge"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                      style={{
+                        position: 'absolute',
+                        top: '-6px',
+                        right: '-8px',
+                        backgroundColor: 'var(--color-accent)',
+                        color: 'var(--color-text)',
+                        fontWeight: 800,
+                        fontSize: '10px',
+                        minWidth: '18px',
+                        height: '18px',
+                        padding: '0 3px',
+                        borderRadius: '9999px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '2px solid var(--white)',
+                        zIndex: 10,
+                        lineHeight: 1,
+                      }}
+                    >
+                      {totalItems}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </div>
-            </button>
+            </motion.button>
           </div>
 
           {/* Search Input Box */}
@@ -408,7 +398,7 @@ export default function Header() {
                 <ChevronDown size={16} className={`transition-transform duration-200 ${activeDropdown === 'all' ? 'rotate-180' : ''}`} />
               </button>
 
-              {/* Mega Dropdown Menu */}
+              {/* All Categories Dropdown Menu (Matches exact size & layout of other hover cards) */}
               <AnimatePresence>
                 {activeDropdown === 'all' && (
                   <motion.div
@@ -416,46 +406,42 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute left-0 top-full mt-1.5 w-[640px] max-w-[95vw] bg-white rounded-2xl shadow-2xl border border-secondary-alt/40 p-6 z-50 glass-strong"
+                    className="absolute left-0 top-full mt-1.5 w-80 max-w-[95vw] bg-white rounded-2xl shadow-xl border border-secondary-alt/40 p-4 z-50 glass-strong"
+                    style={{ width: '20rem', maxWidth: '95vw' }}
                   >
-                    {/* Top Pet Filters Header */}
-                    <div className="pb-3 mb-4 border-b border-secondary/50">
+                    {/* Top Header */}
+                    <div className="pb-2.5 mb-2.5 border-b border-secondary/40">
                       <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-text">
                         Shop by Category
                       </h4>
-                      <p className="text-[11px] text-text-muted mt-0.5">Explore our complete catalog of authorized veterinary pet essentials</p>
+                      <p className="text-[11px] text-text-muted mt-0.5">Explore our complete catalog of veterinary essentials</p>
                     </div>
 
-                    {/* Uniform Categories Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {unifiedCategories.map((c) => {
-                        return (
-                          <Link
-                            key={`mega-item-${c.slug}`}
-                            href={`/products?category=${c.slug}`}
-                            onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
-                            className="p-2.5 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group block"
-                          >
-                            <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
-                            <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
-                          </Link>
-                        );
-                      })}
-                    </div>
+                    {/* Categories List */}
+                    <div className="space-y-1">
+                      {unifiedCategories.map((c) => (
+                        <Link
+                          key={`mega-item-${c.slug}`}
+                          href={`/products?category=${c.slug}`}
+                          onClick={() => { setCurrentCategory(c.slug); closeDropdown(); }}
+                          className="p-2 rounded-xl hover:bg-secondary/40 border border-transparent hover:border-secondary-alt/30 transition-all group block"
+                        >
+                          <p className="text-xs font-bold text-text group-hover:text-accent transition-colors truncate">{c.name}</p>
+                          <p className="text-[10px] text-text-muted truncate mt-0.5">{c.desc}</p>
+                        </Link>
+                      ))}
 
-                    {/* Bottom Action Footer */}
-                    <div className="mt-4 pt-3 border-t border-secondary/40 flex flex-col gap-2 w-full">
-                      <p className="text-[11px] text-text-muted">
-                        Direct islandwide delivery across Sri Lanka
-                      </p>
-                      <Link
-                        href="/products"
-                        onClick={() => { setCurrentCategory(null); closeDropdown(); }}
-                        className="text-xs font-bold text-accent hover:underline flex items-center justify-between w-full"
-                      >
-                        <span>Browse Complete Store Catalog</span>
-                        <ArrowRight size={13} />
-                      </Link>
+                      {/* Bottom Action Footer */}
+                      <div className="pt-2.5 mt-2.5 border-t border-secondary/40 w-full">
+                        <Link
+                          href="/products"
+                          onClick={() => { setCurrentCategory(null); closeDropdown(); }}
+                          className="text-xs font-bold text-accent hover:underline flex items-center justify-between w-full py-1"
+                        >
+                          <span>Browse Complete Store Catalog</span>
+                          <ArrowRight size={13} />
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -725,6 +711,7 @@ export default function Header() {
           dog: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
           cat: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
           both: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
+          pharmacy: pharmacyCategories.map((c) => ({ name: c.name, slug: c.slug })),
         }}
       />
     </>

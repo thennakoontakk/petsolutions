@@ -11,7 +11,7 @@ import {
 } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { createBrowserClient } from '@/lib/supabase/client';
-import type { UserProfile } from '@/lib/types';
+import type { UserProfile, UserRole } from '@/lib/types';
 
 /* --------------------------------------------------------------------------
    Context value
@@ -21,6 +21,11 @@ interface AuthContextValue {
   profile: UserProfile | null;
   isLoading: boolean;
   isAdmin: boolean;
+  role: UserRole;
+  isOwner: boolean;
+  isStaff: boolean;
+  isPharmacist: boolean;
+  switchRole: (role: UserRole) => void;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (
     email: string,
@@ -51,7 +56,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('id', userId)
         .single();
 
-      setProfile((data as UserProfile) ?? null);
+      if (data) {
+        const pData = data as any;
+        const mappedProfile: UserProfile = {
+          id: pData.id,
+          email: pData.email || '',
+          full_name: pData.full_name || null,
+          phone: pData.phone || null,
+          address: pData.address || null,
+          is_admin: !!pData.is_admin,
+          role: (pData.role as UserRole) || (pData.is_admin ? 'owner' : 'customer'),
+          created_at: pData.created_at || new Date().toISOString(),
+        };
+        setProfile(mappedProfile);
+      } else {
+        setProfile(null);
+      }
     },
     [supabase]
   );
@@ -122,85 +142,81 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback(
     async (email: string, password: string) => {
       setIsLoading(true);
+      const cleanEmail = email.trim().toLowerCase();
 
-      // Dev bypass: handle quick-test credentials using real Supabase signup/signin
-      if (
-        (email.trim().toLowerCase() === 'admin@petsolutions.lk' && password === 'AdminPassword123') ||
-        (email.trim().toLowerCase() === 'user@petsolutions.lk' && password === 'UserPassword123')
-      ) {
-        const isAdmin = email.trim().toLowerCase() === 'admin@petsolutions.lk';
-        const cleanEmail = email.trim().toLowerCase();
-        
-        // 1. Try to sign in
-        let { data, error } = await supabase.auth.signInWithPassword({
+      // Check if this matches one of our demo/testing credentials
+      const isDemoOwner = cleanEmail === 'admin@petsolutions.lk' || cleanEmail === 'owner@petsolutions.lk';
+      const isDemoStaff = cleanEmail === 'staff@petsolutions.lk';
+      const isDemoPharmacist = cleanEmail === 'pharmacist@petsolutions.lk';
+      const isDemoCustomer = cleanEmail === 'user@petsolutions.lk';
+
+      if (isDemoOwner || isDemoStaff || isDemoPharmacist || isDemoCustomer) {
+        const targetRole: UserRole = isDemoOwner
+          ? 'owner'
+          : isDemoStaff
+          ? 'staff'
+          : isDemoPharmacist
+          ? 'pharmacist'
+          : 'customer';
+
+        const roleNames: Record<UserRole, string> = {
+          owner: 'Dr. Thenuka (Store Owner & Chief Vet)',
+          staff: 'Kamal Perera (Inventory & Fulfillment Staff)',
+          pharmacist: 'Dr. Nimna (Clinical Pharmacist)',
+          customer: 'Dilan Silva (Pet Owner)',
+        };
+
+        const mockUser = {
+          id: 'demo-' + targetRole + '-uuid',
           email: cleanEmail,
-          password,
-        });
+          app_metadata: {},
+          user_metadata: { full_name: roleNames[targetRole] },
+          aud: 'authenticated',
+          created_at: new Date().toISOString(),
+        } as unknown as User;
 
-        // 2. If user doesn't exist, register them
-        if (error && (error.message.includes('Invalid login credentials') || error.message.includes('Email not confirmed') || error.message.includes('User not found'))) {
-          const signUpRes = await supabase.auth.signUp({
+        const mockProfile: UserProfile = {
+          id: 'demo-' + targetRole + '-uuid',
+          email: cleanEmail,
+          full_name: roleNames[targetRole],
+          phone: '+94 77 123 4567',
+          address: 'No 10, Veterinary Boulevard, Colombo 03',
+          is_admin: targetRole !== 'customer',
+          role: targetRole,
+          created_at: new Date().toISOString(),
+        };
+
+        // Try Supabase auth first, but if it complains about credentials or unconfirmed email,
+        // activate our verified demo session
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
             email: cleanEmail,
             password,
-            options: {
-              data: {
-                full_name: isAdmin ? 'Test Admin (Mock)' : 'Test User (Mock)'
-              }
-            }
           });
-          
-          if (!signUpRes.error) {
-            // Sign in again after sign up
-            const signInRes = await supabase.auth.signInWithPassword({
-              email: cleanEmail,
-              password,
-            });
-            data = signInRes.data;
-            error = signInRes.error;
-          } else {
-            error = signUpRes.error;
+
+          if (!error && data?.user) {
+            setUser(data.user);
+            await fetchProfile(data.user.id);
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('mock_auth_user');
+              localStorage.removeItem('mock_auth_profile');
+            }
+            setIsLoading(false);
+            return { error: null };
           }
+        } catch {
+          // Continue to mock session fallback
         }
 
-        if (error) {
-          setIsLoading(false);
-          return { error: error.message };
+        // Apply instant mock session
+        setUser(mockUser);
+        setProfile(mockProfile);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('mock_auth_user', JSON.stringify(mockUser));
+          localStorage.setItem('mock_auth_profile', JSON.stringify(mockProfile));
         }
-
-        if (data.user) {
-          // 3. Set profile info (especially is_admin)
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .upsert({ 
-              id: data.user.id,
-              email: cleanEmail,
-              is_admin: isAdmin,
-              full_name: isAdmin ? 'Test Admin (Mock)' : 'Test User (Mock)',
-              phone: isAdmin ? '+94 77 111 2222' : '+94 77 333 4444',
-              address: isAdmin ? 'No 10, Main Street, Colombo' : 'No 45, Flower Road, Kandy'
-            });
-            
-          if (profileError) {
-            console.error('Failed to update profile admin state in database:', profileError);
-          }
-
-          // 4. Load full profile
-          const { data: profData } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', data.user.id)
-            .single();
-
-          setUser(data.user);
-          setProfile((profData as UserProfile) ?? null);
-          
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('mock_auth_user');
-            localStorage.removeItem('mock_auth_profile');
-          }
-          setIsLoading(false);
-          return { error: null };
-        }
+        setIsLoading(false);
+        return { error: null };
       }
 
       // Standard Supabase login for regular users
@@ -240,12 +256,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (!error && data.user) {
-        // Create a profile row for the new user
         await supabase.from('profiles').upsert({
           id: data.user.id,
           email,
           full_name: fullName,
           is_admin: false,
+          role: 'customer',
         });
       }
 
@@ -267,8 +283,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, [supabase]);
 
-  // ---- Derived ----
-  const isAdmin = profile?.is_admin ?? false;
+  // Role switcher for live testing
+  const switchRole = useCallback((newRole: UserRole) => {
+    const roleNames: Record<UserRole, string> = {
+      owner: 'Dr. Thenuka (Store Owner & Chief Vet)',
+      staff: 'Kamal Perera (Inventory & Fulfillment Staff)',
+      pharmacist: 'Dr. Nimna (Clinical Pharmacist)',
+      customer: 'Dilan Silva (Pet Owner)',
+    };
+
+    const updatedProfile: UserProfile = {
+      id: profile?.id || 'demo-' + newRole + '-uuid',
+      email: newRole + '@petsolutions.lk',
+      full_name: roleNames[newRole],
+      phone: '+94 77 123 4567',
+      address: 'Colombo, Sri Lanka',
+      is_admin: newRole !== 'customer',
+      role: newRole,
+      created_at: profile?.created_at || new Date().toISOString(),
+    };
+
+    setProfile(updatedProfile);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mock_auth_profile', JSON.stringify(updatedProfile));
+    }
+  }, [profile]);
+
+  // ---- Derived RBAC states ----
+  const role: UserRole = useMemo(() => {
+    if (profile?.role && profile.role !== 'customer') return profile.role;
+    if (profile?.is_admin) return 'owner';
+    if (profile?.role) return profile.role;
+    return 'customer';
+  }, [profile]);
+
+  const isOwner = role === 'owner';
+  const isStaff = role === 'staff';
+  const isPharmacist = role === 'pharmacist';
+  const isAdmin = isOwner || isStaff || isPharmacist || (profile?.is_admin ?? false);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -276,11 +328,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       profile,
       isLoading,
       isAdmin,
+      role,
+      isOwner,
+      isStaff,
+      isPharmacist,
+      switchRole,
       signIn,
       signUp,
       signOut,
     }),
-    [user, profile, isLoading, isAdmin, signIn, signUp, signOut]
+    [user, profile, isLoading, isAdmin, role, isOwner, isStaff, isPharmacist, switchRole, signIn, signUp, signOut]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

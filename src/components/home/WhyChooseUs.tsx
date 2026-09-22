@@ -61,19 +61,19 @@ export default function WhyChooseUs() {
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center px-4 py-1 bg-accent/15 text-accent-hover text-xs font-bold uppercase tracking-widest rounded-full mb-2 border border-accent/25 shadow-xs">
+          <div className="eyebrow-tag mx-auto w-fit">
             <span>Why Choose PetSolutions</span>
           </div>
-          <h2 className="font-heading font-extrabold text-3xl md:text-4xl text-text tracking-tight">
+          <h2 className="section-heading mt-2">
             Sri Lanka&apos;s Premier Pet Care Standard
           </h2>
-          <div className="w-16 h-1 bg-accent mx-auto rounded-full mt-2.5 mb-2.5" />
-          <p className="text-sm md:text-base text-text-muted max-w-xl mx-auto leading-relaxed">
+          <div className="w-12 h-1 rounded-full mx-auto mt-3 mb-4" style={{ background: 'linear-gradient(90deg, var(--color-brand-blue), var(--color-accent))' }} />
+          <p className="text-sm md:text-base text-pretty" style={{ color: 'var(--color-text-muted)', maxWidth: '52ch', margin: '0 auto', lineHeight: '1.65' }}>
             Authorized veterinary healthcare, authentic clinical nutrition, and unmatched dedicated service delivered straight to your home.
           </p>
         </div>
 
-        {/* 4 Cards Grid - 4 Columns Across */}
+        {/* 4 Cards Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -85,11 +85,13 @@ export default function WhyChooseUs() {
             <motion.div
               key={item.title}
               variants={cardVariants}
-              whileHover={{ y: -6 }}
-              className="glass rounded-3xl p-6 flex flex-col items-center text-center h-full border border-white/80 shadow-md hover:shadow-2xl hover:border-accent/50 transition-all duration-300 group bg-white/85 backdrop-blur-md"
+              whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(26,26,46,0.10)' }}
+              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+              className="glass rounded-3xl p-6 flex flex-col items-center text-center h-full border border-white/80 group bg-white/85 backdrop-blur-md"
+              style={{ boxShadow: 'var(--shadow-card)' }}
             >
-              {/* Luxury 3D Visual */}
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-secondary/20 border border-secondary-alt/20 shadow-sm flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-105 flex-shrink-0">
+              {/* Image */}
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-secondary/20 border border-secondary-alt/20 flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-105 flex-shrink-0">
                 <Image
                   src={item.image}
                   alt={item.title}
@@ -101,15 +103,15 @@ export default function WhyChooseUs() {
               </div>
 
               {/* Tag & Title */}
-              <span className="text-[10px] font-bold uppercase tracking-wider text-accent block mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider block mb-1" style={{ color: 'var(--color-brand-blue)' }}>
                 {item.tag}
               </span>
-              <h3 className="font-heading font-extrabold text-base text-text mb-2 group-hover:text-accent transition-colors leading-snug">
+              <h3 className="font-heading font-extrabold text-base mb-2 group-hover:text-[#0090BB] transition-colors leading-snug" style={{ color: 'var(--color-text)' }}>
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-xs text-text-muted leading-relaxed">
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
                 {item.description}
               </p>
             </motion.div>
@@ -117,6 +119,7 @@ export default function WhyChooseUs() {
         </motion.div>
 
       </div>
+
     </section>
   );
 }

@@ -87,7 +87,9 @@ function ProductsContent() {
 
   // Apply filters
   useEffect(() => {
-    let result = [...products];
+    let result = products.filter(
+      (p) => !p.name.toLowerCase().includes('saalayo') && !p.slug.toLowerCase().includes('saalayo')
+    );
 
     // Search Query Filter
     if (searchQuery) {
@@ -172,32 +174,33 @@ function ProductsContent() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 md:py-10 catalog-layout">
-      {/* Sidebar Filters */}
-      <aside className="products-sidebar">
+    <div className="container mx-auto px-4 py-6 md:py-10">
+      {/* Page Header Title */}
+      <div className="mb-6">
+        <h1 className="section-heading text-2xl md:text-3xl font-heading font-bold text-[#1A1A2E]">
+          Our Products
+        </h1>
+        <p className="text-xs sm:text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
+          Sri Lanka's trusted veterinary pharmacy & clinical pet nutrition catalog.
+        </p>
+      </div>
+
+      {/* Top Horizontal Product Filter Bar & Collapsible Drawer */}
+      <div className="mb-8">
         <ProductFilter
           availableCategories={categories}
           filters={filters}
           onFilterChange={handleFilterChange}
+          totalProducts={products.length}
+          filteredCount={filteredProducts.length}
         />
-      </aside>
+      </div>
 
-      {/* Main Grid Area */}
-      <main className="flex-1 min-w-0">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="font-heading font-extrabold text-2xl md:text-3xl text-text">
-              Our Products
-            </h1>
-            <p className="text-xs text-text-muted mt-0.5">
-              Showing {filteredProducts.length} of {products.length} products
-            </p>
-          </div>
-        </div>
-
+      {/* Main Full-Width Product Grid */}
+      <main className="w-full">
         {loading ? (
-          <div className="grid grid-2 md:grid-3 gap-4 md:gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <div key={i} className="glass p-4 rounded-2xl h-80 animate-pulse flex flex-col justify-between">
                 <div className="w-full h-1/2 bg-secondary/50 rounded-xl" />
                 <div className="h-4 bg-secondary/50 w-2/3 rounded mt-4" />

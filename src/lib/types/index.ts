@@ -84,6 +84,25 @@ export interface Offer {
 }
 
 /* --------------------------------------------------------------------------
+   Weekly Deals & Special Offers
+   -------------------------------------------------------------------------- */
+export interface WeeklyDealItem {
+  product_id: string;
+  offer_label?: string; // e.g. "Buy 1 get 2 FREE", "20% OFF", "Save LKR 1,200"
+  deal_price?: number | null; // Optional deal price override
+  promo_subtext?: string; // e.g. "While supplies last", "Veterinary approved"
+}
+
+export interface WeeklyDealsConfig {
+  is_enabled: boolean;
+  banner_title: string;
+  banner_subtitle: string;
+  badge_text: string;
+  deal_product_ids?: string[]; // backward compatibility
+  deals?: WeeklyDealItem[];
+}
+
+/* --------------------------------------------------------------------------
    Orders
    -------------------------------------------------------------------------- */
 export type OrderStatus =
@@ -142,8 +161,10 @@ export interface CartItem {
 }
 
 /* --------------------------------------------------------------------------
-   User / Profile
+   User / Profile & RBAC
    -------------------------------------------------------------------------- */
+export type UserRole = 'owner' | 'staff' | 'pharmacist' | 'customer';
+
 export interface UserProfile {
   id: string;
   email: string;
@@ -151,6 +172,7 @@ export interface UserProfile {
   phone: string | null;
   address: string | null;
   is_admin: boolean;
+  role?: UserRole;
   created_at: string;
 }
 
@@ -188,4 +210,9 @@ export interface AuthState {
   profile: UserProfile | null;
   isLoading: boolean;
   isAdmin: boolean;
+  role: UserRole;
+  isOwner: boolean;
+  isStaff: boolean;
+  isPharmacist: boolean;
 }
+

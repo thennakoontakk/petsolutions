@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCart } from '@/lib/hooks/useCart';
 import CartItem from './CartItem';
+import FreeDeliveryProgressBar from './FreeDeliveryProgressBar';
 import { formatPrice } from '@/lib/utils/formatPrice';
 
 interface CartDrawerProps {
@@ -72,34 +73,49 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl border-l border-white/20 flex flex-col"
+            transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+            className="fixed top-0 right-0 h-full w-full max-w-md flex flex-col"
             style={{
               position: 'fixed',
               right: 0,
               top: 0,
               zIndex: 1001,
-              backgroundColor: 'rgba(254, 252, 243, 0.95)',
+              backgroundColor: 'rgba(254, 252, 243, 0.97)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              borderLeft: '1px solid rgba(189, 223, 234, 0.4)',
+              boxShadow: '0 0 60px rgba(26, 26, 46, 0.14)',
             }}
           >
             {/* Header */}
             <div className="p-4 border-b border-secondary-alt/30 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <ShoppingBag className="text-accent" size={24} />
-                <h2 className="font-heading font-bold text-lg">Your Cart</h2>
+                <ShoppingBag style={{ color: 'var(--color-brand-blue)' }} size={22} />
+                <h2 className="font-heading font-bold text-lg" style={{ color: 'var(--color-text)' }}>Your Cart</h2>
                 {totalItems > 0 && (
-                  <span className="badge badge-accent animate-pulse-glow">
+                  <span className="badge badge-accent">
                     {totalItems}
                   </span>
                 )}
               </div>
-              <button
+              <motion.button
                 onClick={onClose}
-                className="p-2 hover:bg-secondary/40 rounded-full transition-colors text-muted hover:text-text"
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.93 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                className="p-2 hover:bg-secondary/40 rounded-full transition-colors"
+                style={{ color: 'var(--color-text-muted)' }}
               >
                 <X size={20} />
-              </button>
+              </motion.button>
             </div>
+
+            {/* Free Delivery Bar in Drawer */}
+            {items.length > 0 && (
+              <div className="px-4 pt-3 pb-1">
+                <FreeDeliveryProgressBar subtotal={subtotal} />
+              </div>
+            )}
 
             {/* Cart Items List */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -110,27 +126,54 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   ))
                 ) : (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col items-center justify-center h-64 text-center p-8 space-y-4"
+                    transition={{ type: 'spring', stiffness: 240, damping: 26 }}
+                    className="flex flex-col items-center justify-center h-64 text-center p-8 gap-4"
                   >
-                    <div className="p-4 bg-accent/10 rounded-full text-accent">
-                      <ShoppingBag size={48} />
+                    {/* Warm paw illustration */}
+                    <div style={{ width: 80, height: 80, backgroundColor: 'var(--color-accent-light)', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="44" height="44" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="32" cy="42" rx="11" ry="9" fill="#FFC800" opacity="0.9"/>
+                        <circle cx="20" cy="26" r="6.5" fill="#FFC800" opacity="0.75"/>
+                        <circle cx="44" cy="26" r="6.5" fill="#FFC800" opacity="0.75"/>
+                        <circle cx="14" cy="38" r="5.5" fill="#FFC800" opacity="0.65"/>
+                        <circle cx="50" cy="38" r="5.5" fill="#FFC800" opacity="0.65"/>
+                      </svg>
                     </div>
                     <div>
-                      <h3 className="font-heading font-semibold text-base mb-1">Your cart is empty</h3>
-                      <p className="text-xs text-muted">Looks like you haven't added anything to your cart yet.</p>
+                      <h3 className="font-heading font-bold text-base mb-1" style={{ color: 'var(--color-text)' }}>Your cart is empty</h3>
+                      <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Start browsing our premium pet care selection.</p>
                     </div>
-                    <button
-                      onClick={onClose}
-                      className="btn btn-primary btn-sm flex items-center gap-2"
-                    >
-                      Continue Shopping <ArrowRight size={16} />
-                    </button>
+                    {/* Quick category chips */}
+                    <div className="flex flex-wrap gap-2 justify-center mt-1">
+                      {[
+                        { label: 'Pet Food', href: '/products?category=dry-wet-pet-food' },
+                        { label: 'Tick Care', href: '/products?category=parasite-tick-control' },
+                        { label: 'Grooming', href: '/products?category=medicated-shampoos-grooming' },
+                      ].map((chip) => (
+                        <a
+                          key={chip.label}
+                          href={chip.href}
+                          onClick={onClose}
+                          style={{
+                            fontSize: '11px', fontWeight: 600, padding: '5px 12px',
+                            borderRadius: '9999px', textDecoration: 'none',
+                            backgroundColor: 'var(--color-secondary)',
+                            color: 'var(--color-brand-blue)',
+                            border: '1px solid var(--color-secondary-alt)',
+                            display: 'inline-block',
+                          }}
+                        >
+                          {chip.label}
+                        </a>
+                      ))}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+
 
             {/* Summary Footer */}
             {items.length > 0 && (

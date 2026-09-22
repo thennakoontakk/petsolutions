@@ -1,5 +1,6 @@
 import { createServerClient as createSSRServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { resolveProductImage } from '@/lib/data/productImageMap';
 
 /**
  * Creates a Supabase client for Server Components, Server Actions, and Route Handlers.
@@ -39,7 +40,7 @@ export async function createServerSupabaseClient() {
     },
   });
 
-  // Intercept client queries to mock/inject the 3 images for the SmartHeart Power Pack Adult product
+  // Ensure all products resolve to high-res Supabase Storage URLs
   const originalFrom = rawClient.from;
   rawClient.from = function (this: any, table: string) {
     const queryBuilder = originalFrom.apply(this, arguments as any);
@@ -52,16 +53,10 @@ export async function createServerSupabaseClient() {
         filterBuilder.then = function (this: any, onfulfilled: any, onrejected: any) {
           return originalThen.call(this, (res: any) => {
             if (res && res.data) {
-              const modifyProduct = (p: any) => {
-                if (p && (p.slug === 'smartheart-power-pack-adult' || p.id === '94e4da03-d940-479e-a2da-e625aafbc302')) {
-                  p.image_url = '/images/products/1.jpeg';
-                  p.images = ['/images/products/1.jpeg', '/images/products/2.jpeg', '/images/products/3.jpeg'];
-                }
-              };
               if (Array.isArray(res.data)) {
-                res.data.forEach(modifyProduct);
+                res.data = res.data.map(resolveProductImage);
               } else {
-                modifyProduct(res.data);
+                res.data = resolveProductImage(res.data);
               }
             }
             return onfulfilled ? onfulfilled(res) : res;
@@ -72,9 +67,6 @@ export async function createServerSupabaseClient() {
     }
     return queryBuilder;
   } as any;
-
-
-
 
   return rawClient;
 }

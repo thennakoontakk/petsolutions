@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Tag, ArrowRight, ShoppingBag } from 'lucide-react';
 import { formatPrice } from '@/lib/utils/formatPrice';
+import FreeDeliveryProgressBar from '@/components/cart/FreeDeliveryProgressBar';
 
 /* --------------------------------------------------------------------------
    Props
@@ -53,6 +54,8 @@ export default function CartSummary({
       className={`glass ${className}`}
       style={{ padding: 'var(--space-5)' }}
     >
+      <FreeDeliveryProgressBar subtotal={safeSubtotal} className="mb-5" />
+
       <h3
         className="font-heading font-semibold"
         style={{

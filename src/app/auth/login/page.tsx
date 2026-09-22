@@ -71,15 +71,22 @@ function LoginFormContent() {
   };
 
   // Helper function to simulate fast typing for demo accounts
-  const handleQuickLogin = async (type: 'admin' | 'user') => {
+  const handleQuickLogin = async (type: 'owner' | 'staff' | 'pharmacist' | 'user') => {
     if (fillState === 'typing' || isSubmitting) return;
     
     setFillState('typing');
     setError(null);
     setSuccess(null);
     
-    const targetEmail = type === 'admin' ? 'admin@petsolutions.lk' : 'user@petsolutions.lk';
-    const targetPassword = type === 'admin' ? 'AdminPassword123' : 'UserPassword123';
+    const creds = {
+      owner: { email: 'admin@petsolutions.lk', pass: 'AdminPassword123' },
+      staff: { email: 'staff@petsolutions.lk', pass: 'StaffPassword123' },
+      pharmacist: { email: 'pharmacist@petsolutions.lk', pass: 'PharmaPassword123' },
+      user: { email: 'user@petsolutions.lk', pass: 'UserPassword123' },
+    }[type];
+
+    const targetEmail = creds.email;
+    const targetPassword = creds.pass;
     
     // Clear first
     setEmail('');
@@ -91,21 +98,21 @@ function LoginFormContent() {
     
     // Simulate typing email
     for (let i = 0; i <= targetEmail.length; i++) {
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 12));
       currentEmail = targetEmail.slice(0, i);
       setEmail(currentEmail);
     }
     
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 60));
     
     // Simulate typing password
     for (let i = 0; i <= targetPassword.length; i++) {
-      await new Promise((r) => setTimeout(r, 15));
+      await new Promise((r) => setTimeout(r, 10));
       currentPassword = targetPassword.slice(0, i);
       setPassword(currentPassword);
     }
     
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, 120));
     setFillState('idle');
     
     // Trigger submit
@@ -289,19 +296,35 @@ function LoginFormContent() {
           </p>
           <div className="grid grid-cols-2 gap-2.5">
             <button
-              onClick={() => handleQuickLogin('admin')}
+              onClick={() => handleQuickLogin('owner')}
               disabled={isSubmitting || fillState === 'typing'}
-              className="px-3.5 py-2.5 bg-white hover:bg-accent/10 text-accent hover:text-accent-hover text-[11px] font-extrabold rounded-xl border border-accent/20 hover:border-accent/40 shadow-sm flex flex-col items-center justify-center gap-1 text-center transition-all duration-200"
+              className="px-3 py-2.5 bg-white hover:bg-accent/10 text-accent text-[11px] font-extrabold rounded-xl border border-accent/20 hover:border-accent/40 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
             >
-              <span className="font-heading tracking-tight uppercase">Admin Demo</span>
-              <span className="text-[8.5px] opacity-75 font-normal normal-case">Full access</span>
+              <span className="font-heading tracking-tight uppercase">👑 Owner Demo</span>
+              <span className="text-[8.5px] opacity-75 font-normal normal-case">Full access & financials</span>
+            </button>
+            <button
+              onClick={() => handleQuickLogin('staff')}
+              disabled={isSubmitting || fillState === 'typing'}
+              className="px-3 py-2.5 bg-white hover:bg-blue-50 text-blue-700 text-[11px] font-extrabold rounded-xl border border-blue-200 hover:border-blue-400 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
+            >
+              <span className="font-heading tracking-tight uppercase">📦 Staff Demo</span>
+              <span className="text-[8.5px] opacity-75 font-normal normal-case">Dispatch & inventory</span>
+            </button>
+            <button
+              onClick={() => handleQuickLogin('pharmacist')}
+              disabled={isSubmitting || fillState === 'typing'}
+              className="px-3 py-2.5 bg-white hover:bg-emerald-50 text-emerald-700 text-[11px] font-extrabold rounded-xl border border-emerald-200 hover:border-emerald-400 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
+            >
+              <span className="font-heading tracking-tight uppercase">🩺 Pharmacist</span>
+              <span className="text-[8.5px] opacity-75 font-normal normal-case">Clinical formulas & RX</span>
             </button>
             <button
               onClick={() => handleQuickLogin('user')}
               disabled={isSubmitting || fillState === 'typing'}
-              className="px-3.5 py-2.5 bg-white hover:bg-accent/10 text-text-dark hover:text-accent text-[11px] font-extrabold rounded-xl border border-secondary-alt/60 hover:border-accent/30 shadow-sm flex flex-col items-center justify-center gap-1 text-center transition-all duration-200"
+              className="px-3 py-2.5 bg-white hover:bg-secondary/40 text-text-dark text-[11px] font-extrabold rounded-xl border border-secondary-alt/60 hover:border-accent/30 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
             >
-              <span className="font-heading tracking-tight uppercase">Customer Demo</span>
+              <span className="font-heading tracking-tight uppercase">🐶 Customer</span>
               <span className="text-[8.5px] opacity-75 font-normal normal-case">Standard buyer</span>
             </button>
           </div>

@@ -53,67 +53,6 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden text-white" style={{ backgroundColor: '#0F121E' }}>
 
-      {/* 2. NEWSLETTER / VIP CLUB BANNER */}
-      <div className="container mx-auto px-4 pt-12">
-        <div 
-          className="p-6 sm:p-10 rounded-3xl relative overflow-hidden border border-white/10 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8"
-          style={{
-            background: 'linear-gradient(135deg, rgba(26, 32, 53, 0.95) 0%, rgba(15, 18, 30, 0.95) 100%)',
-          }}
-        >
-          {/* Subtle gold glow behind newsletter */}
-          <div 
-            className="absolute -right-20 -top-20 w-80 h-80 rounded-full blur-3xl opacity-20 pointer-events-none"
-            style={{ backgroundColor: '#FFC800' }}
-          />
-
-          <div className="max-w-xl text-center lg:text-left relative z-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-accent/20 text-accent border border-accent/30 mb-3">
-              🐾 Join the PetSolutions VIP Club
-            </span>
-            <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-white">
-              Get Weekly Pet Care Tips & Exclusive Discounts
-            </h3>
-            <p className="text-xs text-white/70 mt-1.5 leading-relaxed">
-              Subscribe to receive members-only promo codes, clinical healthcare guides, and alerts on new inventory arrivals.
-            </p>
-          </div>
-
-          <div className="w-full lg:max-w-md relative z-10">
-            {isSubscribed ? (
-              <div className="p-4 rounded-2xl bg-success/20 border border-success/40 text-success text-xs font-bold flex items-center justify-center gap-2 animate-scale-in">
-                <CheckCircle2 size={18} />
-                <span>Thank you! You've joined the VIP Pet Club.</span>
-              </div>
-            ) : (
-              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
-                <div className="relative flex-1">
-                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
-                  <input
-                    type="email"
-                    required
-                    placeholder="Enter your email address..."
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-xs text-white placeholder-white/40 focus:outline-none focus:border-accent focus:bg-white/15 transition-all"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary text-xs font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-md hover:shadow-lg whitespace-nowrap"
-                >
-                  <span>Subscribe</span>
-                  <Send size={14} />
-                </button>
-              </form>
-            )}
-            <p className="text-[10px] text-white/40 mt-2 text-center lg:text-left">
-              🔒 We respect your privacy. Unsubscribe anytime with 1-click.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* 3. MAIN FOOTER: BRAND & CONTACT INFO (1-2 Lines) */}
       <div className="container mx-auto px-4 py-10 sm:py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-white/10">
