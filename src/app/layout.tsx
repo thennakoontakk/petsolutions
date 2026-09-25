@@ -3,6 +3,7 @@ import { Outfit, Inter } from 'next/font/google';
 import { AuthProvider } from '@/lib/hooks/useAuth';
 import { CartProvider } from '@/lib/hooks/useCart';
 import FloatingActions from '@/components/layout/FloatingActions';
+import ClickPawPulse from '@/components/layout/ClickPawPulse';
 import { Toaster } from 'sonner';
 import './globals.css';
 
@@ -98,6 +99,7 @@ export default function RootLayout({
           <CartProvider>
             {children}
             <FloatingActions />
+            <ClickPawPulse />
             <Toaster position="top-right" richColors closeButton />
           </CartProvider>
         </AuthProvider>

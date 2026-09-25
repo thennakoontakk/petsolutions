@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Dog, Cat, ArrowRight, Loader2 } from 'lucide-react';
+import { ShoppingCart, Dog, Cat, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Product } from '@/lib/types';
 import { formatPriceShort, calcDiscount } from '@/lib/utils/formatPrice';
@@ -16,16 +16,14 @@ import { useCart } from '@/lib/hooks/useCart';
    -------------------------------------------------------------------------- */
 function PawPlaceholder() {
   return (
-    <div
-      className="flex items-center justify-center w-full h-full bg-[#F9F6EE]"
-    >
+    <div className="flex items-center justify-center w-full h-full bg-[#FAF7F2]">
       <svg
         width="56"
         height="56"
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="opacity-30"
+        className="opacity-25"
       >
         <ellipse cx="32" cy="42" rx="10" ry="8" fill="#FFC800" />
         <circle cx="20" cy="26" r="6" fill="#FFC800" />
@@ -61,15 +59,23 @@ export default function ProductCard({
 
   const variants = product.variants ?? [];
   const activeVariants = variants.filter((v) => v.is_active);
-  const prices = activeVariants.map((v) => v.price);
-  const compareAtPrices = activeVariants
-    .filter((v) => v.compare_at_price)
-    .map((v) => v.compare_at_price!);
+  const hasMultipleVariants = activeVariants.length > 1;
 
-  const lowestPrice = prices.length ? Math.min(...prices) : 0;
-  const hasMultipleSizes = prices.length > 1;
-  const isSingleVariant = activeVariants.length === 1;
-  const singleVariantId = isSingleVariant ? activeVariants[0].id : null;
+  // Selected variant state
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(
+    activeVariants[0]?.id || null
+  );
+
+  const selectedVariant =
+    activeVariants.find((v) => v.id === selectedVariantId) ||
+    activeVariants[0] ||
+    null;
+
+  const currentPrice = selectedVariant
+    ? Number(selectedVariant.price)
+    : activeVariants[0]?.price || 0;
+
+  const currentCompareAt = selectedVariant?.compare_at_price || null;
 
   // Calculate best discount across variants
   const bestDiscount = activeVariants.reduce((max, v) => {
@@ -87,12 +93,14 @@ export default function ProductCard({
     e.preventDefault();
     e.stopPropagation();
 
-    if (isSingleVariant && singleVariantId) {
+    const targetVariantId = selectedVariantId || activeVariants[0]?.id || null;
+
+    if (targetVariantId) {
       setIsAdding(true);
       try {
-        await addItem(singleVariantId, 1);
-        toast.success(`Added to cart!`, {
-          description: `${product.name} · ${formatPriceShort(lowestPrice)}`,
+        await addItem(targetVariantId, 1);
+        toast.success('Added to cart!', {
+          description: `${product.name} ${selectedVariant?.size_label ? `(${selectedVariant.size_label})` : ''} · ${formatPriceShort(currentPrice)}`,
         });
       } catch (err) {
         console.error('Failed to add to cart:', err);
@@ -118,106 +126,268 @@ export default function ProductCard({
       className={`h-full ${className}`}
     >
       <motion.article
-        whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(26,26,46,0.10)' }}
+        whileHover={{
+          y: -5,
+          boxShadow: '0 20px 35px -8px rgba(26, 26, 46, 0.12)',
+        }}
         transition={{ type: 'spring', stiffness: 360, damping: 28 }}
-        className="group relative flex flex-col h-full bg-white rounded-2xl p-3 border border-[#BDDFEA]/70"
-        style={{ boxShadow: 'var(--shadow-card)' }}
+        className="group relative flex flex-col h-full bg-white border border-[#BDDFEA]/60 transition-all duration-300"
+        style={{
+          borderRadius: '28px',
+          padding: '16px',
+          boxShadow:
+            '0 8px 24px -4px rgba(26, 26, 46, 0.06), 0 2px 6px rgba(26, 26, 46, 0.03)',
+        }}
       >
-        {/* 1. Standardized 1:1 Aspect Ratio Image Container */}
-        <Link
-          href={`/products/${product.slug}`}
-          className="block relative aspect-square w-full rounded-xl bg-[#F9F6EE] overflow-hidden shrink-0 group/img"
-          style={{ borderRadius: 'calc(var(--radius-2xl) - var(--space-3))' }}
+        {/* 1. Image Container with Floating Wishlist Heart */}
+        <div
+          className="relative w-full overflow-hidden shrink-0"
+          style={{
+            aspectRatio: '1 / 1',
+            borderRadius: '20px',
+            backgroundColor: '#F8F9FA',
+          }}
         >
-          {product.image_url ? (
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              fill
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover group-hover/img:scale-105 transition-transform duration-300"
-              style={{ borderRadius: 'calc(var(--radius-2xl) - var(--space-3))' }}
-              loading="lazy"
-            />
-          ) : (
-            <PawPlaceholder />
-          )}
+          <Link
+            href={`/products/${product.slug}`}
+            className="block relative w-full h-full group/img"
+          >
+            {product.image_url ? (
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-contain group-hover/img:scale-105 transition-transform duration-300"
+                style={{
+                  padding: '10px',
+                  borderRadius: '20px',
+                }}
+                loading="lazy"
+              />
+            ) : (
+              <PawPlaceholder />
+            )}
 
-          {/* Discount Badge */}
-          {bestDiscount > 0 && (
-            <span className="absolute top-2 left-2 bg-[#EF4444] text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs z-10">
-              -{bestDiscount}%
-            </span>
-          )}
+            {/* Discount Badge on Top Left */}
+            {bestDiscount > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  left: '10px',
+                  zIndex: 10,
+                  backgroundColor: '#EF4444',
+                  color: '#FFFFFF',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  padding: '2px 8px',
+                  borderRadius: '9999px',
+                }}
+                className="shadow-xs"
+              >
+                -{bestDiscount}%
+              </span>
+            )}
+          </Link>
+        </div>
 
-          {/* Pet Type Badge */}
-          {PetIconComponent && (
-            <span className="absolute top-2 right-2 bg-white/95 backdrop-blur-xs text-[#1A1A2E] text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs border border-[#BDDFEA]/60 flex items-center gap-1 z-10">
-              <PetIconComponent size={11} className="text-[#00ACDF]" />
-              <span>{product.pet_type}</span>
-            </span>
-          )}
-        </Link>
-
-        {/* 2. Content Info with Enforced Minimum Heights */}
-        <div className="mt-3 flex flex-col flex-1">
-          {/* Fixed-height Category / Brand Slot */}
-          <div className="h-5 flex items-center overflow-hidden">
-            <span className="text-[11px] font-semibold text-[#00ACDF] uppercase tracking-wider truncate">
-              {product.brand ||
-                (typeof product.category === 'object' && product.category !== null
-                  ? product.category.name
-                  : 'Pet Care')}
-            </span>
-          </div>
-
-          {/* Fixed-height 2-line Title Slot */}
-          <Link href={`/products/${product.slug}`} className="block mt-1">
-            <h3 className="font-heading font-semibold text-sm text-[#1A1A2E] line-clamp-2 min-h-[2.5rem] leading-snug hover:text-[#00ACDF] transition-colors">
+        {/* 2. Product Information */}
+        <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+          {/* Title */}
+          <Link href={`/products/${product.slug}`} style={{ display: 'block' }}>
+            <h3
+              className="font-heading font-bold text-[#1A1A2E] hover:text-[#FFC800] transition-colors"
+              style={{
+                fontSize: '15px',
+                lineHeight: '1.35',
+                minHeight: '2.5rem',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}
+            >
               {product.name}
             </h3>
           </Link>
 
-          {/* 3. Sticky Bottom Price & CTA Bar */}
-          <div className="mt-auto pt-3 flex items-center justify-between border-t border-[#BDDFEA]/30 gap-2">
-            {/* Price Container */}
-            <div className="flex flex-col min-w-0">
-              <span className="font-heading font-bold text-sm sm:text-base text-[#1A1A2E] truncate">
-                {hasMultipleSizes
-                  ? `From ${formatPriceShort(lowestPrice)}`
-                  : formatPriceShort(lowestPrice)}
-              </span>
-              <div className="h-4 flex items-center">
-                {!hasMultipleSizes && compareAtPrices.length === 1 && (
-                  <span className="text-xs text-[#6B6B7B] line-through truncate">
-                    {formatPriceShort(compareAtPrices[0])}
+          {/* Variant Size Pills (Matching Reference Image) */}
+          <div
+            style={{
+              marginTop: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              paddingBottom: '2px',
+            }}
+          >
+            {hasMultipleVariants ? (
+              activeVariants.map((v) => {
+                const isSelected = v.id === selectedVariant?.id;
+                return (
+                  <button
+                    key={v.id}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedVariantId(v.id);
+                    }}
+                    style={{
+                      borderRadius: '9999px',
+                      backgroundColor: isSelected ? '#FFC800' : '#F1F5F9',
+                      color: isSelected ? '#1A1A2E' : '#64748B',
+                      border: isSelected ? '1px solid #E6B400' : '1px solid #E2E8F0',
+                      padding: '3px 10px',
+                      fontSize: '11px',
+                      fontWeight: isSelected ? 700 : 600,
+                      whiteSpace: 'nowrap',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {v.size_label || 'Standard'}
+                  </button>
+                );
+              })
+            ) : (
+              <>
+                <span
+                  style={{
+                    borderRadius: '9999px',
+                    padding: '3px 10px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: '#00ACDF',
+                    backgroundColor: '#E6F4F8',
+                    border: '1px solid rgba(189, 223, 234, 0.7)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {product.brand ||
+                    (typeof product.category === 'object' && product.category !== null
+                      ? product.category.name
+                      : 'Veterinary')}
+                </span>
+                {PetIconComponent && (
+                  <span
+                    style={{
+                      borderRadius: '9999px',
+                      padding: '3px 9px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: '#64748B',
+                      backgroundColor: '#F1F5F9',
+                      border: '1px solid #E2E8F0',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    <PetIconComponent size={11} className="text-[#00ACDF]" />
+                    <span>{product.pet_type}</span>
                   </span>
                 )}
-              </div>
+              </>
+            )}
+          </div>
+
+          {/* Short 2-Line Description */}
+          <p
+            style={{
+              marginTop: '8px',
+              fontSize: '12px',
+              lineHeight: '1.5',
+              color: '#6B6B7B',
+              minHeight: '2.25rem',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {product.description ||
+              product.indications ||
+              'High quality veterinary formula recommended for clinical care and daily wellness.'}
+          </p>
+
+          {/* 3. Bottom Price & Wide Pill 'Add to Cart' Button with Brand Yellow */}
+          <div
+            style={{
+              marginTop: 'auto',
+              paddingTop: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '8px',
+              borderTop: '1px solid #F1F5F9',
+            }}
+          >
+            {/* Price */}
+            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+              <span
+                className="font-heading"
+                style={{
+                  fontWeight: 800,
+                  fontSize: '16px',
+                  color: '#1A1A2E',
+                  lineHeight: 1.2,
+                }}
+              >
+                {formatPriceShort(currentPrice)}
+              </span>
+              {currentCompareAt && currentCompareAt > currentPrice && (
+                <span
+                  style={{
+                    fontSize: '11px',
+                    color: '#94A3B8',
+                    textDecoration: 'line-through',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {formatPriceShort(currentCompareAt)}
+                </span>
+              )}
             </div>
 
-            {/* Always-visible compact + round button */}
-            <motion.button
-              whileTap={{ scale: 0.93 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            {/* Pill 'Add to Cart' Button (Brand Yellow #FFC800 matching .btn-primary) */}
+            <button
+              type="button"
               onClick={handleAction}
               disabled={isAdding}
-              className="btn-icon-round flex-shrink-0"
               style={{
-                backgroundColor: 'var(--color-accent)',
-                color: 'var(--color-text)',
-                boxShadow: '0 2px 8px rgba(255,200,0,0.25)',
+                backgroundColor: '#FFC800',
+                color: '#1A1A2E',
+                borderRadius: '9999px',
+                boxShadow: '0 4px 14px rgba(255, 200, 0, 0.35)',
+                padding: '8px 18px',
+                fontWeight: 800,
+                fontSize: '12px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
               }}
-              aria-label={isSingleVariant ? 'Add to cart' : 'View options'}
+              className="hover:brightness-95 active:scale-95"
+              aria-label="Add to cart"
             >
               {isAdding ? (
-                <Loader2 size={14} className="animate-spin" />
-              ) : isSingleVariant ? (
-                <ShoppingCart size={14} />
+                <Loader2 size={13} className="animate-spin text-[#1A1A2E]" />
               ) : (
-                <ArrowRight size={14} />
+                <>
+                  <ShoppingCart size={13} className="text-[#1A1A2E]" />
+                  <span>Add to Cart</span>
+                </>
               )}
-            </motion.button>
+            </button>
           </div>
         </div>
       </motion.article>

@@ -1,56 +1,44 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Bone, Cat, Dog, HeartPulse, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const categories = [
   {
     name: 'Dog Food & Treats',
     slug: 'dry-wet-pet-food?pet_type=Dog',
     image: '/images/storefront/cat-dog-food.jpg',
-    bgColor: '#FFF0DB',
-    icon: Dog,
   },
   {
     name: 'Cat Food & Treats',
     slug: 'dry-wet-pet-food?pet_type=Cat',
     image: '/images/storefront/cat-cat-food.jpg',
-    bgColor: '#FEE6E1',
-    icon: Cat,
   },
   {
     name: 'Health & Wellness',
     slug: 'health-supplements',
     image: '/images/storefront/cat-health.jpg',
-    bgColor: '#E2F4FD',
-    icon: HeartPulse,
   },
   {
     name: 'Grooming & Hygiene',
     slug: 'medicated-shampoos-grooming',
     image: '/images/storefront/cat-grooming.jpg',
-    bgColor: '#FEF9D9',
-    icon: Sparkles,
   },
   {
     name: 'Tick & Flea Control',
     slug: 'parasite-tick-control',
-    image: '/images/storefront/cat-health.jpg',
-    bgColor: '#FFE2E2',
-    icon: ShieldCheck,
+    image: '/images/storefront/deals-dog.jpg',
   },
   {
     name: 'Cat Litter & Hygiene',
     slug: 'cat-litter-hygiene',
-    image: '/images/storefront/cat-cat-food.jpg',
-    bgColor: '#F3ECE7',
-    icon: Bone,
+    image: '/images/storefront/brand-story-cat.jpg',
   },
 ];
 
 export default function CategoryShowcase() {
   return (
-    <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-12 sm:py-16 container mx-auto px-4">
       {/* Section Heading */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mb-8 sm:mb-10">
         <div>
@@ -85,61 +73,64 @@ export default function CategoryShowcase() {
           <Link
             key={category.name}
             href={`/products?category=${category.slug}`}
-            className="group block h-full"
+            className="group block h-full select-none"
           >
-            <div className="bg-white rounded-2xl p-3 border border-[#E7DFD5] shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col items-center text-center h-full">
-              
-              {/* Pastel Container with Contained Image */}
-              <div
-                className="w-full rounded-xl flex items-center justify-center p-2 mb-2.5 shrink-0"
+            <div
+              className="relative overflow-hidden rounded-2xl border border-[#BDDFEA]/60 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-end text-center bg-[#F5F2EB]"
+              style={{
+                height: '220px',
+                minHeight: '220px',
+                padding: '14px 12px 20px 12px',
+              }}
+            >
+              {/* Full Card Background Image */}
+              <img
+                src={category.image}
+                alt={category.name}
                 style={{
-                  backgroundColor: category.bgColor,
-                  height: '98px',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 20%',
                 }}
-              >
+                className="absolute inset-0 group-hover:scale-108 transition-transform duration-500"
+                loading="lazy"
+              />
+
+              {/* Gradient Overlay for Text Contrast */}
+              <div
+                className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+                style={{
+                  background:
+                    'linear-gradient(180deg, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.25) 55%, rgba(0, 0, 0, 0.75) 85%, rgba(0, 0, 0, 0.92) 100%)',
+                }}
+              />
+
+              {/* Overlaid Bottom Content */}
+              <div className="relative z-10 flex flex-col items-center justify-end text-center w-full">
+                {/* Category Name */}
+                <h3 className="font-heading font-extrabold text-xs sm:text-sm text-white group-hover:text-[#FFC800] transition-colors leading-snug line-clamp-2 min-h-[2rem] flex items-center justify-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+                  {category.name}
+                </h3>
+
+                {/* Small Yellow Arrow Chip */}
                 <div
-                  className="rounded-full overflow-hidden border-2 border-white/90 shadow-2xs relative shrink-0"
+                  className="mx-auto mt-2.5 shadow-md transition-all duration-300 group-hover:scale-110 shrink-0"
                   style={{
-                    width: '68px',
-                    height: '68px',
+                    width: '28px',
+                    height: '28px',
+                    backgroundColor: '#FFC800',
+                    color: '#1A1A2E',
+                    borderRadius: '9999px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(255, 200, 0, 0.4)',
                   }}
                 >
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                    className="group-hover:scale-110 transition-transform duration-300"
-                    loading="lazy"
-                  />
+                  <ArrowRight size={13} className="text-[#1A1A2E] stroke-[2.5]" />
                 </div>
               </div>
-
-              {/* Category Name */}
-              <h3 className="font-heading font-bold text-xs text-[#1C1917] group-hover:text-[#F97316] transition-colors leading-snug line-clamp-2 min-h-[2rem] flex items-center justify-center">
-                {category.name}
-              </h3>
-
-              {/* Small Orange Arrow Chip */}
-              <div
-                className="mx-auto mt-2 shadow-2xs transition-transform group-hover:scale-110 shrink-0"
-                style={{
-                  width: '26px',
-                  height: '26px',
-                  backgroundColor: '#F97316',
-                  color: '#FFFFFF',
-                  borderRadius: '9999px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <ArrowRight size={12} className="text-white stroke-[2.5]" />
-              </div>
-
             </div>
           </Link>
         ))}

@@ -1,8 +1,6 @@
 import Header from '@/components/layout/Header';
 import HeroBanner from '@/components/home/HeroBanner';
 import CategoryShowcase from '@/components/home/CategoryShowcase';
-import PromoBentoBanner from '@/components/home/PromoBentoBanner';
-import WeeklyDeals from '@/components/home/WeeklyDeals';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import BrandStory from '@/components/home/BrandStory';
 import Testimonials from '@/components/home/Testimonials';
@@ -20,13 +18,7 @@ export default function Home() {
         {/* 2. Shop by Category (6 Rounded Pastel Cards) */}
         <CategoryShowcase />
 
-        {/* 4. Special Offer Wide Bento Banner */}
-        <PromoBentoBanner />
-
-        {/* 5. Weekly Deals Interactive Carousel */}
-        <WeeklyDeals />
-
-        {/* 6. Featured Products 5-Column Grid */}
+        {/* Featured Products 5-Column Grid */}
         <FeaturedProducts />
 
         {/* 7. Brand Story & Mission */}

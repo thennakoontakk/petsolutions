@@ -3,22 +3,45 @@
 import { Heart, ShieldCheck, Stethoscope, Award, PawPrint } from 'lucide-react';
 
 export default function BrandStory() {
+  const features = [
+    {
+      icon: ShieldCheck,
+      title: 'Trusted Brands',
+      description: '100% genuine pet care products',
+    },
+    {
+      icon: Stethoscope,
+      title: 'Pet Health First',
+      description: 'Wellness & veterinary care',
+    },
+    {
+      icon: Award,
+      title: 'Happy Pet Parents',
+      description: 'Thousands of happy pets',
+    },
+  ];
+
   return (
-    <section className="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div
+        className="mx-auto"
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-          gap: '3.5rem',
+          maxWidth: '1100px',
+          display: 'flex',
+          flexWrap: 'wrap',
           alignItems: 'center',
+          justifyContent: 'center',
+          gap: 'clamp(2rem, 4vw, 3.5rem)',
         }}
       >
-        
         {/* Left Column: Overlapping Organic Pet Photo Bubbles */}
-        <div className="flex justify-center">
+        <div
+          className="shrink-0 select-none flex justify-center"
+          style={{ width: '370px' }}
+        >
           <div
-            className="relative shrink-0"
-            style={{ width: '360px', height: '360px', position: 'relative' }}
+            className="relative"
+            style={{ width: '370px', height: '350px' }}
           >
             {/* Soft Organic Amber Glow behind circles */}
             <div
@@ -27,7 +50,7 @@ export default function BrandStory() {
                 inset: 0,
                 borderRadius: '9999px',
                 background: 'radial-gradient(circle, rgba(254, 215, 170, 0.5) 0%, rgba(255, 237, 213, 0.25) 60%, transparent 80%)',
-                filter: 'blur(24px)',
+                filter: 'blur(28px)',
                 pointerEvents: 'none',
               }}
             />
@@ -37,13 +60,13 @@ export default function BrandStory() {
               style={{
                 position: 'absolute',
                 top: '15px',
-                left: '10px',
-                width: '210px',
-                height: '210px',
+                left: '15px',
+                width: '215px',
+                height: '215px',
                 borderRadius: '9999px',
                 overflow: 'hidden',
                 border: '4px solid #FFFFFF',
-                boxShadow: '0 10px 25px rgba(0,0,0,0.12)',
+                boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
                 zIndex: 1,
               }}
             >
@@ -58,14 +81,14 @@ export default function BrandStory() {
             <div
               style={{
                 position: 'absolute',
-                bottom: '20px',
+                bottom: '15px',
                 right: '15px',
-                width: '160px',
-                height: '160px',
+                width: '170px',
+                height: '170px',
                 borderRadius: '9999px',
                 overflow: 'hidden',
                 border: '4px solid #FFFFFF',
-                boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+                boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
                 zIndex: 2,
               }}
             >
@@ -80,14 +103,14 @@ export default function BrandStory() {
             <div
               style={{
                 position: 'absolute',
-                top: '30px',
-                right: '40px',
+                top: '55px',
+                right: '48px',
                 width: '42px',
                 height: '42px',
                 borderRadius: '9999px',
                 backgroundColor: '#F97316',
-                border: '2px solid #FFFFFF',
-                boxShadow: '0 4px 12px rgba(249, 115, 22, 0.35)',
+                border: '3px solid #FFFFFF',
+                boxShadow: '0 4px 14px rgba(249, 115, 22, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -101,18 +124,18 @@ export default function BrandStory() {
             <div
               style={{
                 position: 'absolute',
-                top: '-6px',
-                left: '0px',
-                transform: 'rotate(-5deg)',
+                top: '2px',
+                left: '20px',
+                transform: 'rotate(-4deg)',
                 zIndex: 4,
               }}
             >
               <span
-                className="italic font-serif text-xs text-[#EA580C] font-bold px-3.5 py-1.5 rounded-full border"
+                className="italic font-serif text-xs text-[#EA580C] font-bold px-3.5 py-1.5 rounded-full border inline-block"
                 style={{
                   backgroundColor: '#FFFFFF',
                   borderColor: '#FED7AA',
-                  boxShadow: '0 2px 8px rgba(234, 88, 12, 0.12)',
+                  boxShadow: '0 2px 10px rgba(234, 88, 12, 0.12)',
                 }}
               >
                 ✦ Better Care, Brighter Days
@@ -123,14 +146,14 @@ export default function BrandStory() {
             <div
               style={{
                 position: 'absolute',
-                bottom: '10px',
-                left: '20px',
-                transform: 'rotate(3deg)',
+                bottom: '8px',
+                left: '30px',
+                transform: 'rotate(2deg)',
                 zIndex: 4,
               }}
             >
               <span
-                className="italic font-serif text-xs text-[#78716C] font-semibold px-3 py-1 rounded-full border"
+                className="italic font-serif text-xs text-[#78716C] font-semibold px-3.5 py-1 rounded-full border inline-block"
                 style={{
                   backgroundColor: '#FFFFFF',
                   borderColor: '#E7DFD5',
@@ -143,83 +166,76 @@ export default function BrandStory() {
           </div>
         </div>
 
-        {/* Right Column: Mission Text & 3 Mini Feature Badges */}
-        <div className="text-left">
+        {/* Right Column: Mission Text & 3 Mini Feature Cards */}
+        <div
+          className="text-left"
+          style={{
+            flex: '1 1 460px',
+            maxWidth: '620px',
+          }}
+        >
           <div
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider mb-3"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider mb-3.5"
             style={{ backgroundColor: '#FFF3EB', color: '#EA580C' }}
           >
-            <PawPrint size={12} style={{ color: '#EA580C' }} />
+            <PawPrint size={13} style={{ color: '#EA580C' }} />
             <span>More Than Just a Store</span>
           </div>
 
           <h2
-            className="font-heading font-extrabold text-[#1C1917] tracking-tight leading-tight"
-            style={{ fontSize: 'clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem)' }}
+            className="font-heading font-extrabold text-[#1C1917] tracking-tight leading-[1.2] mb-3.5"
+            style={{ fontSize: 'clamp(1.75rem, 1.35rem + 1.25vw, 2.35rem)' }}
           >
             A Healthier, Happier Life for Every Pet
           </h2>
 
-          <p className="text-xs sm:text-sm md:text-base text-[#78716C] mt-3 leading-relaxed max-w-xl">
+          <p className="text-sm sm:text-base text-[#78716C] leading-relaxed mb-6">
             At PetSolutions.lk, we believe pets are family. That&apos;s why we offer high-quality products, expert advice, and genuine care — because their well-being matters.
           </p>
 
-          {/* 3 Mini Feature Badges matching reference */}
+          {/* 3 Mini Feature Cards */}
           <div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 pt-6"
             style={{
-              borderTop: '1px solid rgba(231, 223, 213, 0.7)',
+              borderTop: '1px solid rgba(231, 223, 213, 0.8)',
+              paddingTop: '1.25rem',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+              gap: '0.75rem',
             }}
           >
-            
-            <div
-              className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border shadow-2xs"
-              style={{ borderColor: '#E7DFD5' }}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                style={{ backgroundColor: '#FFF3EB', color: '#F97316' }}
-              >
-                <ShieldCheck size={20} />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-xs text-[#1C1917]">Trusted Brands</h3>
-                <p className="text-[10px] text-[#78716C] mt-0.5 leading-tight">We only stock the best.</p>
-              </div>
-            </div>
-
-            <div
-              className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border shadow-2xs"
-              style={{ borderColor: '#E7DFD5' }}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                style={{ backgroundColor: '#FFF3EB', color: '#F97316' }}
-              >
-                <Stethoscope size={20} />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-xs text-[#1C1917]">Pet Health Focused</h3>
-                <p className="text-[10px] text-[#78716C] mt-0.5 leading-tight">Wellness for life.</p>
-              </div>
-            </div>
-
-            <div
-              className="flex items-start gap-3 p-3.5 rounded-2xl bg-white border shadow-2xs"
-              style={{ borderColor: '#E7DFD5' }}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                style={{ backgroundColor: '#FFF3EB', color: '#F97316' }}
-              >
-                <Award size={20} />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-xs text-[#1C1917]">Happy Pet Parents</h3>
-                <p className="text-[10px] text-[#78716C] mt-0.5 leading-tight">Thousands of satisfied customers.</p>
-              </div>
-            </div>
-
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={feature.title}
+                  className="flex items-start gap-2.5 rounded-2xl bg-white border border-[#E7DFD5] transition-all hover:shadow-xs"
+                  style={{
+                    padding: '12px 14px',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)',
+                  }}
+                >
+                  <div
+                    className="rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      backgroundColor: '#FFF3EB',
+                      color: '#F97316',
+                    }}
+                  >
+                    <Icon size={19} className="stroke-[2.2]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-heading font-bold text-xs sm:text-[13px] text-[#1C1917] leading-tight">
+                      {feature.title}
+                    </h3>
+                    <p className="text-[11px] text-[#78716C] mt-1 leading-snug">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

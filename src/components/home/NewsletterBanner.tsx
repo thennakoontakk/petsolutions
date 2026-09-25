@@ -21,46 +21,63 @@ export default function NewsletterBanner() {
   };
 
   return (
-    <section className="py-8 sm:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-12 sm:py-16 container mx-auto px-4">
       <div
-        className="relative overflow-hidden rounded-3xl p-6 sm:p-8 md:p-10 shadow-md border border-amber-400/40"
+        className="relative overflow-hidden rounded-3xl shadow-xl border border-amber-400/40"
         style={{
           background: 'linear-gradient(135deg, #FFCA28 0%, #FFA000 55%, #FF8F00 100%)',
+          padding: 'clamp(2.5rem, 5vw, 4.5rem) clamp(1.75rem, 5vw, 4rem)',
+          minHeight: '380px',
+          borderRadius: '2rem',
         }}
       >
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
+        {/* Subtle decorative circles for depth */}
+        <div
+          className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/10 pointer-events-none blur-xl"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-amber-600/10 pointer-events-none blur-2xl"
+          aria-hidden="true"
+        />
+
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-16">
           
           {/* Left: Text and Subscription Form */}
-          <div className="text-[#1C1917] flex-1 max-w-xl text-center md:text-left">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/40 backdrop-blur-xs text-[#1C1917] text-[10px] sm:text-[11px] font-black uppercase tracking-wider mb-2.5">
-              <PawPrint size={13} className="text-[#1C1917]" />
+          <div className="text-[#1C1917] flex-1 max-w-2xl text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/45 backdrop-blur-xs text-[#1C1917] text-xs font-black uppercase tracking-wider mb-3.5 shadow-2xs">
+              <PawPrint size={14} className="text-[#1C1917]" />
               <span>Stay in Touch</span>
             </div>
 
-            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-black text-[#1C1917] tracking-tight leading-tight">
+            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-black text-[#1C1917] tracking-tight leading-tight mb-3">
               Get Exclusive Offers &amp; Pet Care Tips
             </h2>
 
-            <p className="text-[#1C1917]/85 text-xs sm:text-sm mt-1.5 font-medium leading-relaxed">
+            <p className="text-[#1C1917]/90 text-sm sm:text-base font-medium leading-relaxed max-w-xl">
               Join our pet community to receive weekly special discounts, veterinary health tips, and new catalog arrivals direct to your inbox.
             </p>
 
             {subscribed ? (
-              <div className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-emerald-800 font-bold text-xs sm:text-sm shadow-md">
-                <CheckCircle2 size={16} className="text-emerald-600" />
+              <div className="mt-7 inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-white text-emerald-800 font-bold text-sm sm:text-base shadow-md">
+                <CheckCircle2 size={20} className="text-emerald-600" />
                 <span>You are subscribed! Check your inbox soon.</span>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="mt-5 flex flex-col sm:flex-row gap-2 max-w-md mx-auto md:mx-0 bg-white p-1.5 rounded-full shadow-md border border-amber-200/50"
+                className="mt-7 sm:mt-8 flex flex-col sm:flex-row gap-2.5 sm:gap-2 max-w-lg sm:max-w-xl mx-auto md:mx-0 bg-white p-2 rounded-2xl sm:rounded-full shadow-lg border-2 border-white/80"
+                style={{
+                  boxShadow: '0 12px 36px -8px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06)',
+                }}
               >
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  className="flex-1 px-4 py-2.5 rounded-full bg-transparent text-[#1C1917] text-xs sm:text-sm placeholder:text-stone-400 outline-none"
+                  placeholder="Enter your email address..."
+                  className="flex-1 px-5 py-3 sm:py-3.5 rounded-full bg-transparent text-[#1C1917] text-sm sm:text-base placeholder:text-stone-400 outline-none"
+                  style={{ minWidth: 0, fontSize: '15px' }}
                   required
                 />
                 <button
@@ -69,25 +86,26 @@ export default function NewsletterBanner() {
                     backgroundColor: '#EA580C',
                     color: '#FFFFFF',
                     borderRadius: '9999px',
+                    boxShadow: '0 4px 14px rgba(234, 88, 12, 0.4)',
+                    padding: '14px 48px',
                   }}
-                  className="px-6 py-2.5 font-bold text-xs flex items-center justify-center gap-1.5 hover:brightness-95 transition-all cursor-pointer whitespace-nowrap shadow-xs"
+                  className="font-bold text-sm sm:text-base flex items-center justify-center gap-2 hover:brightness-105 active:scale-98 transition-all cursor-pointer whitespace-nowrap shrink-0"
                 >
                   <span>Subscribe</span>
-                  <Send size={12} className="stroke-[2.5]" />
+                  <Send size={16} className="stroke-[2.5]" />
                 </button>
               </form>
             )}
           </div>
 
-          {/* Right: Curious Cat Photo with STRICT SIZING */}
+          {/* Right: Curious Cat Photo */}
           <div className="flex justify-center shrink-0">
             <div
-              className="rounded-full overflow-hidden border-4 border-white shadow-xl bg-white/20 shrink-0"
+              className="rounded-full overflow-hidden border-4 sm:border-[6px] border-white shadow-2xl bg-white/20 shrink-0"
               style={{
-                width: '160px',
-                height: '160px',
-                maxWidth: '160px',
-                maxHeight: '160px',
+                width: 'clamp(180px, 20vw, 220px)',
+                height: 'clamp(180px, 20vw, 220px)',
+                boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.25)',
               }}
             >
               <img
