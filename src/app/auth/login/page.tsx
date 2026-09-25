@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, ArrowRight, User, Shield, Sparkles, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Sparkles, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -20,7 +20,6 @@ function LoginFormContent() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
-  const [fillState, setFillState] = useState<'idle' | 'typing'>('idle');
 
   const redirect = searchParams.get('redirect') || '/';
 
@@ -65,67 +64,6 @@ function LoginFormContent() {
     } catch (err: any) {
       console.error('Sign in error:', err);
       setError(err.message || 'Invalid email or password. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Helper function to simulate fast typing for demo accounts
-  const handleQuickLogin = async (type: 'owner' | 'staff' | 'pharmacist' | 'user') => {
-    if (fillState === 'typing' || isSubmitting) return;
-    
-    setFillState('typing');
-    setError(null);
-    setSuccess(null);
-    
-    const creds = {
-      owner: { email: 'admin@petsolutions.lk', pass: 'AdminPassword123' },
-      staff: { email: 'staff@petsolutions.lk', pass: 'StaffPassword123' },
-      pharmacist: { email: 'pharmacist@petsolutions.lk', pass: 'PharmaPassword123' },
-      user: { email: 'user@petsolutions.lk', pass: 'UserPassword123' },
-    }[type];
-
-    const targetEmail = creds.email;
-    const targetPassword = creds.pass;
-    
-    // Clear first
-    setEmail('');
-    setPassword('');
-    
-    // Quick typing animation
-    let currentEmail = '';
-    let currentPassword = '';
-    
-    // Simulate typing email
-    for (let i = 0; i <= targetEmail.length; i++) {
-      await new Promise((r) => setTimeout(r, 12));
-      currentEmail = targetEmail.slice(0, i);
-      setEmail(currentEmail);
-    }
-    
-    await new Promise((r) => setTimeout(r, 60));
-    
-    // Simulate typing password
-    for (let i = 0; i <= targetPassword.length; i++) {
-      await new Promise((r) => setTimeout(r, 10));
-      currentPassword = targetPassword.slice(0, i);
-      setPassword(currentPassword);
-    }
-    
-    await new Promise((r) => setTimeout(r, 120));
-    setFillState('idle');
-    
-    // Trigger submit
-    setIsSubmitting(true);
-    try {
-      const res = await signIn(targetEmail, targetPassword);
-      if (res && res.error) {
-        setError(res.error);
-      } else {
-        setSuccess('Successfully signed in! Welcome back.');
-      }
-    } catch (err: any) {
-      setError('An error occurred during quick sign in.');
     } finally {
       setIsSubmitting(false);
     }
@@ -231,7 +169,7 @@ function LoginFormContent() {
                 type="email"
                 placeholder="email@example.com"
                 required
-                disabled={isSubmitting || fillState === 'typing'}
+                disabled={isSubmitting}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="input w-full pl-11 pr-4 py-3 bg-secondary/25 border border-secondary-alt/50 rounded-xl focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all duration-300 text-sm"
@@ -252,7 +190,7 @@ function LoginFormContent() {
                 type="password"
                 placeholder="••••••••"
                 required
-                disabled={isSubmitting || fillState === 'typing'}
+                disabled={isSubmitting}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input w-full pl-11 pr-4 py-3 bg-secondary/25 border border-secondary-alt/50 rounded-xl focus:bg-white focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all duration-300 text-sm"
@@ -262,7 +200,7 @@ function LoginFormContent() {
 
           <motion.button
             type="submit"
-            disabled={isSubmitting || fillState === 'typing'}
+            disabled={isSubmitting}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
             className="btn btn-primary w-full py-3.5 mt-2 text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 rounded-xl shadow-md cursor-pointer transition-all duration-200"
@@ -283,51 +221,6 @@ function LoginFormContent() {
           <Link href={`/auth/register?redirect=${encodeURIComponent(redirect)}`} className="text-accent font-bold hover:underline">
             Create Account
           </Link>
-        </div>
-
-        {/* Quick Testing Credentials Assistant Panel */}
-        <div className="mt-8 pt-6 border-t border-dashed border-secondary-alt/40 bg-accent-light/30 rounded-2xl p-4.5 border-0">
-          <div className="flex items-center gap-1.5 mb-3 text-accent">
-            <Shield size={14} className="shrink-0" />
-            <span className="text-[11px] font-extrabold uppercase tracking-widest">Quick Developer Logins</span>
-          </div>
-          <p className="text-[10px] text-text-muted leading-relaxed mb-4">
-            Use these one-click shortcuts to bypass email verification and sign in instantly for testing.
-          </p>
-          <div className="grid grid-cols-2 gap-2.5">
-            <button
-              onClick={() => handleQuickLogin('owner')}
-              disabled={isSubmitting || fillState === 'typing'}
-              className="px-3 py-2.5 bg-white hover:bg-accent/10 text-accent text-[11px] font-extrabold rounded-xl border border-accent/20 hover:border-accent/40 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
-            >
-              <span className="font-heading tracking-tight uppercase">👑 Owner Demo</span>
-              <span className="text-[8.5px] opacity-75 font-normal normal-case">Full access & financials</span>
-            </button>
-            <button
-              onClick={() => handleQuickLogin('staff')}
-              disabled={isSubmitting || fillState === 'typing'}
-              className="px-3 py-2.5 bg-white hover:bg-blue-50 text-blue-700 text-[11px] font-extrabold rounded-xl border border-blue-200 hover:border-blue-400 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
-            >
-              <span className="font-heading tracking-tight uppercase">📦 Staff Demo</span>
-              <span className="text-[8.5px] opacity-75 font-normal normal-case">Dispatch & inventory</span>
-            </button>
-            <button
-              onClick={() => handleQuickLogin('pharmacist')}
-              disabled={isSubmitting || fillState === 'typing'}
-              className="px-3 py-2.5 bg-white hover:bg-emerald-50 text-emerald-700 text-[11px] font-extrabold rounded-xl border border-emerald-200 hover:border-emerald-400 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
-            >
-              <span className="font-heading tracking-tight uppercase">🩺 Pharmacist</span>
-              <span className="text-[8.5px] opacity-75 font-normal normal-case">Clinical formulas & RX</span>
-            </button>
-            <button
-              onClick={() => handleQuickLogin('user')}
-              disabled={isSubmitting || fillState === 'typing'}
-              className="px-3 py-2.5 bg-white hover:bg-secondary/40 text-text-dark text-[11px] font-extrabold rounded-xl border border-secondary-alt/60 hover:border-accent/30 shadow-xs flex flex-col items-center justify-center gap-0.5 text-center transition-all duration-200"
-            >
-              <span className="font-heading tracking-tight uppercase">🐶 Customer</span>
-              <span className="text-[8.5px] opacity-75 font-normal normal-case">Standard buyer</span>
-            </button>
-          </div>
         </div>
       </motion.div>
     </div>

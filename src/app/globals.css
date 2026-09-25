@@ -155,6 +155,9 @@ html {
   text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal layout shifts / dancing screen when vertical scrollbars appear or disappear */
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -174,6 +177,32 @@ body {
   background-color: var(--color-dominant);
   min-height: 100dvh;
   overflow-x: hidden;
+}
+
+/* ── Custom Sleek Scrollbar (Prevents Windows 17px Gray Scrollbar Flicker) ── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dominant, #FEFCF3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+  border: 2px solid var(--color-dominant, #FEFCF3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-blue, #00ACDF);
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 var(--color-dominant, #FEFCF3);
 }
 
 /* Selection */
@@ -1803,6 +1832,9 @@ input:-webkit-autofill:focus {
 .hover\:translate-x-0\.5:hover { transform: translateX(2px); }
 .hover\:translate-x-1:hover { transform: translateX(4px); }
 .group:hover .group-hover\:scale-105 { transform: scale(1.05); }
+.group\/img:hover .group-hover\/img\:scale-105 { transform: scale(1.05); }
+.object-contain { object-fit: contain; }
+.bg-\[\#F9F6EE\] { background-color: #F9F6EE; }
 .group:hover .group-hover\:scale-110 { transform: scale(1.1); }
 .group:hover .group-hover\:translate-x-0\.5 { transform: translateX(2px); }
 .group:hover .group-hover\:translate-x-1 { transform: translateX(4px); }
@@ -1895,6 +1927,7 @@ table tr:hover { background-color: rgba(237, 232, 219, 0.15); }
   flex-direction: column;
   gap: var(--space-5);
   padding-bottom: var(--space-12);
+  min-height: calc(100vh - 120px);
 }
 
 /* Header Banner */
@@ -2003,6 +2036,25 @@ table tr:hover { background-color: rgba(237, 232, 219, 0.15); }
 @media (max-width: 640px) {
   .admin-kpi-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.admin-kpi-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .admin-kpi-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-kpi-grid-4 {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -2190,6 +2242,7 @@ table tr:hover { background-color: rgba(237, 232, 219, 0.15); }
 .admin-table-scroll {
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .admin-table {
@@ -2346,4 +2399,13 @@ table tr:hover { background-color: rgba(237, 232, 219, 0.15); }
   box-shadow: var(--shadow-sm);
   flex-wrap: wrap;
 }
+
+/* App Shell & Scroll Utilities */
+.h-screen { height: 100vh; }
+.min-h-screen { min-height: 100vh; }
+.max-h-screen { max-height: 100vh; }
+.overflow-y-auto { overflow-y: auto; }
+.overflow-y-hidden { overflow-y: hidden; }
+.overflow-x-hidden { overflow-x: hidden; }
+
 

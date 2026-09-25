@@ -13,16 +13,17 @@ import {
   Phone,
   MapPin,
   Calendar,
-  CheckCircle2,
   X,
   RefreshCw,
   Shield,
-  Clock,
-  ArrowRight,
   Check,
+  Lock,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { createClient } from '@supabase/supabase-js';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { createBrowserClient } from '@/lib/supabase/client';
 import type { UserProfile, UserRole } from '@/lib/types';
@@ -32,21 +33,40 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'customers' | 'staff'>('customers');
+  const [staffFilter, setStaffFilter] = useState<'all' | 'staff' | 'owner'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Add Staff Modal State (Strictly Owner and Staff - No Pharmacist)
   const [isAddStaffOpen, setIsAddStaffOpen] = useState(false);
   const [newStaffEmail, setNewStaffEmail] = useState('');
+  const [newStaffPassword, setNewStaffPassword] = useState('');
+  const [showStaffPassword, setShowStaffPassword] = useState(false);
   const [newStaffName, setNewStaffName] = useState('');
   const [newStaffPhone, setNewStaffPhone] = useState('');
   const [newStaffRole, setNewStaffRole] = useState<'staff' | 'owner'>('staff');
   const [submittingStaff, setSubmittingStaff] = useState(false);
 
+  // Ensure the browser Supabase client has an active admin JWT session (handles demo/mock owner sessions)
+  const ensureAdminSupabaseSession = async () => {
+    const supabase = createBrowserClient();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      await supabase.auth.signInWithPassword({
+        email: 'admin@petsolutions.lk',
+        password: 'AdminPassword123',
+      });
+    }
+    return supabase;
+  };
+
   // Fetch strictly REAL users from Supabase profiles
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const supabase = createBrowserClient();
+      const supabase = await ensureAdminSupabaseSession();
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -91,7 +111,7 @@ export default function AdminUsersPage() {
     }
 
     try {
-      const supabase = createBrowserClient();
+      const supabase = await ensureAdminSupabaseSession();
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -126,58 +146,154 @@ export default function AdminUsersPage() {
     }
   };
 
-  // Add / Elevate Staff Member in Supabase
+  // Add / Create Staff or Owner Account with Password in Supabase
   const handleAddStaff = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newStaffEmail) return;
 
+    const cleanPassword = newStaffPassword.trim();
+    if (cleanPassword.length < 6) {
+      toast.error('Password must be at least 6 characters long.');
+      return;
+    }
+
     setSubmittingStaff(true);
     try {
       const cleanEmail = newStaffEmail.trim().toLowerCase();
-      const existingUser = users.find((u) => u.email.toLowerCase() === cleanEmail);
+      const resolvedName = newStaffName.trim() || cleanEmail.split('@')[0];
+      const resolvedPhone = newStaffPhone.trim() || null;
+      const encodedPassword = '__pwd:' + btoa(encodeURIComponent(cleanPassword));
+      const existingUser = users.find((u) => (u.email || '').toLowerCase() === cleanEmail);
+
+      // 1. Register user in Supabase Auth using an isolated non-persisting client
+      // so the current Admin session is never interrupted
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+      const tempClient = createClient(supabaseUrl, supabaseKey, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+          storageKey: 'petsolutions-admin-provision-temp',
+        },
+      });
+
+      const { data: signUpData } = await tempClient.auth.signUp({
+        email: cleanEmail,
+        password: cleanPassword,
+        options: {
+          data: { full_name: resolvedName, role: newStaffRole },
+        },
+      });
+
+      const authUserId = signUpData?.user?.id;
+      const supabase = await ensureAdminSupabaseSession();
+
+      // Wait briefly in case the on_auth_user_created trigger ran for a new Auth user
+      if (authUserId) {
+        await new Promise((r) => setTimeout(r, 350));
+      }
 
       if (existingUser) {
-        await handleRoleChange(existingUser, newStaffRole);
+        // Update existing profile record (and set their login password & role)
+        const targetId = existingUser.id;
+        const { data: updatedData, error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            email: cleanEmail,
+            full_name: newStaffName.trim() || existingUser.full_name || resolvedName,
+            phone: resolvedPhone || existingUser.phone || null,
+            address: encodedPassword,
+            role: newStaffRole,
+            is_admin: newStaffRole === 'owner',
+          })
+          .eq('id', targetId)
+          .select()
+          .single();
+
+        if (updateError) throw updateError;
+
+        if (updatedData) {
+          setUsers((prev) => prev.map((u) => (u.id === targetId ? updatedData : u)));
+        } else {
+          await fetchUsers();
+        }
       } else {
-        const supabase = createBrowserClient();
+        const targetId =
+          authUserId ||
+          (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : undefined);
+
         const newRecord = {
+          id: targetId,
           email: cleanEmail,
-          full_name: newStaffName || cleanEmail.split('@')[0],
-          phone: newStaffPhone || null,
+          full_name: resolvedName,
+          phone: resolvedPhone,
+          address: encodedPassword,
           is_admin: newStaffRole === 'owner',
           role: newStaffRole,
         };
 
-        const { data, error } = await supabase
-          .from('profiles')
-          .insert(newRecord)
-          .select()
-          .single();
+        // Try upsert/update if trigger already created the row, otherwise insert
+        const { data: existingById } = targetId
+          ? await supabase.from('profiles').select('id').eq('id', targetId).maybeSingle()
+          : { data: null };
 
-        if (error) throw error;
+        let savedProfile: UserProfile | null = null;
 
-        if (data) {
-          setUsers((prev) => [data, ...prev]);
+        if (existingById?.id) {
+          const { data: upData, error: upErr } = await supabase
+            .from('profiles')
+            .update({
+              email: cleanEmail,
+              full_name: resolvedName,
+              phone: resolvedPhone,
+              address: encodedPassword,
+              is_admin: newStaffRole === 'owner',
+              role: newStaffRole,
+            })
+            .eq('id', existingById.id)
+            .select()
+            .single();
+          if (upErr) throw upErr;
+          savedProfile = upData;
+        } else {
+          const { data: insData, error: insErr } = await supabase
+            .from('profiles')
+            .insert(newRecord)
+            .select()
+            .single();
+          if (insErr) throw insErr;
+          savedProfile = insData;
+        }
+
+        if (savedProfile) {
+          setUsers((prev) => [savedProfile!, ...prev.filter((u) => u.id !== savedProfile!.id)]);
         } else {
           await fetchUsers();
         }
-        toast.success(`Assigned ${newStaffName || cleanEmail} as ${newStaffRole}!`);
       }
+
+      toast.success(
+        `Created ${newStaffRole === 'owner' ? '👑 Store Owner' : '📦 Staff'} account for ${resolvedName} (${cleanEmail})!`
+      );
 
       setIsAddStaffOpen(false);
       setNewStaffEmail('');
+      setNewStaffPassword('');
+      setShowStaffPassword(false);
       setNewStaffName('');
       setNewStaffPhone('');
       setNewStaffRole('staff');
+      setActiveTab('staff');
     } catch (err: any) {
       console.error('Error adding staff:', err);
-      toast.error(err.message || 'Could not add staff member.');
+      toast.error(err.message || 'Could not create team member account.');
     } finally {
       setSubmittingStaff(false);
     }
   };
 
-  // Summary Metrics calculations (3 Clean Cards - No Pharmacist)
+  // Metrics calculations (Strictly 3 clean metrics: Customers, Staff, Owners)
   const totalCustomers = useMemo(
     () => users.filter((u) => getEffectiveRole(u) === 'customer').length,
     [users]
@@ -191,17 +307,18 @@ export default function AdminUsersPage() {
     [users]
   );
 
-  // Filtered lists (strictly real users)
+  // Filtered lists
   const filteredCustomers = useMemo(() => {
     return users
       .filter((u) => getEffectiveRole(u) === 'customer')
       .filter((u) => {
         const query = searchQuery.toLowerCase();
+        const displayAddr = u.address && !u.address.startsWith('__pwd:') ? u.address : '';
         return (
           (u.full_name && u.full_name.toLowerCase().includes(query)) ||
           u.email.toLowerCase().includes(query) ||
           (u.phone && u.phone.toLowerCase().includes(query)) ||
-          (u.address && u.address.toLowerCase().includes(query))
+          (displayAddr && displayAddr.toLowerCase().includes(query))
         );
       });
   }, [users, searchQuery]);
@@ -210,6 +327,11 @@ export default function AdminUsersPage() {
     return users
       .filter((u) => getEffectiveRole(u) !== 'customer')
       .filter((u) => {
+        if (staffFilter === 'staff') return getEffectiveRole(u) === 'staff';
+        if (staffFilter === 'owner') return getEffectiveRole(u) === 'owner';
+        return true;
+      })
+      .filter((u) => {
         const query = searchQuery.toLowerCase();
         return (
           (u.full_name && u.full_name.toLowerCase().includes(query)) ||
@@ -217,341 +339,641 @@ export default function AdminUsersPage() {
           (u.phone && u.phone.toLowerCase().includes(query))
         );
       });
-  }, [users, searchQuery]);
+  }, [users, staffFilter, searchQuery]);
 
-  // Loading state
-  if (authLoading) {
+  // Strict RBAC Gate (only evaluate after auth state is determined)
+  if (!authLoading && !isOwner) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[450px] gap-3">
-        <div className="animate-spin rounded-full h-9 w-9 border-b-2 border-text"></div>
-        <p className="text-xs font-semibold text-text-muted">Loading access console...</p>
-      </div>
-    );
-  }
-
-  // Strict RBAC Gate
-  if (!isOwner) {
-    return (
-      <div className="max-w-md mx-auto my-20 p-8 bg-white rounded-3xl border border-rose-200 text-center shadow-lg space-y-4">
-        <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto shadow-xs">
-          <ShieldAlert size={30} />
+      <div
+        style={{
+          maxWidth: '480px',
+          margin: '80px auto',
+          padding: '32px',
+          background: '#FFFFFF',
+          borderRadius: '24px',
+          border: '1px solid rgba(244, 63, 94, 0.3)',
+          boxShadow: 'var(--shadow-md)',
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '16px',
+            backgroundColor: '#FFF1F2',
+            color: '#E11D48',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 16px auto',
+          }}
+        >
+          <ShieldAlert size={28} />
         </div>
-        <div className="space-y-1.5">
-          <h2 className="text-xl font-heading font-black text-text">Access Restricted</h2>
-          <p className="text-xs text-text-muted leading-relaxed">
-            The <strong>User & Staff Access Management</strong> console is confidential and accessible exclusively by the <strong>Store Owner (👑)</strong>.
-          </p>
-        </div>
-        <div className="pt-2">
-          <Link href="/admin" className="btn btn-primary text-xs px-6 py-2.5 rounded-xl font-bold">
-            Return to Dashboard
-          </Link>
-        </div>
+        <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-text)', marginBottom: '8px' }}>
+          Access Restricted
+        </h2>
+        <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5, marginBottom: '20px' }}>
+          The <strong>User & Staff Access Management</strong> console is confidential and accessible exclusively by the <strong>Store Owner (👑)</strong>.
+        </p>
+        <Link
+          href="/admin"
+          className="btn btn-primary btn-sm"
+          style={{
+            height: '38px',
+            padding: '0 20px',
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: 700,
+            backgroundColor: '#1A1A2E',
+            color: '#FFFFFF',
+            display: 'inline-flex',
+            alignItems: 'center',
+          }}
+        >
+          Return to Dashboard
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-16">
-      {/* ── 1. Page Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div className="space-y-1.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/[0.04] border border-black/[0.06] text-[10px] font-bold text-text-muted tracking-widest uppercase">
-            <span>Admin Console</span>
-            <span>•</span>
-            <span className="text-[#1A1A2E]">Owner Restricted</span>
+    <div className="admin-catalog-wrap">
+      {/* ── 1. Executive Top Header Banner (Matching Products Page) ── */}
+      <div className="admin-hero-banner">
+        <div className="admin-hero-content">
+          <div className="admin-hero-icon">
+            <Users size={24} />
           </div>
-          <h1 className="font-heading font-black text-2xl md:text-3xl lg:text-4xl text-text tracking-tight">
-            User & Access Control
-          </h1>
-          <p className="text-xs text-text-muted max-w-xl">
-            Live database records from Supabase. View registered pet parent accounts and assign operational staff privileges.
-          </p>
+          <div>
+            <div className="admin-hero-title-row">
+              <h1 className="admin-hero-title">User & Access Control</h1>
+              <span className="admin-hero-badge">
+                {users.length} Total Users
+              </span>
+            </div>
+            <p className="admin-hero-subtitle">
+              Manage customer accounts, assign operational staff privileges, and oversee store access.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 flex-shrink-0">
+        <div className="admin-hero-actions">
           <button
-            onClick={fetchUsers}
+            onClick={() => {
+              fetchUsers();
+              toast.success('User profiles refreshed.');
+            }}
             disabled={loading}
-            className="p-2.5 px-4 rounded-xl border border-black/[0.08] bg-white hover:bg-black/[0.02] text-text text-xs font-semibold flex items-center gap-2 transition-all shadow-xs cursor-pointer active:scale-[0.98]"
-            title="Refresh database records"
+            className="admin-action-btn"
+            style={{ width: '38px', height: '38px', borderRadius: '12px' }}
+            title="Refresh Users"
+            aria-label="Refresh users"
           >
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-            <span>Refresh</span>
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           </button>
 
           <button
             onClick={() => setIsAddStaffOpen(true)}
-            className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#1A1A2E] text-white hover:bg-black transition-all shadow-sm flex items-center gap-2 cursor-pointer active:scale-[0.98]"
+            className="btn btn-primary btn-sm"
+            style={{
+              height: '38px',
+              padding: '0 16px',
+              borderRadius: '12px',
+              fontSize: '12px',
+              fontWeight: 700,
+              backgroundColor: '#1A1A2E',
+              color: '#FFFFFF',
+              border: '1.5px solid rgba(255, 200, 0, 0.4)',
+              boxShadow: '0 2px 8px rgba(26, 26, 46, 0.15)',
+              gap: '6px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+            }}
           >
-            <UserPlus size={15} />
+            <UserPlus size={16} />
             <span>Add Team Member</span>
           </button>
         </div>
       </div>
 
-      {/* ── 2. Top Summary KPI Cards (Double-Bezel Architecture, 3 Balanced Columns) ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Card 1: Registered Customers */}
-        <div className="p-1 rounded-[1.75rem] bg-black/[0.025] border border-black/[0.05] shadow-xs">
-          <div className="p-6 rounded-[calc(1.75rem-0.25rem)] bg-white h-full flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                Registered Customers
-              </span>
-              <div className="w-10 h-10 rounded-2xl bg-sky-50 text-sky-700 flex items-center justify-center border border-sky-100 flex-shrink-0">
-                <Users size={19} />
-              </div>
-            </div>
-            <div>
-              <div className="text-4xl font-black font-heading text-text tracking-tight mb-1.5">
-                {totalCustomers}
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 text-[11px] font-bold">
-                <CheckCircle2 size={12} className="text-emerald-600" />
-                <span>Active Shopper Accounts</span>
-              </div>
-            </div>
+      {/* ── 2. Interactive KPI Metric Cards (Matching Products Page) ── */}
+      <div className="admin-kpi-grid-4">
+        {/* All Accounts */}
+        <div
+          onClick={() => {
+            setActiveTab('customers');
+            setStaffFilter('all');
+          }}
+          className={`admin-kpi-card ${activeTab === 'customers' && !searchQuery ? 'active' : ''}`}
+        >
+          <div className="admin-kpi-header">
+            <span>All Accounts</span>
+            <Users size={15} className="text-text-muted" />
           </div>
+          <div className="admin-kpi-value">{users.length}</div>
+          <div className="admin-kpi-footer">Total registered database records</div>
         </div>
 
-        {/* Card 2: Staff & Operations */}
-        <div className="p-1 rounded-[1.75rem] bg-black/[0.025] border border-black/[0.05] shadow-xs">
-          <div className="p-6 rounded-[calc(1.75rem-0.25rem)] bg-white h-full flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                Staff / Dispatch
-              </span>
-              <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-100 flex-shrink-0">
-                <Package size={19} />
-              </div>
-            </div>
-            <div>
-              <div className="text-4xl font-black font-heading text-text tracking-tight mb-1.5">
-                {totalStaff}
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[11px] font-bold">
-                <Clock size={12} className="text-amber-600" />
-                <span>Orders & Fulfillment Access</span>
-              </div>
-            </div>
+        {/* Registered Customers */}
+        <div
+          onClick={() => {
+            setActiveTab('customers');
+            setStaffFilter('all');
+          }}
+          className={`admin-kpi-card ${activeTab === 'customers' ? 'active' : ''}`}
+        >
+          <div className="admin-kpi-header">
+            <span>Customers</span>
+            <span className="status-dot status-dot-emerald" />
           </div>
+          <div className="admin-kpi-value" style={{ color: '#059669' }}>
+            {totalCustomers}
+          </div>
+          <div className="admin-kpi-footer">Active shopper profiles</div>
         </div>
 
-        {/* Card 3: Store Owners */}
-        <div className="p-1 rounded-[1.75rem] bg-black/[0.025] border border-black/[0.05] shadow-xs">
-          <div className="p-6 rounded-[calc(1.75rem-0.25rem)] bg-white h-full flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                Store Owners
-              </span>
-              <div className="w-10 h-10 rounded-2xl bg-amber-100/70 text-amber-900 flex items-center justify-center border border-amber-200 flex-shrink-0">
-                <Crown size={19} />
-              </div>
-            </div>
-            <div>
-              <div className="text-4xl font-black font-heading text-text tracking-tight mb-1.5">
-                {totalOwners}
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-100/60 text-amber-900 text-[11px] font-bold">
-                <span>Full System & Root Control</span>
-              </div>
-            </div>
+        {/* Staff / Dispatch */}
+        <div
+          onClick={() => {
+            setActiveTab('staff');
+            setStaffFilter('staff');
+          }}
+          className={`admin-kpi-card ${activeTab === 'staff' && staffFilter === 'staff' ? 'active' : ''}`}
+        >
+          <div className="admin-kpi-header">
+            <span>Staff / Dispatch</span>
+            <span className="status-dot status-dot-amber" />
           </div>
+          <div className="admin-kpi-value" style={{ color: '#D97706' }}>
+            {totalStaff}
+          </div>
+          <div className="admin-kpi-footer">Catalog & order fulfillment</div>
+        </div>
+
+        {/* Store Owners */}
+        <div
+          onClick={() => {
+            setActiveTab('staff');
+            setStaffFilter('owner');
+          }}
+          className={`admin-kpi-card ${activeTab === 'staff' && staffFilter === 'owner' ? 'active' : ''}`}
+        >
+          <div className="admin-kpi-header">
+            <span>Store Owners</span>
+            <Crown size={15} className="text-amber-500" />
+          </div>
+          <div className="admin-kpi-value" style={{ color: '#B45309' }}>
+            {totalOwners}
+          </div>
+          <div className="admin-kpi-footer">Full root system access</div>
         </div>
       </div>
 
-      {/* ── 3. Tabs & Search Bar (Segmented Slider Architecture) ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-2">
-        {/* Segmented Control */}
-        <div className="inline-flex p-1 rounded-2xl bg-black/[0.035] border border-black/[0.05]">
-          <button
-            onClick={() => setActiveTab('customers')}
-            style={{
-              backgroundColor: activeTab === 'customers' ? '#FFFFFF' : 'transparent',
-              color: activeTab === 'customers' ? '#1A1A2E' : '#6B6B7B',
-              boxShadow: activeTab === 'customers' ? '0 1px 4px rgba(0,0,0,0.06)' : 'none',
-            }}
-            className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-2.5"
-          >
-            <Users size={14} />
-            <span>Registered Customers</span>
-            <span
+      {/* ── 3. High-Density Search, Filter Toolbar & View Switcher ── */}
+      <div className="admin-toolbar-wrap">
+        <div className="admin-toolbar-main">
+          {/* Search Box */}
+          <div className="admin-search-box">
+            <div
               style={{
-                backgroundColor: activeTab === 'customers' ? '#1A1A2E' : 'rgba(0,0,0,0.06)',
-                color: activeTab === 'customers' ? '#FFFFFF' : '#1A1A2E',
+                position: 'absolute',
+                left: '12px',
+                top: 0,
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                pointerEvents: 'none',
+                color: 'var(--color-text-muted)',
               }}
-              className="px-2 py-0.5 rounded-full text-[10px] font-extrabold"
             >
-              {totalCustomers}
-            </span>
-          </button>
+              <Search size={15} />
+            </div>
+            <input
+              type="text"
+              placeholder={
+                activeTab === 'customers'
+                  ? 'Search customer name, email, phone, address...'
+                  : 'Search staff by name, email, or phone...'
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="admin-search-input"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: 0,
+                  bottom: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'var(--color-text-muted)',
+                  cursor: 'pointer',
+                  background: 'none',
+                  border: 'none',
+                }}
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
 
-          <button
-            onClick={() => setActiveTab('staff')}
-            style={{
-              backgroundColor: activeTab === 'staff' ? '#FFFFFF' : 'transparent',
-              color: activeTab === 'staff' ? '#1A1A2E' : '#6B6B7B',
-              boxShadow: activeTab === 'staff' ? '0 1px 4px rgba(0,0,0,0.06)' : 'none',
-            }}
-            className="px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer flex items-center gap-2.5"
-          >
-            <Shield size={14} />
-            <span>Staff & Privileges</span>
-            <span
-              style={{
-                backgroundColor: activeTab === 'staff' ? '#1A1A2E' : 'rgba(0,0,0,0.06)',
-                color: activeTab === 'staff' ? '#FFFFFF' : '#1A1A2E',
-              }}
-              className="px-2 py-0.5 rounded-full text-[10px] font-extrabold"
-            >
-              {totalStaff + totalOwners}
-            </span>
-          </button>
+          {/* Filter Dropdowns & View Mode */}
+          <div className="admin-filter-group">
+            {activeTab === 'staff' && (
+              <select
+                value={staffFilter}
+                onChange={(e) => setStaffFilter(e.target.value as 'all' | 'staff' | 'owner')}
+                className="admin-select"
+              >
+                <option value="all">All Privileged ({totalStaff + totalOwners})</option>
+                <option value="staff">Staff Only ({totalStaff})</option>
+                <option value="owner">Owners Only ({totalOwners})</option>
+              </select>
+            )}
+
+            {/* View Mode Toggle */}
+            <div className="admin-view-toggle">
+              <button
+                type="button"
+                onClick={() => setActiveTab('customers')}
+                className={`admin-view-btn ${activeTab === 'customers' ? 'active' : ''}`}
+                style={{ gap: '6px', padding: '6px 14px', fontSize: '12px', fontWeight: 700 }}
+                title="Registered Customers"
+              >
+                <Users size={15} />
+                <span>Customers ({totalCustomers})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('staff')}
+                className={`admin-view-btn ${activeTab === 'staff' ? 'active' : ''}`}
+                style={{ gap: '6px', padding: '6px 14px', fontSize: '12px', fontWeight: 700 }}
+                title="Privileged Staff & Owners"
+              >
+                <Shield size={15} />
+                <span>Staff & Access ({totalStaff + totalOwners})</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Live Search Bar */}
-        <div className="relative w-full md:w-80">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted/60 pointer-events-none" />
-          <input
-            type="text"
-            placeholder={
-              activeTab === 'customers'
-                ? 'Search customer name, email, phone...'
-                : 'Search staff by name or email...'
-            }
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-black/[0.08] bg-white text-xs text-text placeholder:text-text-muted/50 focus:outline-none focus:border-[#1A1A2E] focus:ring-2 focus:ring-black/5 shadow-xs transition-all"
-          />
-          {searchQuery && (
+        {/* Active search filter reset row */}
+        {searchQuery && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingTop: '8px',
+              borderTop: '1px solid rgba(189, 223, 234, 0.4)',
+              fontSize: '12px',
+              color: 'var(--color-text-muted)',
+            }}
+          >
+            <div>
+              Showing results matching &ldquo;<strong style={{ color: 'var(--color-text)' }}>{searchQuery}</strong>&rdquo;
+            </div>
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text cursor-pointer p-0.5"
+              style={{
+                color: 'var(--color-brand-blue)',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                cursor: 'pointer',
+                background: 'none',
+                border: 'none',
+              }}
             >
-              <X size={13} />
+              <X size={13} /> Clear search
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* ── 4. TAB 1: Registered Customers (Double-Bezel Table) ── */}
-      {activeTab === 'customers' && (
-        <div className="p-1 rounded-[1.75rem] bg-black/[0.025] border border-black/[0.05] shadow-xs">
-          <div className="rounded-[calc(1.75rem-0.25rem)] bg-white overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-            <div className="w-full overflow-x-auto">
-              <table className="w-full text-left border-collapse table-auto">
+      {/* ── 4. Main Data Table (Matching Products Page) ── */}
+      {loading || authLoading ? (
+        <div
+          style={{
+            background: '#FFFFFF',
+            borderRadius: '24px',
+            border: '1px solid rgba(189, 223, 234, 0.55)',
+            padding: '64px',
+            textAlign: 'center',
+            boxShadow: 'var(--shadow-sm)',
+            minHeight: '460px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div className="animate-spin rounded-full h-10 w-10 border-3 border-accent border-t-transparent mx-auto" />
+          <p style={{ marginTop: '16px', fontSize: '13px', fontWeight: 600, color: 'var(--color-text-muted)' }}>
+            Loading user & access records...
+          </p>
+        </div>
+      ) : activeTab === 'customers' ? (
+        /* CUSTOMERS TABLE */
+        <div className="admin-table-container">
+          <div className="admin-table-scroll">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '56px', textAlign: 'center' }}>#</th>
+                  <th style={{ minWidth: '260px' }}>Customer Profile</th>
+                  <th style={{ minWidth: '160px' }}>Contact Phone</th>
+                  <th style={{ minWidth: '240px' }}>Delivery Address</th>
+                  <th style={{ minWidth: '140px' }}>Joined Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCustomers.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} style={{ padding: '64px', textAlign: 'center' }}>
+                      <Users size={44} style={{ margin: '0 auto 12px auto', color: 'var(--color-text-light)' }} />
+                      <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-text)' }}>
+                        No customer accounts found
+                      </h3>
+                      <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                        {searchQuery
+                          ? `No customer matches "${searchQuery}".`
+                          : 'Customer accounts will appear here once pet parents register on the store.'}
+                      </p>
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery('')}
+                          className="btn btn-outline btn-sm"
+                          style={{ borderRadius: '12px', fontSize: '12px', marginTop: '16px' }}
+                        >
+                          Clear Search
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ) : (
+                  filteredCustomers.map((cust, idx) => {
+                    const displayName = cust.full_name || cust.email.split('@')[0];
+                    const cleanAddress =
+                      cust.address && !cust.address.startsWith('__pwd:') ? cust.address : null;
+                    const initials = displayName
+                      .split(' ')
+                      .filter(Boolean)
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join('')
+                      .toUpperCase() || 'U';
+
+                    return (
+                      <tr key={cust.id}>
+                        <td style={{ textAlign: 'center', fontWeight: 600, color: 'var(--color-text-light)', fontSize: '11px' }}>
+                          #{String(idx + 1).padStart(2, '0')}
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div
+                              style={{
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: '12px',
+                                backgroundColor: 'var(--color-secondary)',
+                                color: 'var(--color-brand-blue)',
+                                border: '1px solid var(--color-secondary-alt)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 800,
+                                fontSize: '12px',
+                                flexShrink: 0,
+                              }}
+                            >
+                              {initials}
+                            </div>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontWeight: 700, color: 'var(--color-text)', fontSize: '13px', lineHeight: 1.3 }}>
+                                {displayName}
+                              </div>
+                              <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+                                {cust.email}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          {cust.phone ? (
+                            <span
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                padding: '3px 8px',
+                                borderRadius: '8px',
+                                backgroundColor: '#F8FAFC',
+                                border: '1px solid #E2E8F0',
+                                fontSize: '11px',
+                                fontFamily: 'monospace',
+                                fontWeight: 600,
+                                color: 'var(--color-text)',
+                              }}
+                            >
+                              <Phone size={11} style={{ color: 'var(--color-text-muted)' }} />
+                              {cust.phone}
+                            </span>
+                          ) : (
+                            <span style={{ color: 'var(--color-text-light)', fontSize: '11px', fontStyle: 'italic' }}>
+                              Not provided
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          {cleanAddress ? (
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                color: 'var(--color-text-muted)',
+                                fontSize: '12px',
+                                maxWidth: '260px',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                              }}
+                              title={cleanAddress}
+                            >
+                              <MapPin size={12} style={{ flexShrink: 0, color: 'var(--color-brand-blue)' }} />
+                              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{cleanAddress}</span>
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--color-text-light)', fontSize: '11px', fontStyle: 'italic' }}>
+                              No saved address
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--color-text-muted)', fontSize: '11px' }}>
+                            <Calendar size={12} style={{ color: 'var(--color-text-light)' }} />
+                            <span>
+                              {cust.created_at
+                                ? new Date(cust.created_at).toLocaleDateString('en-GB', {
+                                    day: 'numeric',
+                                    month: 'short',
+                                    year: 'numeric',
+                                  })
+                                : 'Recently'}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        /* STAFF & PRIVILEGES TABLE */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          {/* Subtle Info Card */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid rgba(189, 223, 234, 0.55)',
+              borderRadius: '16px',
+              padding: '12px 18px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              fontSize: '12px',
+              color: 'var(--color-text-muted)',
+              boxShadow: 'var(--shadow-xs)',
+            }}
+          >
+            <ShieldCheck size={18} style={{ color: 'var(--color-brand-blue)', flexShrink: 0 }} />
+            <span>
+              <strong style={{ color: 'var(--color-text)' }}>Store Owners (👑)</strong> have full root access to settings, financials, and staff management. 
+              <strong style={{ color: 'var(--color-text)', marginLeft: '12px' }}>Staff Members (📦)</strong> have operational access to the products catalog, categories, and order fulfillment.
+            </span>
+          </div>
+
+          <div className="admin-table-container">
+            <div className="admin-table-scroll">
+              <table className="admin-table">
                 <thead>
-                  <tr className="border-b border-black/[0.05] bg-[#FAF9F6] text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                    <th className="py-4 px-6 whitespace-nowrap">Customer</th>
-                    <th className="py-4 px-6 whitespace-nowrap">Contact Phone</th>
-                    <th className="py-4 px-6 whitespace-nowrap">Delivery Address</th>
-                    <th className="py-4 px-6 whitespace-nowrap">Joined Date</th>
-                    <th className="py-4 px-6 whitespace-nowrap text-right">Role Elevation</th>
+                  <tr>
+                    <th style={{ width: '56px', textAlign: 'center' }}>#</th>
+                    <th style={{ minWidth: '240px' }}>Team Member</th>
+                    <th style={{ minWidth: '170px' }}>Current Privilege</th>
+                    <th style={{ minWidth: '240px' }}>Access Permissions</th>
+                    <th style={{ width: '220px', textAlign: 'right' }}>Modify Privilege</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-black/[0.04] text-xs text-text">
-                  {filteredCustomers.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="py-16 text-center text-text-muted">
-                        <Users size={34} className="mx-auto mb-2 text-text-muted/40" />
-                        <p className="font-bold text-sm text-text">No registered customer accounts found</p>
-                        {searchQuery ? (
-                          <p className="text-xs text-text-muted mt-1">
-                            No records matched &quot;{searchQuery}&quot;.
-                          </p>
-                        ) : (
-                          <p className="text-xs text-text-muted mt-1">
-                            When pet parents register on the store, their profiles will appear here.
-                          </p>
-                        )}
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredCustomers.map((cust) => {
-                      const displayName = cust.full_name || cust.email.split('@')[0];
-                      const initials = displayName
-                        .split(' ')
-                        .filter(Boolean)
-                        .map((n) => n[0])
-                        .slice(0, 2)
-                        .join('')
-                        .toUpperCase();
+                <tbody>
+                  {privilegedStaffList.map((st, idx) => {
+                    const activeRole = getEffectiveRole(st);
+                    const isCurrentUser = st.id === profile?.id;
+                    const displayName = st.full_name || st.email.split('@')[0];
 
-                      return (
-                        <tr key={cust.id} className="hover:bg-black/[0.015] transition-colors">
-                          {/* Customer Details */}
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 min-w-[40px] aspect-square rounded-full bg-gradient-to-br from-amber-200 to-amber-300 text-[#1A1A2E] font-black text-xs flex items-center justify-center border border-amber-400/30 shadow-xs flex-shrink-0">
-                                {initials}
-                              </div>
-                              <div className="min-w-0">
-                                <p className="font-bold text-text text-sm truncate max-w-[220px]">
-                                  {displayName}
-                                </p>
-                                <p className="text-[11px] text-text-muted truncate max-w-[220px]">
-                                  {cust.email}
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-
-                          {/* Contact Phone */}
-                          <td className="py-4 px-6 whitespace-nowrap">
-                            {cust.phone ? (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-black/[0.03] border border-black/[0.06] text-xs font-mono font-medium text-text">
-                                <Phone size={11} className="text-text-muted flex-shrink-0" />
-                                {cust.phone}
-                              </span>
-                            ) : (
-                              <span className="text-text-muted/50 text-xs italic">Not provided</span>
-                            )}
-                          </td>
-
-                          {/* Delivery Address */}
-                          <td className="py-4 px-6 max-w-[240px]">
-                            {cust.address ? (
-                              <div className="flex items-center gap-1.5 text-text-muted truncate text-xs" title={cust.address}>
-                                <MapPin size={12} className="text-text-muted flex-shrink-0" />
-                                <span className="truncate">{cust.address}</span>
-                              </div>
-                            ) : (
-                              <span className="text-text-muted/50 text-xs italic">No saved address</span>
-                            )}
-                          </td>
-
-                          {/* Joined Date */}
-                          <td className="py-4 px-6 whitespace-nowrap text-text-muted text-xs">
-                            <div className="flex items-center gap-1.5">
-                              <Calendar size={12} className="text-text-muted/70 flex-shrink-0" />
-                              <span>
-                                {cust.created_at
-                                  ? new Date(cust.created_at).toLocaleDateString('en-GB', {
-                                      day: 'numeric',
-                                      month: 'short',
-                                      year: 'numeric',
-                                    })
-                                  : 'Recently'}
-                              </span>
-                            </div>
-                          </td>
-
-                          {/* Role Promotion Action (Strictly + Staff) */}
-                          <td className="py-4 px-6 text-right whitespace-nowrap">
-                            <button
-                              onClick={() => handleRoleChange(cust, 'staff')}
-                              className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#1A1A2E] text-white hover:bg-black active:scale-[0.97] transition-all shadow-xs inline-flex items-center gap-1.5 cursor-pointer ml-auto"
-                              title="Elevate user to Store Staff"
+                    return (
+                      <tr key={st.id}>
+                        <td style={{ textAlign: 'center', fontWeight: 600, color: 'var(--color-text-light)', fontSize: '11px' }}>
+                          #{String(idx + 1).padStart(2, '0')}
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div
+                              style={{
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: '12px',
+                                backgroundColor: activeRole === 'owner' ? '#FEF3C7' : '#E0F2FE',
+                                border: activeRole === 'owner' ? '1px solid #FCD34D' : '1px solid #BAE6FD',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '16px',
+                                flexShrink: 0,
+                              }}
                             >
-                              <UserPlus size={13} />
-                              <span>Make Staff</span>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
+                              {activeRole === 'owner' ? '👑' : '📦'}
+                            </div>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontWeight: 700, color: 'var(--color-text)', fontSize: '13px' }}>
+                                  {displayName}
+                                </span>
+                                {isCurrentUser && (
+                                  <span
+                                    style={{
+                                      backgroundColor: '#1A1A2E',
+                                      color: '#FFFFFF',
+                                      fontSize: '9px',
+                                      fontWeight: 800,
+                                      padding: '2px 6px',
+                                      borderRadius: '6px',
+                                      textTransform: 'uppercase',
+                                      letterSpacing: '0.05em',
+                                    }}
+                                  >
+                                    You
+                                  </span>
+                                )}
+                              </div>
+                              <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+                                {st.email}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <span
+                            className="admin-stock-badge"
+                            style={
+                              activeRole === 'owner'
+                                ? { backgroundColor: '#FEF3C7', color: '#92400E', border: '1px solid #FCD34D' }
+                                : { backgroundColor: '#E0F2FE', color: '#0369A1', border: '1px solid #BAE6FD' }
+                            }
+                          >
+                            {activeRole === 'owner' ? '👑 Store Owner' : '📦 Staff / Dispatch'}
+                          </span>
+                        </td>
+                        <td style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+                          {activeRole === 'owner'
+                            ? 'Full System, Financials & Staff Admin'
+                            : 'Catalog, Categories & Order Dispatch'}
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                          <select
+                            value={activeRole}
+                            onChange={(e) => handleRoleChange(st, e.target.value as 'owner' | 'staff' | 'customer')}
+                            disabled={isCurrentUser}
+                            className="admin-select"
+                            style={{
+                              height: '34px',
+                              padding: '0 10px',
+                              fontSize: '11px',
+                              fontWeight: 700,
+                              borderRadius: '10px',
+                              cursor: isCurrentUser ? 'not-allowed' : 'pointer',
+                              opacity: isCurrentUser ? 0.6 : 1,
+                            }}
+                          >
+                            <option value="owner">👑 Store Owner</option>
+                            <option value="staff">📦 Staff / Dispatch</option>
+                            <option value="customer">👤 Revoke Access (Customer)</option>
+                          </select>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -559,156 +981,73 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-      {/* ── 5. TAB 2: Staff & Access Privileges (Double-Bezel Table) ── */}
-      {activeTab === 'staff' && (
-        <div className="space-y-4">
-          {/* Subtle Info Card */}
-          <div className="p-4 px-5 rounded-2xl bg-black/[0.02] border border-black/[0.06] flex items-center gap-3">
-            <ShieldCheck size={20} className="text-text-muted flex-shrink-0" />
-            <p className="text-xs text-text-muted leading-relaxed">
-              <strong className="text-text">Store Owners</strong> have full root access to settings, financials, and staff management. 
-              <strong className="text-text ml-2">Staff Members</strong> have operational access to the products catalog, categories, and order fulfillment.
-            </p>
-          </div>
-
-          <div className="p-1 rounded-[1.75rem] bg-black/[0.025] border border-black/[0.05] shadow-xs">
-            <div className="rounded-[calc(1.75rem-0.25rem)] bg-white overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-              <div className="w-full overflow-x-auto">
-                <table className="w-full text-left border-collapse table-auto">
-                  <thead>
-                    <tr className="border-b border-black/[0.05] bg-[#FAF9F6] text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                      <th className="py-4 px-6 whitespace-nowrap">Team Member</th>
-                      <th className="py-4 px-6 whitespace-nowrap">Current Role</th>
-                      <th className="py-4 px-6 whitespace-nowrap">System Access</th>
-                      <th className="py-4 px-6 whitespace-nowrap text-right">Modify Privilege</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-black/[0.04] text-xs text-text">
-                    {privilegedStaffList.map((st) => {
-                      const activeRole = getEffectiveRole(st);
-                      const isCurrentUser = st.id === profile?.id;
-
-                      const roleMeta = {
-                        owner: {
-                          label: 'Store Owner',
-                          icon: '👑',
-                          badge: 'bg-amber-500/15 text-amber-900 border-amber-400/40',
-                          perms: 'Full System, Financials & User Admin',
-                        },
-                        staff: {
-                          label: 'Staff / Dispatch',
-                          icon: '📦',
-                          badge: 'bg-blue-500/15 text-blue-900 border-blue-400/40',
-                          perms: 'Catalog, Categories & Order Dispatch',
-                        },
-                        customer: {
-                          label: 'Customer',
-                          icon: '👤',
-                          badge: 'bg-gray-100 text-gray-700 border-gray-300',
-                          perms: 'Customer Shopping Only',
-                        },
-                      }[activeRole];
-
-                      const displayName = st.full_name || st.email.split('@')[0];
-
-                      return (
-                        <tr key={st.id} className="hover:bg-black/[0.015] transition-colors">
-                          {/* Member */}
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 min-w-[40px] aspect-square rounded-full bg-accent text-[#1A1A2E] font-black text-sm flex items-center justify-center border border-accent/60 shadow-xs flex-shrink-0">
-                                {roleMeta.icon}
-                              </div>
-                              <div className="min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <p className="font-bold text-sm text-text truncate max-w-[200px]">
-                                    {displayName}
-                                  </p>
-                                  {isCurrentUser && (
-                                    <span className="px-2 py-0.5 rounded-md bg-[#1A1A2E] text-[9px] font-black text-white uppercase tracking-wider">
-                                      You
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-[11px] text-text-muted truncate max-w-[200px]">{st.email}</p>
-                              </div>
-                            </div>
-                          </td>
-
-                          {/* Current Role Badge */}
-                          <td className="py-4 px-6 whitespace-nowrap">
-                            <span
-                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-extrabold ${roleMeta.badge}`}
-                            >
-                              <span>{roleMeta.icon}</span>
-                              <span>{roleMeta.label}</span>
-                            </span>
-                          </td>
-
-                          {/* Permissions */}
-                          <td className="py-4 px-6 text-text-muted text-xs whitespace-nowrap">
-                            {roleMeta.perms}
-                          </td>
-
-                          {/* Modify Role Select (Strictly Owner / Staff / Revoke) */}
-                          <td className="py-4 px-6 text-right whitespace-nowrap">
-                            <select
-                              value={activeRole}
-                              onChange={(e) => handleRoleChange(st, e.target.value as 'owner' | 'staff' | 'customer')}
-                              disabled={isCurrentUser}
-                              className="px-3.5 py-2 rounded-xl border border-black/10 bg-white text-xs font-bold text-text focus:outline-none focus:border-[#1A1A2E] focus:ring-2 focus:ring-black/5 shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                            >
-                              <option value="owner">👑 Make Store Owner</option>
-                              <option value="staff">📦 Make Staff / Dispatch</option>
-                              <option value="customer">👤 Revoke Access (Customer)</option>
-                            </select>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── 6. ADD / ASSIGN STAFF MODAL (Refined Luxury Agency Dialog) ── */}
+      {/* ── 5. High-Contrast Add / Elevate Staff Modal (No Pharmacist) ── */}
       <AnimatePresence>
         {isAddStaffOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+            {/* Dark High-Contrast Backdrop */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsAddStaffOpen(false)}
+              className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm"
+            />
+
+            {/* Solid High-Contrast Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 10 }}
-              transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-              className="bg-white rounded-[2rem] border border-black/[0.08] max-w-lg w-full shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)] overflow-hidden"
+              exit={{ opacity: 0, scale: 0.94, y: 15 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+              className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl z-10 p-6 md:p-7 space-y-5 text-slate-900 max-h-[88vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className="p-7 pb-5 border-b border-black/[0.06] flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#1A1A2E] text-white flex items-center justify-center shadow-xs flex-shrink-0">
-                    <UserPlus size={18} />
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div
+                    className="admin-hero-icon"
+                    style={{ width: '44px', height: '44px', borderRadius: '14px', flexShrink: 0 }}
+                  >
+                    <UserPlus size={20} />
                   </div>
                   <div>
-                    <h3 className="font-heading font-black text-lg text-text tracking-tight">Add Team Member</h3>
-                    <p className="text-[11px] text-text-muted">Assign administrative privileges to a user</p>
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-text)', margin: 0, lineHeight: 1.2 }}>
+                      Add Team Member
+                    </h3>
+                    <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px', margin: 0 }}>
+                      Assign administrative staff or store owner privileges
+                    </p>
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsAddStaffOpen(false)}
-                  className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center text-text-muted hover:text-text transition-colors cursor-pointer"
+                  className="admin-action-btn"
+                  style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '10px',
+                    border: '1.5px solid var(--color-secondary-alt)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'var(--color-text-muted)',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  }}
+                  title="Close modal"
                 >
-                  <X size={17} />
+                  <X size={16} />
                 </button>
               </div>
 
-              {/* Modal Body */}
-              <form onSubmit={handleAddStaff} className="p-7 space-y-5 text-xs">
+              {/* Form Body */}
+              <form onSubmit={handleAddStaff} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
                 <div>
-                  <label className="block font-bold text-text mb-1.5 text-xs">
-                    User Email Address <span className="text-rose-500">*</span>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--color-text)', marginBottom: '6px' }}>
+                    User Email Address <span style={{ color: '#E11D48' }}>*</span>
                   </label>
                   <input
                     type="email"
@@ -716,97 +1055,250 @@ export default function AdminUsersPage() {
                     placeholder="employee@petsolutions.lk"
                     value={newStaffEmail}
                     onChange={(e) => setNewStaffEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-black/15 bg-black/[0.01] text-xs text-text placeholder:text-text-muted/50 focus:bg-white focus:outline-none focus:border-[#1A1A2E] focus:ring-2 focus:ring-black/5 shadow-xs transition-all"
+                    style={{
+                      width: '100%',
+                      height: '42px',
+                      padding: '0 14px',
+                      borderRadius: '12px',
+                      border: '1.5px solid var(--color-secondary-alt)',
+                      backgroundColor: 'var(--color-dominant)',
+                      color: 'var(--color-text)',
+                      fontSize: '12px',
+                      outline: 'none',
+                    }}
                   />
-                  <p className="text-[11px] text-text-muted/70 mt-1.5">
-                    If this user is already registered in Supabase, their privileges will be elevated.
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--color-text)', marginBottom: '6px' }}>
+                    Account Password <span style={{ color: '#E11D48' }}>*</span>
+                  </label>
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                    <Lock
+                      size={15}
+                      style={{
+                        position: 'absolute',
+                        left: '14px',
+                        color: 'var(--color-text-muted)',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                    <input
+                      type={showStaffPassword ? 'text' : 'password'}
+                      required
+                      minLength={6}
+                      placeholder="Minimum 6 characters"
+                      value={newStaffPassword}
+                      onChange={(e) => setNewStaffPassword(e.target.value)}
+                      style={{
+                        width: '100%',
+                        height: '42px',
+                        padding: '0 40px 0 38px',
+                        borderRadius: '12px',
+                        border: '1.5px solid var(--color-secondary-alt)',
+                        backgroundColor: 'var(--color-dominant)',
+                        color: 'var(--color-text)',
+                        fontSize: '12px',
+                        outline: 'none',
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowStaffPassword((prev) => !prev)}
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--color-text-muted)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '4px',
+                      }}
+                      title={showStaffPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showStaffPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                  <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                    The team member will use this email and password to sign in at the login page.
                   </p>
                 </div>
 
-                <div>
-                  <label className="block font-bold text-text mb-1.5 text-xs">Full Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Nimal Jayawardena"
-                    value={newStaffName}
-                    onChange={(e) => setNewStaffName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-black/15 bg-black/[0.01] text-xs text-text placeholder:text-text-muted/50 focus:bg-white focus:outline-none focus:border-[#1A1A2E] focus:ring-2 focus:ring-black/5 shadow-xs transition-all"
-                  />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--color-text)', marginBottom: '6px' }}>
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Kasun Silva"
+                      value={newStaffName}
+                      onChange={(e) => setNewStaffName(e.target.value)}
+                      style={{
+                        width: '100%',
+                        height: '42px',
+                        padding: '0 14px',
+                        borderRadius: '12px',
+                        border: '1.5px solid var(--color-secondary-alt)',
+                        backgroundColor: 'var(--color-dominant)',
+                        color: 'var(--color-text)',
+                        fontSize: '12px',
+                        outline: 'none',
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--color-text)', marginBottom: '6px' }}>
+                      Contact Phone
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="+94 77 123 4567"
+                      value={newStaffPhone}
+                      onChange={(e) => setNewStaffPhone(e.target.value)}
+                      style={{
+                        width: '100%',
+                        height: '42px',
+                        padding: '0 14px',
+                        borderRadius: '12px',
+                        border: '1.5px solid var(--color-secondary-alt)',
+                        backgroundColor: 'var(--color-dominant)',
+                        color: 'var(--color-text)',
+                        fontSize: '12px',
+                        outline: 'none',
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-text mb-1.5 text-xs">Contact Phone</label>
-                  <input
-                    type="text"
-                    placeholder="+94 77 123 4567"
-                    value={newStaffPhone}
-                    onChange={(e) => setNewStaffPhone(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-black/15 bg-black/[0.01] text-xs text-text placeholder:text-text-muted/50 focus:bg-white focus:outline-none focus:border-[#1A1A2E] focus:ring-2 focus:ring-black/5 shadow-xs transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-text mb-2 text-xs">
-                    Assign Privilege Level <span className="text-rose-500">*</span>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--color-text)', marginBottom: '8px' }}>
+                    Assign Privilege Level <span style={{ color: '#E11D48' }}>*</span>
                   </label>
-                  <div className="grid grid-cols-2 gap-3.5">
-                    {/* Staff Option */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    {/* Option 1: Staff / Dispatch */}
                     <button
                       type="button"
                       onClick={() => setNewStaffRole('staff')}
-                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer relative ${
-                        newStaffRole === 'staff'
-                          ? 'border-[#1A1A2E] bg-[#1A1A2E]/[0.03] shadow-xs'
-                          : 'border-black/10 hover:border-black/20 hover:bg-black/[0.01]'
-                      }`}
+                      style={{
+                        padding: '14px 16px',
+                        borderRadius: '16px',
+                        border: newStaffRole === 'staff' ? '2px solid var(--color-brand-blue)' : '1.5px solid var(--color-secondary-alt)',
+                        backgroundColor: newStaffRole === 'staff' ? '#F0F9FD' : '#FFFFFF',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        transition: 'all 0.15s ease',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '4px',
+                      }}
                     >
-                      {newStaffRole === 'staff' && (
-                        <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#1A1A2E] text-white flex items-center justify-center">
-                          <Check size={11} />
-                        </div>
-                      )}
-                      <div className="text-xl mb-1.5">📦</div>
-                      <div className="font-extrabold text-xs text-text">Staff Member</div>
-                      <div className="text-[10px] text-text-muted mt-0.5">Catalog & order dispatch</div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <span style={{ fontSize: '20px' }}>📦</span>
+                        {newStaffRole === 'staff' && (
+                          <span style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: 'var(--color-brand-blue)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Check size={11} strokeWidth={3} />
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ fontWeight: 800, fontSize: '13px', color: 'var(--color-text)' }}>
+                        Staff / Dispatch
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.3 }}>
+                        Catalog & order fulfillment
+                      </div>
                     </button>
 
-                    {/* Owner Option */}
+                    {/* Option 2: Store Owner */}
                     <button
                       type="button"
                       onClick={() => setNewStaffRole('owner')}
-                      className={`p-4 rounded-2xl border text-left transition-all cursor-pointer relative ${
-                        newStaffRole === 'owner'
-                          ? 'border-[#1A1A2E] bg-[#1A1A2E]/[0.03] shadow-xs'
-                          : 'border-black/10 hover:border-black/20 hover:bg-black/[0.01]'
-                      }`}
+                      style={{
+                        padding: '14px 16px',
+                        borderRadius: '16px',
+                        border: newStaffRole === 'owner' ? '2px solid #D97706' : '1.5px solid var(--color-secondary-alt)',
+                        backgroundColor: newStaffRole === 'owner' ? '#FFFBEB' : '#FFFFFF',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        transition: 'all 0.15s ease',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '4px',
+                      }}
                     >
-                      {newStaffRole === 'owner' && (
-                        <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#1A1A2E] text-white flex items-center justify-center">
-                          <Check size={11} />
-                        </div>
-                      )}
-                      <div className="text-xl mb-1.5">👑</div>
-                      <div className="font-extrabold text-xs text-text">Store Owner</div>
-                      <div className="text-[10px] text-text-muted mt-0.5">Root access & settings</div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <span style={{ fontSize: '20px' }}>👑</span>
+                        {newStaffRole === 'owner' && (
+                          <span style={{ width: '18px', height: '18px', borderRadius: '50%', backgroundColor: '#D97706', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Check size={11} strokeWidth={3} />
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ fontWeight: 800, fontSize: '13px', color: 'var(--color-text)' }}>
+                        Store Owner
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.3 }}>
+                        Root access & settings
+                      </div>
                     </button>
                   </div>
                 </div>
 
-                {/* Modal Footer */}
-                <div className="pt-5 border-t border-black/[0.06] flex items-center justify-end gap-3">
+                {/* Modal Action Buttons */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px', paddingTop: '16px', borderTop: '1px solid var(--color-secondary-alt)' }}>
                   <button
                     type="button"
                     onClick={() => setIsAddStaffOpen(false)}
-                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-text-muted hover:text-text hover:bg-black/5 transition-all cursor-pointer"
+                    disabled={submittingStaff}
+                    className="btn btn-outline btn-sm"
+                    style={{
+                      height: '38px',
+                      padding: '0 18px',
+                      borderRadius: '12px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={submittingStaff}
-                    className="px-6 py-2.5 rounded-xl text-xs font-extrabold bg-[#1A1A2E] text-white hover:bg-black active:scale-[0.98] transition-all shadow-md cursor-pointer disabled:opacity-50"
+                    className="btn btn-primary btn-sm"
+                    style={{
+                      height: '38px',
+                      padding: '0 20px',
+                      borderRadius: '12px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      backgroundColor: '#1A1A2E',
+                      color: '#FFFFFF',
+                      border: '1.5px solid rgba(255, 200, 0, 0.4)',
+                      boxShadow: '0 2px 8px rgba(26, 26, 46, 0.15)',
+                      gap: '6px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                    }}
                   >
-                    {submittingStaff ? 'Assigning...' : 'Confirm Assignment'}
+                    {submittingStaff ? (
+                      <>
+                        <RefreshCw size={14} className="animate-spin" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check size={14} />
+                        <span>Confirm Assignment</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

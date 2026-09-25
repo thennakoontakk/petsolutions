@@ -11,9 +11,6 @@ import {
   ClipboardList, 
   LogOut, 
   ArrowLeft, 
-  Settings, 
-  Flame, 
-  Tag,
   Users,
 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -31,9 +28,6 @@ export const adminNavItems: AdminNavItem[] = [
   { name: 'Categories', path: '/admin/categories', icon: ListCollapse, roles: ['owner', 'staff'] },
   { name: 'Orders List', path: '/admin/orders', icon: ClipboardList },
   { name: 'Users & Staff', path: '/admin/users', icon: Users, roles: ['owner'] },
-  { name: 'Weekly Deals', path: '/admin/deals', icon: Flame, roles: ['owner'] },
-  { name: 'Offers & Discounts', path: '/admin/offers', icon: Tag, roles: ['owner'] },
-  { name: 'Settings', path: '/admin/settings', icon: Settings, roles: ['owner'] },
 ];
 
 interface AdminSidebarProps {
@@ -43,7 +37,7 @@ interface AdminSidebarProps {
 
 export default function AdminSidebar({ isOpen = true }: AdminSidebarProps) {
   const pathname = usePathname();
-  const { profile, role, signOut } = useAuth();
+  const { role, signOut } = useAuth();
 
   const currentRole = role === 'staff' ? 'staff' : 'owner';
 
@@ -52,21 +46,11 @@ export default function AdminSidebar({ isOpen = true }: AdminSidebarProps) {
     staff: { label: 'Staff / Dispatch', short: 'Staff', icon: '📦', color: '#60A5FA' },
   }[currentRole];
 
-  // Group 1: Core Store Management
+  // Core Store Management Items
   const corePaths = ['/admin', '/admin/products', '/admin/categories', '/admin/orders', '/admin/users'];
   const coreItems = adminNavItems.filter(
     (item) => corePaths.includes(item.path) && (!item.roles || item.roles.includes(currentRole))
   );
-
-  // Group 2: Marketing & Promotions
-  const promoPaths = ['/admin/deals', '/admin/offers'];
-  const promoItems = adminNavItems.filter(
-    (item) => promoPaths.includes(item.path) && (!item.roles || item.roles.includes(currentRole))
-  );
-
-  // Group 3: System Settings
-  const settingsItem = adminNavItems.find((item) => item.path === '/admin/settings');
-  const showSettings = !!settingsItem && (!settingsItem.roles || settingsItem.roles.includes(currentRole));
 
   // Helper to render a navigation item with 100% matching height and positions
   const renderNavItem = (item: AdminNavItem) => {
@@ -182,7 +166,7 @@ export default function AdminSidebar({ isOpen = true }: AdminSidebarProps) {
 
   return (
     <aside
-      className="hidden md:flex flex-col bg-text-dark text-white border-r border-white/10 flex-shrink-0 relative transition-all duration-300 ease-out select-none overflow-hidden"
+      className="hidden md:flex flex-col bg-text-dark text-white border-r border-white/10 flex-shrink-0 transition-all duration-300 ease-out select-none overflow-hidden"
       style={{
         backgroundColor: '#1A1A2E',
         width: isOpen ? '16rem' : '4.75rem',
@@ -264,46 +248,14 @@ export default function AdminSidebar({ isOpen = true }: AdminSidebarProps) {
           msOverflowStyle: 'none',
           display: 'flex',
           flexDirection: 'column',
+          gap: '8px',
           padding: isOpen ? '16px 14px' : '16px 10px',
         }}
       >
-        {/* Group 1: Core Store Items */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {coreItems.map(renderNavItem)}
-        </div>
-
-        {/* Group Divider (Identical height & margin in both modes) */}
-        {promoItems.length > 0 && (
-          <div 
-            style={{
-              width: isOpen ? '100%' : '28px',
-              height: '1px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              margin: '10px auto',
-              flexShrink: 0,
-            }} 
-          />
-        )}
-
-        {/* Group 2: Marketing & Promotions */}
-        {promoItems.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {promoItems.map(renderNavItem)}
-          </div>
-        )}
-
-        {/* Flexible spacer (Distributes extra vertical space identically) */}
-        <div style={{ flex: 1, minHeight: '16px' }} />
-
-        {/* Group 3: Settings (Anchored right above user footer) */}
-        {showSettings && settingsItem && (
-          <div style={{ display: 'flex', flexDirection: 'column', marginTop: '10px' }}>
-            {renderNavItem(settingsItem)}
-          </div>
-        )}
+        {coreItems.map(renderNavItem)}
       </div>
 
-      {/* ── 3. USER PROFILE & FOOTER ACTIONS (NO EXPAND BUTTON) ── */}
+      {/* ── 3. USER ACTIONS & STORE LINK (NO EXPAND BUTTON) ── */}
       <div 
         style={{
           padding: isOpen ? '14px 16px' : '14px 10px',
@@ -311,67 +263,56 @@ export default function AdminSidebar({ isOpen = true }: AdminSidebarProps) {
           backgroundColor: 'rgba(0, 0, 0, 0.35)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '10px',
+          gap: '6px',
           alignItems: isOpen ? 'stretch' : 'center',
           flexShrink: 0,
         }}
       >
         {isOpen ? (
           <>
-            <div style={{ padding: '0 4px' }}>
-              <p style={{ fontSize: '12px', fontWeight: 700, color: '#FFFFFF', lineHeight: 1.25 }} className="truncate">
-                {profile?.full_name || 'Admin User'}
-              </p>
-              <p style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.5)', marginTop: '2px', fontWeight: 500 }} className="truncate">
-                Administrator
-              </p>
-            </div>
+            <Link
+              href="/"
+              target="_blank"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 12px',
+                borderRadius: '10px',
+                fontSize: '12px',
+                fontWeight: 500,
+                color: 'rgba(255, 255, 255, 0.7)',
+                transition: 'all 120ms ease',
+              }}
+              className="hover:text-white hover:bg-white/[0.08]"
+            >
+              <ArrowLeft size={14} />
+              <span>Back to Store</span>
+            </Link>
 
-            <div style={{ paddingTop: '8px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <Link
-                href="/"
-                target="_blank"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  transition: 'all 120ms ease',
-                }}
-                className="hover:text-white hover:bg-white/[0.08]"
-              >
-                <ArrowLeft size={13} />
-                <span>Back to Store</span>
-              </Link>
-
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={signOut}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  color: '#FB7185',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 120ms ease',
-                }}
-                className="hover:bg-rose-500/15"
-              >
-                <LogOut size={13} />
-                <span>Sign Out</span>
-              </motion.button>
-            </div>
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={signOut}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 12px',
+                borderRadius: '10px',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#FB7185',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 120ms ease',
+              }}
+              className="hover:bg-rose-500/15"
+            >
+              <LogOut size={14} />
+              <span>Sign Out</span>
+            </motion.button>
           </>
         ) : (
           <>

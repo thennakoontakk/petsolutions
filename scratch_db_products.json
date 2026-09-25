@@ -1,0 +1,554 @@
+[
+  {
+    "id": "6cb772ab-1047-4b59-82f6-66aa73cd71f2",
+    "name": "Himalaya Digyton Drops, 30 ml",
+    "slug": "himalaya-digyton-drops-30-ml-11",
+    "brand": "Himalaya",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "39cffb6c-6708-40f6-8323-a4434e19a242",
+    "name": "Negasunt Powder",
+    "slug": "negasunt-powder-23",
+    "brand": "PetSolutions",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "a8c2b864-ffb0-40c9-a9ac-8386635cf514",
+    "name": "Aluspray AWD",
+    "slug": "aluspray-awd-24",
+    "brand": "PetSolutions",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "d8098dfa-34f9-4bc6-8cc7-4b758d91e53c",
+    "name": "Petmend Spray, 150 ml",
+    "slug": "petmend-spray-150-ml-25",
+    "brand": "PetSolutions",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "2d45569b-1d77-4fe6-b922-19022e35ad16",
+    "name": "Vetgrow Bones-Up - Mineral & Vitamin Supplement",
+    "slug": "vetgrow-bones-up-mineral-and-vitamin-supplement",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "86d30914-1505-4e98-8a70-6ef5eda4df64",
+    "name": "Himalaya Liv.52 pet, 200 ml",
+    "slug": "himalaya-liv-52-pet-200-ml-10",
+    "brand": "Himalaya",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Dog"
+  },
+  {
+    "id": "06665a21-e18a-434b-876c-763809f6eef5",
+    "name": "Vetgrow Red Dogs 200 ml",
+    "slug": "vetgrow-red-dogs-200-ml-7",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "de491f83-9752-466d-bac8-f0ebd45f47ff",
+    "name": "Rapimec - Ivermectin 10 mg Tablets",
+    "slug": "rapimec-ivermectin-10-mg-tablets-5",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "5c15612a-862e-4ca0-bae0-ad40bde90986",
+    "name": "Tickamit 12.5",
+    "slug": "tickamit-12-5-4",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "87dd6fb2-dcb2-49d0-b736-871a20c2b340",
+    "name": "Antick 10%",
+    "slug": "antick-10-3",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Dog"
+  },
+  {
+    "id": "085c6eb8-b240-46de-a668-0d9c7a2fcfd1",
+    "name": "TixFree Spot-On for Dogs",
+    "slug": "tixfree-spot-on-for-dogs-2",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "41ca7430-8776-4eda-97fa-c287b626bd67",
+    "name": "TixFree Spot-On for Adult Cats",
+    "slug": "tixfree-spot-on-for-adult-cats-1",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "90fe04c7-091e-4671-b456-48602160113d",
+    "name": "aRBCe PET, with a 200 ml",
+    "slug": "arbce-pet-with-a-200-ml-12",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "f7d23010-aca7-4ba3-944a-2f571ef38e8c",
+    "name": "Vi-Sorbits Tablets 50s",
+    "slug": "vi-sorbits-tablets-50s-13",
+    "brand": "Zoetis",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Dog"
+  },
+  {
+    "id": "f967987d-641c-4c60-864f-adc2a669607c",
+    "name": "Himalaya Scavon VET Spray, 100 ml",
+    "slug": "himalaya-scavon-vet-spray-100-ml-14",
+    "brand": "Himalaya",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "cd895621-0377-4b4d-b395-35483614015d",
+    "name": "Himalaya Scavon VET Cream, 50 g",
+    "slug": "himalaya-scavon-vet-cream-50-g-15",
+    "brand": "Himalaya",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "c532e754-897f-435c-bc6b-cf003834a6fc",
+    "name": "SANPET-PLUS",
+    "slug": "sanpet-plus-16",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "1bd17202-da38-4fcf-8661-527be4ab3159",
+    "name": "Wolfo Flea & Tick Powder for Dogs and Cats",
+    "slug": "wolfo-flea-tick-powder-for-dogs-and-cats-17",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "91c9cf02-a791-4ebc-84c4-44303d2a11e6",
+    "name": "Woofy Medicated Neem Soap 70 g",
+    "slug": "woofy-medicated-neem-soap-70-g-18",
+    "brand": "Seepet",
+    "category_id": "13f83bbd-4f65-49af-adef-5075fd99de07",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "14c532c9-436b-458d-a880-d77138052e46",
+    "name": "SeePet Woofy Lavender Soap, 70 g",
+    "slug": "seepet-woofy-lavender-soap-70-g-19",
+    "brand": "Seepet",
+    "category_id": "13f83bbd-4f65-49af-adef-5075fd99de07",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "e27fd982-8583-4620-90e0-50d8caacc55d",
+    "name": "Permvet Medicated Dog Soap 70 g",
+    "slug": "permvet-medicated-dog-soap-70-g-20",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "cfbba553-8740-4dee-ae0d-7694ef93452b",
+    "name": "Nutricoat Syrup",
+    "slug": "nutricoat-syrup-22",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "0aceeda9-26ad-4501-bda8-94d0bd5c5064",
+    "name": "Drontal Plus Tasty",
+    "slug": "drontal-plus-tasty-26",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Dog"
+  },
+  {
+    "id": "7ae3b021-0ac3-4886-93f7-fe4642518bd7",
+    "name": "Dermitol Shampoo",
+    "slug": "dermitol-shampoo-27",
+    "brand": "PetSolutions",
+    "category_id": "13f83bbd-4f65-49af-adef-5075fd99de07",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "2fc21823-2a39-4abe-b953-764d591b963a",
+    "name": "Furr-Fresh Medicated Shampoo 100 ml",
+    "slug": "furr-fresh-medicated-shampoo-100-ml-28",
+    "brand": "PetSolutions",
+    "category_id": "13f83bbd-4f65-49af-adef-5075fd99de07",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "fd32458c-6d6c-483c-aaa7-96b01cba8607",
+    "name": "Ticks & Fleas Shampoo 225 ml",
+    "slug": "ticks-fleas-shampoo-225-ml-29",
+    "brand": "PetSolutions",
+    "category_id": "92a694f1-b90a-4d3e-b97e-04172426e80a",
+    "pet_type": "Dog"
+  },
+  {
+    "id": "aac4cc87-d8cd-423a-af9e-86aaf414b5fa",
+    "name": "Aloe Vera Shampoo & Conditioner 225 ml",
+    "slug": "aloe-vera-shampoo-conditioner-225-ml-30",
+    "brand": "PetSolutions",
+    "category_id": "13f83bbd-4f65-49af-adef-5075fd99de07",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "ef86ba70-7a94-4a4c-b929-6d5b1d552b23",
+    "name": "Malaseb Shampoo 200 ml",
+    "slug": "malaseb-shampoo-200-ml-31",
+    "brand": "Seepet",
+    "category_id": "13f83bbd-4f65-49af-adef-5075fd99de07",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "235889cd-7b4e-45f7-b3b4-efe6447c3060",
+    "name": "Petvit Liquid, 200 ml",
+    "slug": "petvit-liquid-200-ml-32",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "3bc81b62-21b9-4e3d-8bda-97e146952f99",
+    "name": "Vetgrow Meat in Feet 400 g",
+    "slug": "vetgrow-meat-in-feet-400-g-33",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Dog"
+  },
+  {
+    "id": "f739dc46-3a4d-4544-9e74-4583672cd1b6",
+    "name": "Vetgrow Kick in Punch 300 ml",
+    "slug": "vetgrow-kick-in-punch-300-ml-34",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "b4d1f5c7-f603-4d00-8fb2-c947b45beeff",
+    "name": "Vetgrow Meowghurt, 200 g",
+    "slug": "vetgrow-meowghurt-200-g-35",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "e857dc88-5f69-470d-8189-ccdcef76e34b",
+    "name": "Vetgrow Doghurt 200 g",
+    "slug": "vetgrow-doghurt-200-g-36",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Dog"
+  },
+  {
+    "id": "4424345e-63b9-4965-876f-2da1e68d9ec2",
+    "name": "Classic Pet Puppy \u2013 Milk Flavor",
+    "slug": "classic-pet-puppy-milk-flavor-37",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "5ed19761-e466-4eb5-bc69-e019ab20d7b2",
+    "name": "Me-O Pouch \u2013 Tuna Topping with White Fish",
+    "slug": "me-o-pouch-tuna-topping-with-white-fish-54",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "a59782e2-1f98-46ec-988d-ec28e77f769a",
+    "name": "Classic Pet Adult Dog \u2013 Chicken Flavour",
+    "slug": "classic-pet-adult-dog-chicken-flavour-38",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "12eb28d8-43d2-4cba-be35-528b6b522ea8",
+    "name": "Classic Pet Adult Dog \u2013 Beef Flavour",
+    "slug": "classic-pet-adult-dog-beef-flavour-39",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "6c06cfce-ea42-4ec0-9826-7ee4c91e8c09",
+    "name": "SmartHeart Puppy \u2013 Chicken, Egg & Milk",
+    "slug": "smartheart-puppy-chicken-egg-milk-40",
+    "brand": "SmartHeart",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "bbf41bfe-665d-41fc-8ede-47d5d1fa32f7",
+    "name": "SmartHeart Adult Dog \u2013 Chicken & Egg",
+    "slug": "smartheart-adult-dog-chicken-egg-41",
+    "brand": "SmartHeart",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "07160f38-d588-4f4f-8a25-51fd6ecb4bb6",
+    "name": "SmartHeart Adult Dog \u2013 Chicken & Liver",
+    "slug": "smartheart-adult-dog-chicken-liver-42",
+    "brand": "SmartHeart",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "7c9a5948-0613-4643-be6f-ba75b57b6ba8",
+    "name": "SmartHeart Power Pack \u2013 Adult",
+    "slug": "smartheart-power-pack-adult-44",
+    "brand": "SmartHeart",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "7241d0e8-b87a-4051-9cdd-5940645b57c3",
+    "name": "SmartHeart Mother & Baby Dog",
+    "slug": "smartheart-mother-baby-dog-45",
+    "brand": "SmartHeart",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "b5e97170-c691-42f6-92fe-3b95376b9b12",
+    "name": "Me-O Kitten \u2013 Ocean Fish",
+    "slug": "me-o-kitten-ocean-fish-46",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "60a44000-3960-47fa-a4cc-ba369b580507",
+    "name": "Me-O Creamy Treats \u2013 Bonito Flavor",
+    "slug": "me-o-creamy-treats-bonito-flavor-47",
+    "brand": "Me-O",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "ebc3c01b-b37c-4db9-bf8f-9296021f0ce3",
+    "name": "Me-O Creamy Treats \u2013 Chicken & Liver Flavor",
+    "slug": "me-o-creamy-treats-chicken-liver-flavor-48",
+    "brand": "Me-O",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "bc9e7763-c13b-45ed-ac43-641319b48b41",
+    "name": "Me-O Creamy Treats \u2013 Crab Flavor",
+    "slug": "me-o-creamy-treats-crab-flavor-49",
+    "brand": "Me-O",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "2bf0f2b7-4f2f-45e0-a530-7300538e10fe",
+    "name": "Me-O Creamy Treats \u2013 Salmon Flavor",
+    "slug": "me-o-creamy-treats-salmon-flavor-50",
+    "brand": "Me-O",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "50c76b87-d1b8-4026-84d6-5d01daa9d122",
+    "name": "Me-O Pouch \u2013 Tuna in Jelly",
+    "slug": "me-o-pouch-tuna-in-jelly-51",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "12a763e2-35bf-4831-abd5-e70464a740ad",
+    "name": "Me-O Pouch \u2013 Ocean Fish in Jelly",
+    "slug": "me-o-pouch-ocean-fish-in-jelly-52",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "299ac3da-4b81-46ac-9230-b354cc40c6f7",
+    "name": "Me-O Pouch \u2013 Tuna with Sardine in Jelly (Kitten)",
+    "slug": "me-o-pouch-tuna-with-sardine-in-jelly-kitten-53",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "0a3b7071-d4de-4f2f-89b0-3e7795a35d4b",
+    "name": "Catron Bentonite Cat Litter \u2013 Grey Control",
+    "slug": "catron-bentonite-cat-litter-grey-control-55",
+    "brand": "Catron",
+    "category_id": "979da632-e818-4272-adbc-03ae924664b2",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "aaa6c347-f8cd-4573-bf43-85c31b8d94bd",
+    "name": "Limoxin-25 Spray",
+    "slug": "limoxin-25-spray-57",
+    "brand": "PetSolutions",
+    "category_id": "d57f358c-faf1-40f6-9ca0-2a8bfad3266f",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "4a16a085-66fb-4204-8b19-bbcb026c4307",
+    "name": "Me-O Adult Cat Dry Food - Tuna Flavour",
+    "slug": "me-o-adult-cat-dry-food-tuna-flavour-58",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "0f0708a2-2d82-4b6f-b4b8-667d0f0a052c",
+    "name": "Me-O Adult Cat Dry Food - Seafood Flavour",
+    "slug": "me-o-adult-cat-dry-food-seafood-flavour-59",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "edc6bfa3-de63-4b40-9e32-10594767d27e",
+    "name": "Me-O Adult Cat Dry Food - Mackerel Flavour",
+    "slug": "me-o-adult-cat-dry-food-mackerel-flavour-60",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "9eba1e33-a097-4265-b9c2-fdad3d558beb",
+    "name": "Me-O Adult Cat Dry Food - Chicken & Vegetables",
+    "slug": "me-o-adult-cat-dry-food-chicken-vegetables-61",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "00252822-0a94-4728-afee-2e17c81323d2",
+    "name": "Me-O Persian Cat Food - Anti-Hairball Formula",
+    "slug": "me-o-persian-cat-food-anti-hairball-formula-62",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "cab0d254-daf3-488e-beef-d4929dea15ec",
+    "name": "Orcalmin Suspension pack: 200 ml",
+    "slug": "orcalmin-suspension-pack-200-ml",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "6a94f8b2-bb39-48e4-ace4-d341913bbfe8",
+    "name": "Catron Bentonite Cat Litter - Green Apple",
+    "slug": "catron-bentonite-cat-litter-green-apple-65",
+    "brand": "Catron",
+    "category_id": "979da632-e818-4272-adbc-03ae924664b2",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "7c6236da-7ae0-4bf9-8de1-2968495b5de2",
+    "name": "Catron Bentonite Cat Litter - Coconut & Vanilla",
+    "slug": "catron-bentonite-cat-litter-coconut-vanilla-66",
+    "brand": "Catron",
+    "category_id": "979da632-e818-4272-adbc-03ae924664b2",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "ca2cf606-6e4e-4b47-85ee-2be1828f2562",
+    "name": "Me-O Persian Kitten",
+    "slug": "me-o-persian-kitten-68",
+    "brand": "Me-O",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "ad3af9e5-28a5-460e-9dab-8c3f7908a4ed",
+    "name": "Me-O Mother and Baby Cat",
+    "slug": "me-o-mother-and-baby-cat-69",
+    "brand": "Me-O",
+    "category_id": "979da632-e818-4272-adbc-03ae924664b2",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "3a240633-309d-4f10-98ad-da2f087d6575",
+    "name": "Nutricoat Advance",
+    "slug": "nutricoat-advance-21",
+    "brand": "PetSolutions",
+    "category_id": "60b36e50-d0c8-45cb-8d6c-cde1930a1bdc",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "42394b1f-09ef-4038-8663-b4f40ce6a866",
+    "name": "Catron Bentonite Cat Litter \u2013 Lavender",
+    "slug": "catron-bentonite-cat-litter-lavender-56",
+    "brand": "Catron",
+    "category_id": "979da632-e818-4272-adbc-03ae924664b2",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "e8c0c90b-3208-482d-88ae-190eec7948e7",
+    "name": "SmartHeart Power Pack \u2013 Puppy",
+    "slug": "smartheart-power-pack-puppy",
+    "brand": "SmartHeart",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  },
+  {
+    "id": "ab93c488-c97e-42f6-a0ab-33f73c213a84",
+    "name": "Catron Bentonite Cat Litter - Baby Powder",
+    "slug": "catron-bentonite-cat-litter-baby-powder-63",
+    "brand": "Catron",
+    "category_id": "979da632-e818-4272-adbc-03ae924664b2",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "92d93511-bd22-4bfd-8fbb-bc0c693e28c2",
+    "name": "Catron Bentonite Cat Litter - Marseille Soap",
+    "slug": "catron-bentonite-cat-litter-marseille-soap-64",
+    "brand": "Catron",
+    "category_id": "13f83bbd-4f65-49af-adef-5075fd99de07",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "cbe25acb-599c-4f9e-a51d-ecef747762ad",
+    "name": "Catron Bentonite Cat Litter - Cappuccino",
+    "slug": "catron-bentonite-cat-litter-cappuccino-67",
+    "brand": "Catron",
+    "category_id": "979da632-e818-4272-adbc-03ae924664b2",
+    "pet_type": "Cat"
+  },
+  {
+    "id": "96c59ff9-e527-46d6-93d1-af755f689300",
+    "name": "Petfat Liquid 200 ml",
+    "slug": "petfat-liquid-200-ml-6",
+    "brand": "PetSolutions",
+    "category_id": "40d6b2a0-21d4-4687-bc75-6f6df6e65bb9",
+    "pet_type": "Cat/Dog"
+  }
+]

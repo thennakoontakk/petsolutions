@@ -114,12 +114,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-dominant flex overflow-x-hidden">
+    <div 
+      className="w-full bg-dominant flex overflow-hidden"
+      style={{
+        height: '100vh',
+        maxHeight: '100vh',
+        width: '100%',
+        overflow: 'hidden',
+      }}
+    >
       {/* Sidebar Navigation (Desktop only - Dual Mode: Expanded 16rem / Compact 4.75rem Rail) */}
       <AdminSidebar isOpen={desktopSidebarOpen} onToggle={toggleDesktopSidebar} />
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col min-h-screen overflow-x-hidden">
+      <div 
+        className="flex-1 min-w-0 flex flex-col"
+        style={{
+          height: '100vh',
+          maxHeight: '100vh',
+          overflow: 'hidden',
+        }}
+      >
         
         {/* Desktop Top Header Bar - Always Sticky & Reliable */}
         <header
@@ -228,7 +243,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Content body */}
-        <main className="p-6 md:p-8 flex-1 overflow-x-hidden">
+        <main 
+          className="p-6 md:p-8 flex-1 overflow-x-hidden overflow-y-auto"
+          style={{ overflowY: 'auto' }}
+        >
           {children}
         </main>
       </div>

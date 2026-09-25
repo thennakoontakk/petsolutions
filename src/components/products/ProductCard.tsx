@@ -127,6 +127,7 @@ export default function ProductCard({
         <Link
           href={`/products/${product.slug}`}
           className="block relative aspect-square w-full rounded-xl bg-[#F9F6EE] overflow-hidden shrink-0 group/img"
+          style={{ borderRadius: 'calc(var(--radius-2xl) - var(--space-3))' }}
         >
           {product.image_url ? (
             <Image
@@ -134,7 +135,8 @@ export default function ProductCard({
               alt={product.name}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-contain p-3 group-hover/img:scale-105 transition-transform duration-300"
+              className="object-cover group-hover/img:scale-105 transition-transform duration-300"
+              style={{ borderRadius: 'calc(var(--radius-2xl) - var(--space-3))' }}
               loading="lazy"
             />
           ) : (

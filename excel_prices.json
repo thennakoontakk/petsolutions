@@ -1,0 +1,737 @@
+[
+  {
+    "pet": "Cat",
+    "name": "Tixfree Spot on Adult Cat (3 packs)",
+    "price": 1980.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Tixfree Spot on Dog 02 - 10 Kg (3 packs)",
+    "price": 2700.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Tixfree Spot on Dog 10 - 20 Kg (3 packs)",
+    "price": 3060.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Tixfree Spot on Dog 20 - 40 Kg (3 packs)",
+    "price": 3570.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Tixfree Spot on Dog 40 - 60 Kg (3 packs)",
+    "price": 4680.0
+  },
+  {
+    "pet": "Dog",
+    "name": "ANTICK 10 10ML",
+    "price": 775.0
+  },
+  {
+    "pet": "Dog",
+    "name": "ANTICK 10 1L",
+    "price": 56500.0
+  },
+  {
+    "pet": "Dog",
+    "name": "TICKAMIT 12.5 10ML",
+    "price": 990.0
+  },
+  {
+    "pet": "Dog",
+    "name": "TICKAMIT 12.5 100ML",
+    "price": 9450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "TICKAMIT 12.5 1L",
+    "price": 76000.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Rapimac Tablet 10's",
+    "price": 1100.0
+  },
+  {
+    "pet": "Cat/Dog",
+    "name": "Tick & Flead Pet Shampoo 225ml",
+    "price": 800.0
+  },
+  {
+    "pet": "Cat/Dog",
+    "name": "Alovera Shampoo 225ml",
+    "price": 650.0
+  },
+  {
+    "pet": "Cat/Dog",
+    "name": "Furr Fresh Medicated Shampoo 200ml",
+    "price": 1300.0
+  },
+  {
+    "pet": "Cat/Dog",
+    "name": "Seepet Malaseb Shampoo 200ml",
+    "price": 1140.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Topdog Shampoo 100ml",
+    "price": 450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Topdog Groom Shampoo 200ml",
+    "price": 950.0
+  },
+  {
+    "pet": "Cat/Dog",
+    "name": "Shampoo Dermitol 250ml",
+    "price": 3980.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Seepet Woofy Soap- Neem 70g",
+    "price": 450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Seepet Woofy Soap - Lavendert 70g",
+    "price": 450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Permvet Medicated Dog Soap 70g",
+    "price": 650.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Bolfo Powder 75g",
+    "price": 945.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Wolfo Talk",
+    "price": 590.0
+  },
+  {
+    "pet": "Dog",
+    "name": "NUTRICOAT 200G",
+    "price": 2680.0
+  },
+  {
+    "pet": "Dog",
+    "name": "NUTRICOAT ADVANCE 200G",
+    "price": 2990.0
+  },
+  {
+    "pet": "Dog",
+    "name": "PET FAT 200ML",
+    "price": 2150.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Red Dog 200ml",
+    "price": 1500.0
+  },
+  {
+    "pet": "Dog",
+    "name": "ORCALMIN SUSPENSION",
+    "price": 925.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Bones Up 200g",
+    "price": 1400.0
+  },
+  {
+    "pet": "Dog",
+    "name": "PET VIT LIQUID 200ml",
+    "price": 1490.0
+  },
+  {
+    "pet": "Dog",
+    "name": "aRBCe PET 200ml",
+    "price": 1625.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Visobitts Tablets 50s",
+    "price": 9375.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Liv 52 Pet Liquid 200ml",
+    "price": 1200.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Digytone Drops 30ml",
+    "price": 383.0
+  },
+  {
+    "pet": "Dog",
+    "name": "PETMEND SPRAY 150ml",
+    "price": 980.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Negasunt 40g",
+    "price": 1290.0
+  },
+  {
+    "pet": "Dog",
+    "name": "ALUSPRAY 125ml",
+    "price": 1980.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Scavon Vet Spray 100ml",
+    "price": 1331.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Scavon Vet Cream 50g",
+    "price": 793.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Drontal Plus 2's",
+    "price": 990.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Drontal Plus 12's",
+    "price": 5450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Sanpet 10kg",
+    "price": 360.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Bavaro Junior and Adult Force 28/16 - S.kibbles 18KG",
+    "price": 22450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Bavaro Junior and Adult Force 28/16 18 KG",
+    "price": 22450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crispy Duck 1.9kg",
+    "price": 3900.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crispy Duck 10kg",
+    "price": 16900.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crispy Duck 650g",
+    "price": 1550.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crispy Duck Adult 18kg",
+    "price": 27600.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crunchy Chicken 1.9kg",
+    "price": 3900.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crunchy Chicken 10kg",
+    "price": 16900.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crunchy Chicken 650g",
+    "price": 1550.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Cat Crunchy Chicken Adult 18kg",
+    "price": 27600.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Kitten 1.9kg",
+    "price": 4200.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Kitten 10kg",
+    "price": 21900.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Josi Kitten 650g",
+    "price": 1800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Josi Dog Active 2.7kg",
+    "price": 4900.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Josi Dog Active 900g",
+    "price": 1700.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Josi dog Junior Sensitive 2.7 kg",
+    "price": 4800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Josi dog Junior Sensitive 900g",
+    "price": 1800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Josi Dog Master Mix 900g",
+    "price": 1300.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Josi Dog Mini Adult 2.7kg",
+    "price": 4900.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Josi Dog Mini Adult 900g",
+    "price": 1800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "JosiDog Economy 10 Kg",
+    "price": 10900.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Meat in Feet 400g",
+    "price": 350.0
+  },
+  {
+    "pet": "Cat/Dog",
+    "name": "Kick and Punch 300ml",
+    "price": 450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Meowghurt 200g",
+    "price": 450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Doghurt 200g",
+    "price": 450.0
+  },
+  {
+    "pet": "Dog",
+    "name": "SmartHeart Adult pouch 80g",
+    "price": 310.0
+  },
+  {
+    "pet": "Dog",
+    "name": "SmartHeart Puppy Pouch 80g",
+    "price": 310.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Puppy, Milk flavour 400g",
+    "price": 650.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Puppy, Milk flavour 500g",
+    "price": 850.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Puppy, Milk flavour 2Kg",
+    "price": 3150.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Puppy, Milk flavour 10Kg",
+    "price": 13690.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Chicken, 400g",
+    "price": 560.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Chicken, 500g",
+    "price": 750.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Chicken 2Kg",
+    "price": 2800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Chicken 3.5Kg",
+    "price": 4650.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Chicken 10Kg",
+    "price": 12050.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Chicken 15Kg",
+    "price": 16850.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Beef 2Kg",
+    "price": 2800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Beef 3.5Kg",
+    "price": 4650.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Beef 10Kg",
+    "price": 12050.0
+  },
+  {
+    "pet": "Dog",
+    "name": "CP Dog, Beef 15Kg",
+    "price": 16850.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Puppy Chicken & Egg Milk 500g",
+    "price": 930.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Puppy Chicken & Egg Milk 1.3Kg",
+    "price": 2550.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Puppy Chicken & Egg Milk 2.7Kg",
+    "price": 4460.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Puppy Chicken & Egg Milk 8Kg",
+    "price": 12800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Chicken & Egg 500g",
+    "price": 930.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Chicken & Egg 1.5Kg",
+    "price": 2550.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Chicken & Egg 3Kg",
+    "price": 4460.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Chicken & Egg 10Kg",
+    "price": 12800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Dog Chicken and Liver 500g",
+    "price": 930.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Dog Chicken and Liver 1.5Kg",
+    "price": 2550.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Dog Chicken and Liver 3Kg",
+    "price": 4460.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Adult Dog Chicken and Liver 10Kg",
+    "price": 12800.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Puppy 01Kg",
+    "price": 2140.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Puppy 03Kg",
+    "price": 5670.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Puppy 10Kg",
+    "price": 17690.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Puppy 20Kg",
+    "price": 34990.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Adult 01Kg",
+    "price": 2050.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Adult 03Kg",
+    "price": 5310.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Adult 10Kg",
+    "price": 16490.0
+  },
+  {
+    "pet": "Dog",
+    "name": "Smartheart Power Pack Adult 20Kg",
+    "price": 31990.0
+  },
+  {
+    "pet": "Dog",
+    "name": "SmartHeart Mother & Baby 1.3Kg",
+    "price": 2720.0
+  },
+  {
+    "pet": "Dog",
+    "name": "SmartHeart Mother & Baby 2.6Kg",
+    "price": 5200.0
+  },
+  {
+    "pet": "Dog",
+    "name": "SmartHeart Mother & Baby 8Kg",
+    "price": 13500.0
+  },
+  {
+    "pet": "Dog",
+    "name": "SmartHeart Mother & Baby 15Kg",
+    "price": 24540.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Kitten, Ocean Fish 400g",
+    "price": 1450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Kitten, Ocean Fish 1.1Kg",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Kitten, Ocean Fish 7Kg",
+    "price": 14950.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Tuna 450g",
+    "price": 1450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Tuna 1.2Kg",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Tuna 3 Kg",
+    "price": 6490.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Tuna 7Kg",
+    "price": 13250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Seafood 450g",
+    "price": 1450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Seafood, 1.2Kg",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Seafood 3Kg",
+    "price": 6490.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Seafood 7Kg",
+    "price": 13250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Mackerel 450g",
+    "price": 1450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Mackerel 1.2Kg",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Mackerel 3Kg",
+    "price": 6490.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Mackerel 7Kg",
+    "price": 13250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Chicken & Veg. 450g",
+    "price": 1450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Chicken & Veg. 1.2Kg",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Chicken & Veg. 3Kg",
+    "price": 6490.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Cat, Chicken & Veg. 7Kg",
+    "price": 13250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Percian cat 400g",
+    "price": 1450.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Persian cat 1.1kg",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Persian Kitten 400g",
+    "price": 1490.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Persian Kitten 1.1kg",
+    "price": 3300.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Mother & Baby 400g",
+    "price": 1550.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Mother & Baby 1.1kg",
+    "price": 3400.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Creamy Treats Bonito Flavour",
+    "price": 630.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Creamy Treats Chicken & Liver Flavour",
+    "price": 630.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Creamy Treats Crab Flavour",
+    "price": 630.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Creamy Treats Salmon Flavour",
+    "price": 630.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Tuna in Jelly 80g",
+    "price": 390.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-OPouch Ocen Fish In Jelly 80g",
+    "price": 390.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Pouch Tuna With Sardine 80g",
+    "price": 390.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Me-O Pouch Tuna Topping Wite Fish 80g",
+    "price": 390.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Catron Bentonite Cat Litter - Gray Control 10L",
+    "price": 4500.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Catron Bentonite Cat Litter - Lavender 10L",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Catron Bentonite Cat Litter - Baby Powder 10L",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Catron Bentonite Cat Litter - Marseille Soap 10L",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Catron Bentonite Cat Litter - Green Apple 10L",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Catron Bentonite Cat Litter - Coconut and Vanilla 10L",
+    "price": 3250.0
+  },
+  {
+    "pet": "Cat",
+    "name": "Catron Bentonite Cat Litter - Cappuccino 10L",
+    "price": 3250.0
+  }
+]

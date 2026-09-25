@@ -685,10 +685,15 @@ export default function AdminProductsPage() {
             padding: '64px',
             textAlign: 'center',
             boxShadow: 'var(--shadow-sm)',
+            minHeight: '460px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <div className="animate-spin rounded-full h-10 w-10 border-3 border-accent border-t-transparent mx-auto" />
-          <p style={{ marginTop: '16px', fontSize: '12px', fontWeight: 600, color: 'var(--color-text-muted)' }}>
+          <p style={{ marginTop: '16px', fontSize: '13px', fontWeight: 600, color: 'var(--color-text-muted)' }}>
             Loading inventory catalog...
           </p>
         </div>

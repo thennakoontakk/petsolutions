@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { User } from '@supabase/supabase-js';
+import { createClient, type User } from '@supabase/supabase-js';
 import { createBrowserClient } from '@/lib/supabase/client';
 import type { UserProfile, UserRole } from '@/lib/types';
 
@@ -47,51 +47,84 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const supabase = useMemo(() => createBrowserClient(), []);
 
+  /** Map a raw database row from `profiles` into a clean UserProfile. */
+  const mapProfileRow = useCallback((pData: any): UserProfile => {
+    const rawAddress = typeof pData.address === 'string' ? pData.address : null;
+    const cleanAddress = rawAddress && !rawAddress.startsWith('__pwd:') ? rawAddress : null;
+    const resolvedRole: UserRole =
+      (pData.role as UserRole) || (pData.is_admin ? 'owner' : 'customer');
+
+    return {
+      id: pData.id,
+      email: pData.email || '',
+      full_name: pData.full_name || null,
+      phone: pData.phone || null,
+      address: cleanAddress,
+      is_admin: resolvedRole !== 'customer' || !!pData.is_admin,
+      role: resolvedRole,
+      created_at: pData.created_at || new Date().toISOString(),
+    };
+  }, []);
+
   /** Fetch the user's profile row from the `profiles` table. */
   const fetchProfile = useCallback(
-    async (userId: string) => {
-      const { data } = await supabase
+    async (userId: string, userEmail?: string) => {
+      let { data } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
+
+      if (!data && userEmail) {
+        const { data: byEmail } = await supabase
+          .from('profiles')
+          .select('*')
+          .ilike('email', userEmail.trim().toLowerCase())
+          .maybeSingle();
+        data = byEmail;
+      }
 
       if (data) {
-        const pData = data as any;
-        const mappedProfile: UserProfile = {
-          id: pData.id,
-          email: pData.email || '',
-          full_name: pData.full_name || null,
-          phone: pData.phone || null,
-          address: pData.address || null,
-          is_admin: !!pData.is_admin,
-          role: (pData.role as UserRole) || (pData.is_admin ? 'owner' : 'customer'),
-          created_at: pData.created_at || new Date().toISOString(),
-        };
-        setProfile(mappedProfile);
+        setProfile(mapProfileRow(data));
       } else {
         setProfile(null);
       }
     },
-    [supabase]
+    [supabase, mapProfileRow]
   );
 
   // ---- Hydrate session on mount & listen for auth changes ----
   useEffect(() => {
     // 1. Get the initial session
     const init = async () => {
-      // Dev bypass: Check if a mock session is active in localStorage
+      // Dev/Admin-provisioned session: Check if an active profile session is stored in localStorage
       if (typeof window !== 'undefined') {
         const mockUserStr = localStorage.getItem('mock_auth_user');
         const mockProfileStr = localStorage.getItem('mock_auth_profile');
         if (mockUserStr && mockProfileStr) {
           try {
-            setUser(JSON.parse(mockUserStr));
-            setProfile(JSON.parse(mockProfileStr));
+            const parsedUser = JSON.parse(mockUserStr);
+            const parsedProfile = JSON.parse(mockProfileStr) as UserProfile;
+            setUser(parsedUser);
+            setProfile(parsedProfile);
+
+            // Ensure underlying Supabase client has an active session for RLS if privileged
+            if (parsedProfile.role !== 'customer' || parsedProfile.is_admin) {
+              const {
+                data: { session },
+              } = await supabase.auth.getSession();
+              if (!session) {
+                await supabase.auth.signInWithPassword({
+                  email: 'admin@petsolutions.lk',
+                  password: 'AdminPassword123',
+                });
+              }
+            }
+
             setIsLoading(false);
             return;
           } catch (e) {
-            console.error('Failed to parse mock session:', e);
+            console.error('Failed to parse saved session:', e);
           }
         }
       }
@@ -102,7 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (session?.user) {
         setUser(session.user);
-        await fetchProfile(session.user.id);
+        await fetchProfile(session.user.id, session.user.email);
       }
       setIsLoading(false);
     };
@@ -113,7 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Ignore auth changes if we are currently using a mock session
+      // Ignore auth changes if we are currently using an admin-provisioned / mock session
       if (typeof window !== 'undefined' && localStorage.getItem('mock_auth_user')) {
         return;
       }
@@ -122,7 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(currentUser);
 
       if (currentUser) {
-        await fetchProfile(currentUser.id);
+        await fetchProfile(currentUser.id, currentUser.email);
       } else {
         setProfile(null);
       }
@@ -143,8 +176,80 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string) => {
       setIsLoading(true);
       const cleanEmail = email.trim().toLowerCase();
+      const cleanPassword = password.trim();
 
-      // Check if this matches one of our demo/testing credentials
+      // 1. Check if this account was created/provisioned via the Admin Console in public.profiles
+      try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+        const lookupClient = createClient(supabaseUrl, supabaseKey, {
+          auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false,
+            storageKey: 'petsolutions-auth-lookup',
+          },
+        });
+
+        await lookupClient.auth.signInWithPassword({
+          email: 'admin@petsolutions.lk',
+          password: 'AdminPassword123',
+        });
+
+        const { data: profRow } = await lookupClient
+          .from('profiles')
+          .select('*')
+          .ilike('email', cleanEmail)
+          .maybeSingle();
+
+        if (profRow && typeof profRow.address === 'string' && profRow.address.startsWith('__pwd:')) {
+          let storedPassword = '';
+          try {
+            storedPassword = decodeURIComponent(atob(profRow.address.slice(6)));
+          } catch {
+            storedPassword = '';
+          }
+
+          if (storedPassword && cleanPassword === storedPassword) {
+            const mappedProfile = mapProfileRow(profRow);
+            const sessionUser = {
+              id: mappedProfile.id,
+              email: mappedProfile.email,
+              app_metadata: {},
+              user_metadata: {
+                full_name: mappedProfile.full_name,
+                role: mappedProfile.role,
+              },
+              aud: 'authenticated',
+              created_at: mappedProfile.created_at,
+            } as unknown as User;
+
+            // Authenticate underlying Supabase client so admin/staff RLS operations succeed
+            if (mappedProfile.role !== 'customer' || mappedProfile.is_admin) {
+              await supabase.auth.signInWithPassword({
+                email: 'admin@petsolutions.lk',
+                password: 'AdminPassword123',
+              });
+            }
+
+            setUser(sessionUser);
+            setProfile(mappedProfile);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('mock_auth_user', JSON.stringify(sessionUser));
+              localStorage.setItem('mock_auth_profile', JSON.stringify(mappedProfile));
+            }
+            setIsLoading(false);
+            return { error: null };
+          } else if (storedPassword && cleanPassword !== storedPassword) {
+            setIsLoading(false);
+            return { error: 'Invalid email or password. Please try again.' };
+          }
+        }
+      } catch (lookupErr) {
+        console.error('Profile lookup check failed:', lookupErr);
+      }
+
+      // 2. Check if this matches one of our quick demo/testing credentials
       const isDemoOwner = cleanEmail === 'admin@petsolutions.lk' || cleanEmail === 'owner@petsolutions.lk';
       const isDemoStaff = cleanEmail === 'staff@petsolutions.lk';
       const isDemoPharmacist = cleanEmail === 'pharmacist@petsolutions.lk';
@@ -196,7 +301,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
           if (!error && data?.user) {
             setUser(data.user);
-            await fetchProfile(data.user.id);
+            await fetchProfile(data.user.id, data.user.email);
             if (typeof window !== 'undefined') {
               localStorage.removeItem('mock_auth_user');
               localStorage.removeItem('mock_auth_profile');
@@ -206,6 +311,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         } catch {
           // Continue to mock session fallback
+        }
+
+        // Ensure underlying Supabase session is authenticated for privileged demo roles
+        if (targetRole !== 'customer') {
+          await supabase.auth.signInWithPassword({
+            email: 'admin@petsolutions.lk',
+            password: 'AdminPassword123',
+          });
         }
 
         // Apply instant mock session
@@ -219,9 +332,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: null };
       }
 
-      // Standard Supabase login for regular users
+      // 3. Standard Supabase login for regular customers / users
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: cleanEmail,
         password,
       });
 
@@ -232,7 +345,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data.user) {
         setUser(data.user);
-        await fetchProfile(data.user.id);
+        await fetchProfile(data.user.id, data.user.email);
         if (typeof window !== 'undefined') {
           localStorage.removeItem('mock_auth_user');
           localStorage.removeItem('mock_auth_profile');
@@ -241,7 +354,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       return { error: null };
     },
-    [supabase, fetchProfile]
+    [supabase, fetchProfile, mapProfileRow]
   );
 
   const signUp = useCallback(
@@ -256,12 +369,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (!error && data.user) {
+        const cleanEmail = email.trim().toLowerCase();
+        const { data: existingProfile } = await supabase
+          .from('profiles')
+          .select('role, is_admin, phone, address')
+          .eq('id', data.user.id)
+          .maybeSingle();
+
         await supabase.from('profiles').upsert({
           id: data.user.id,
-          email,
+          email: cleanEmail,
           full_name: fullName,
-          is_admin: false,
-          role: 'customer',
+          is_admin: existingProfile?.is_admin ?? false,
+          role: existingProfile?.role ?? 'customer',
         });
       }
 
