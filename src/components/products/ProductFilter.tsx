@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   SlidersHorizontal,
@@ -40,6 +40,7 @@ interface ProductFilterProps {
   totalProducts?: number;
   filteredCount?: number;
   className?: string;
+  initialExpanded?: boolean;
 }
 
 /* --------------------------------------------------------------------------
@@ -71,8 +72,15 @@ export default function ProductFilter({
   totalProducts,
   filteredCount,
   className = '',
+  initialExpanded = false,
 }: ProductFilterProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(initialExpanded);
+
+  useEffect(() => {
+    if (initialExpanded) {
+      setIsExpanded(true);
+    }
+  }, [initialExpanded]);
 
   const update = useCallback(
     (patch: Partial<FilterState>) => {

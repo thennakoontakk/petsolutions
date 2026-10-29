@@ -14,8 +14,16 @@ export default function ClickPawPulse() {
   const [paws, setPaws] = useState<PawClick[]>([]);
 
   const handlePointerDown = useCallback((e: PointerEvent) => {
-    // Only react to primary mouse button / touch
+    // Only react to primary mouse button (left click)
     if (e.button !== 0) return;
+
+    // Only allow in desktop view (>= 768px) and ignore touch events
+    if (typeof window !== 'undefined') {
+      const isMobileView = window.innerWidth < 768 || window.matchMedia('(max-width: 767px)').matches;
+      if (isMobileView || e.pointerType === 'touch') {
+        return;
+      }
+    }
 
     const newPaw: PawClick = {
       id: Date.now() + Math.random(),
@@ -40,6 +48,7 @@ export default function ClickPawPulse() {
   return (
     <div
       aria-hidden="true"
+      className="mobile-hidden"
       style={{
         position: 'fixed',
         inset: 0,

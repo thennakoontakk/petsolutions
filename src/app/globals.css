@@ -1260,6 +1260,66 @@ input:-webkit-autofill:focus {
   }
 }
 
+/* ── Product Card Add to Cart Action Button ──
+   Mobile: Compact round icon button so price has ample space and never wraps
+   Desktop (>=768px): Full pill button with 'Add to Cart' label
+   ────────────────────────────────────────────────────────────── */
+.product-card-action-btn {
+  background-color: #FFC800;
+  color: #1A1A2E;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(255, 200, 0, 0.35);
+  font-weight: 800;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  /* Mobile default: compact 36px circular button */
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  gap: 0;
+}
+
+.product-card-action-btn .product-card-action-text {
+  display: none;
+}
+
+.product-card-action-btn:hover:not(:disabled) {
+  filter: brightness(0.95);
+  box-shadow: 0 6px 18px rgba(255, 200, 0, 0.45);
+}
+
+.product-card-action-btn:active:not(:disabled) {
+  transform: scale(0.93);
+}
+
+.product-card-action-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Desktop view: wide pill button with 'Add to Cart' label */
+@media (min-width: 768px) {
+  .product-card-action-btn {
+    width: auto;
+    height: auto;
+    padding: 8px 18px;
+    gap: 6px;
+  }
+
+  .product-card-action-btn .product-card-action-text {
+    display: inline;
+  }
+}
+
 .grid-categories {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1371,7 +1431,7 @@ input:-webkit-autofill:focus {
 .animate-feature-marquee {
   display: flex;
   width: max-content;
-  animation: feature-marquee 28s linear infinite;
+  animation: feature-marquee 85s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
   contain: layout;

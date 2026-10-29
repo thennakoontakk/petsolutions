@@ -1,6 +1,6 @@
 import Header from '@/components/layout/Header';
 import HeroBanner from '@/components/home/HeroBanner';
-import CategoryShowcase from '@/components/home/CategoryShowcase';
+import WeeklyDeals from '@/components/home/WeeklyDeals';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import BrandStory from '@/components/home/BrandStory';
 import Testimonials from '@/components/home/Testimonials';
@@ -15,8 +15,8 @@ export default function Home() {
         {/* 1. Original Preferred Hero Banner with Video & Marquee */}
         <HeroBanner />
 
-        {/* 2. Shop by Category (6 Rounded Pastel Cards) */}
-        <CategoryShowcase />
+        {/* 2. Curated Weekly Deals & Special Promotions */}
+        <WeeklyDeals />
 
         {/* Featured Products 5-Column Grid */}
         <FeaturedProducts />

@@ -5,6 +5,34 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Truck, ShieldCheck, Heart } from 'lucide-react';
 
+const FEATURE_ITEMS = [
+  {
+    icon: Truck,
+    title: 'Islandwide Delivery',
+    description: 'Free delivery for orders above Rs. 5,000',
+  },
+  {
+    icon: ShieldCheck,
+    title: '100% Genuine Products',
+    description: 'Sourced directly from official distributors',
+  },
+  {
+    icon: Heart,
+    title: 'Expert Care Selections',
+    description: 'Vitamins, food, and grooming options',
+  },
+];
+
+// 4 sets per half (12 cards per half = ~4,128px width), repeated twice for seamless infinite -50% translateX loop
+// This ensures that even on 4K ultra-wide screens (>2560px), cards always fully cover the screen without blank gaps
+const HALF_FEATURE_CARDS = [
+  ...FEATURE_ITEMS,
+  ...FEATURE_ITEMS,
+  ...FEATURE_ITEMS,
+  ...FEATURE_ITEMS,
+];
+const MARQUEE_CARDS = [...HALF_FEATURE_CARDS, ...HALF_FEATURE_CARDS];
+
 export default function HeroBanner() {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -131,39 +159,7 @@ export default function HeroBanner() {
         />
 
         <div className="animate-feature-marquee">
-          {[
-            {
-              icon: Truck,
-              title: 'Islandwide Delivery',
-              description: 'Free delivery for orders above Rs. 5,000',
-            },
-            {
-              icon: ShieldCheck,
-              title: '100% Genuine Products',
-              description: 'Sourced directly from official distributors',
-            },
-            {
-              icon: Heart,
-              title: 'Expert Care Selections',
-              description: 'Vitamins, food, and grooming options',
-            },
-            // Duplicate the set for seamless loop
-            {
-              icon: Truck,
-              title: 'Islandwide Delivery',
-              description: 'Free delivery for orders above Rs. 5,000',
-            },
-            {
-              icon: ShieldCheck,
-              title: '100% Genuine Products',
-              description: 'Sourced directly from official distributors',
-            },
-            {
-              icon: Heart,
-              title: 'Expert Care Selections',
-              description: 'Vitamins, food, and grooming options',
-            },
-          ].map((card, idx) => {
+          {MARQUEE_CARDS.map((card, idx) => {
             const Icon = card.icon;
             return (
               <div 

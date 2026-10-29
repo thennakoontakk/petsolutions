@@ -328,7 +328,7 @@ export default function ProductCard({
             }}
           >
             {/* Price */}
-            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flexShrink: 1 }}>
               <span
                 className="font-heading"
                 style={{
@@ -336,6 +336,7 @@ export default function ProductCard({
                   fontSize: '16px',
                   color: '#1A1A2E',
                   lineHeight: 1.2,
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {formatPriceShort(currentPrice)}
@@ -347,6 +348,7 @@ export default function ProductCard({
                     color: '#94A3B8',
                     textDecoration: 'line-through',
                     lineHeight: 1.2,
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {formatPriceShort(currentCompareAt)}
@@ -354,37 +356,21 @@ export default function ProductCard({
               )}
             </div>
 
-            {/* Pill 'Add to Cart' Button (Brand Yellow #FFC800 matching .btn-primary) */}
+            {/* Action Button: Mobile round icon button, Desktop pill button */}
             <button
               type="button"
               onClick={handleAction}
               disabled={isAdding}
-              style={{
-                backgroundColor: '#FFC800',
-                color: '#1A1A2E',
-                borderRadius: '9999px',
-                boxShadow: '0 4px 14px rgba(255, 200, 0, 0.35)',
-                padding: '8px 18px',
-                fontWeight: 800,
-                fontSize: '12px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-              className="hover:brightness-95 active:scale-95"
+              className="product-card-action-btn"
               aria-label="Add to cart"
+              title="Add to cart"
             >
               {isAdding ? (
-                <Loader2 size={13} className="animate-spin text-[#1A1A2E]" />
+                <Loader2 size={15} className="animate-spin text-[#1A1A2E]" />
               ) : (
                 <>
-                  <ShoppingCart size={13} className="text-[#1A1A2E]" />
-                  <span>Add to Cart</span>
+                  <ShoppingCart size={15} className="text-[#1A1A2E]" />
+                  <span className="product-card-action-text">Add to Cart</span>
                 </>
               )}
             </button>

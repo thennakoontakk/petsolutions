@@ -707,11 +707,13 @@ export default function Header() {
       <MobileNav
         isOpen={isMobileNavOpen}
         onClose={() => setIsMobileNavOpen(false)}
+        currentCategory={currentCategory}
+        pathname={pathname}
         categories={{
-          dog: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
-          cat: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
-          both: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug })),
-          pharmacy: pharmacyCategories.map((c) => ({ name: c.name, slug: c.slug })),
+          all: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug, desc: c.desc })),
+          dog: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug, desc: c.desc })),
+          cat: unifiedCategories.map((c) => ({ name: c.name, slug: c.slug, desc: c.desc })),
+          pharmacy: pharmacyCategories.map((c) => ({ name: c.name, slug: c.slug, desc: c.desc })),
         }}
       />
     </>

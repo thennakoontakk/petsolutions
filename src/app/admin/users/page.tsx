@@ -99,6 +99,11 @@ export default function AdminUsersPage() {
 
   // Update user role in Supabase
   const handleRoleChange = async (targetUser: UserProfile, newRole: 'owner' | 'staff' | 'customer') => {
+    if (!isOwner) {
+      toast.error('Only Store Owners have permission to modify team member privileges!');
+      return;
+    }
+
     if (targetUser.id === profile?.id && newRole !== 'owner') {
       toast.error('You cannot revoke Store Owner privileges from your own active account!');
       return;
@@ -149,6 +154,10 @@ export default function AdminUsersPage() {
   // Add / Create Staff or Owner Account with Password in Supabase
   const handleAddStaff = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isOwner) {
+      toast.error('Only Store Owners have permission to create Staff and Owner accounts!');
+      return;
+    }
     if (!newStaffEmail) return;
 
     const cleanPassword = newStaffPassword.trim();
@@ -433,29 +442,6 @@ export default function AdminUsersPage() {
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           </button>
-
-          <button
-            onClick={() => setIsAddStaffOpen(true)}
-            className="btn btn-primary btn-sm"
-            style={{
-              height: '38px',
-              padding: '0 16px',
-              borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: 700,
-              backgroundColor: '#1A1A2E',
-              color: '#FFFFFF',
-              border: '1.5px solid rgba(255, 200, 0, 0.4)',
-              boxShadow: '0 2px 8px rgba(26, 26, 46, 0.15)',
-              gap: '6px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              cursor: 'pointer',
-            }}
-          >
-            <UserPlus size={16} />
-            <span>Add Team Member</span>
-          </button>
         </div>
       </div>
 
@@ -620,6 +606,35 @@ export default function AdminUsersPage() {
                 <span>Staff & Access ({totalStaff + totalOwners})</span>
               </button>
             </div>
+
+            {/* Owner-Only Quick Action */}
+            {isOwner && (
+              <button
+                type="button"
+                onClick={() => setIsAddStaffOpen(true)}
+                className="btn btn-primary btn-sm"
+                style={{
+                  height: '38px',
+                  padding: '0 16px',
+                  borderRadius: '12px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  backgroundColor: '#1A1A2E',
+                  color: '#FFFFFF',
+                  border: '1.5px solid rgba(255, 200, 0, 0.45)',
+                  boxShadow: '0 2px 8px rgba(26, 26, 46, 0.15)',
+                  gap: '6px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                }}
+                title="Create Staff or Owner Account"
+              >
+                <UserPlus size={15} />
+                <span>+ Add Staff / Owner</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -848,20 +863,55 @@ export default function AdminUsersPage() {
               background: '#FFFFFF',
               border: '1px solid rgba(189, 223, 234, 0.55)',
               borderRadius: '16px',
-              padding: '12px 18px',
+              padding: '14px 20px',
               display: 'flex',
               alignItems: 'center',
-              gap: '12px',
+              justifyContent: 'space-between',
+              gap: '16px',
               fontSize: '12px',
               color: 'var(--color-text-muted)',
               boxShadow: 'var(--shadow-xs)',
+              flexWrap: 'wrap',
             }}
           >
-            <ShieldCheck size={18} style={{ color: 'var(--color-brand-blue)', flexShrink: 0 }} />
-            <span>
-              <strong style={{ color: 'var(--color-text)' }}>Store Owners (👑)</strong> have full root access to settings, financials, and staff management. 
-              <strong style={{ color: 'var(--color-text)', marginLeft: '12px' }}>Staff Members (📦)</strong> have operational access to the products catalog, categories, and order fulfillment.
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: '280px' }}>
+              <ShieldCheck size={20} style={{ color: 'var(--color-brand-blue)', flexShrink: 0 }} />
+              <span>
+                <strong style={{ color: 'var(--color-text)' }}>Store Owners (👑)</strong> have full root access to settings, financials, and staff management. 
+                <strong style={{ color: 'var(--color-text)', marginLeft: '12px' }}>Staff Members (📦)</strong> have operational access to the products catalog, categories, and order fulfillment.
+                <span style={{ display: 'block', fontSize: '11px', color: '#0369A1', marginTop: '4px', fontWeight: 600 }}>
+                  🔒 Security Policy: Only verified Store Owners can create or modify Staff & Owner privileges.
+                </span>
+              </span>
+            </div>
+
+            {isOwner && (
+              <button
+                type="button"
+                onClick={() => setIsAddStaffOpen(true)}
+                className="btn btn-primary btn-sm"
+                style={{
+                  height: '38px',
+                  padding: '0 18px',
+                  borderRadius: '12px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  backgroundColor: '#1A1A2E',
+                  color: '#FFFFFF',
+                  border: '1.5px solid rgba(255, 200, 0, 0.45)',
+                  boxShadow: '0 2px 8px rgba(26, 26, 46, 0.15)',
+                  gap: '8px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+                title="Create Staff or Owner Account"
+              >
+                <Crown size={15} style={{ color: '#FFC800' }} />
+                <span>+ Create Staff / Owner</span>
+              </button>
+            )}
           </div>
 
           <div className="admin-table-container">
@@ -954,16 +1004,17 @@ export default function AdminUsersPage() {
                           <select
                             value={activeRole}
                             onChange={(e) => handleRoleChange(st, e.target.value as 'owner' | 'staff' | 'customer')}
-                            disabled={isCurrentUser}
+                            disabled={isCurrentUser || !isOwner}
                             className="admin-select"
+                            title={!isOwner ? 'Only Store Owners can modify privileges' : undefined}
                             style={{
                               height: '34px',
                               padding: '0 10px',
                               fontSize: '11px',
                               fontWeight: 700,
                               borderRadius: '10px',
-                              cursor: isCurrentUser ? 'not-allowed' : 'pointer',
-                              opacity: isCurrentUser ? 0.6 : 1,
+                              cursor: (isCurrentUser || !isOwner) ? 'not-allowed' : 'pointer',
+                              opacity: (isCurrentUser || !isOwner) ? 0.6 : 1,
                             }}
                           >
                             <option value="owner">👑 Store Owner</option>
@@ -1008,16 +1059,21 @@ export default function AdminUsersPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                   <div
                     className="admin-hero-icon"
-                    style={{ width: '44px', height: '44px', borderRadius: '14px', flexShrink: 0 }}
+                    style={{ width: '44px', height: '44px', borderRadius: '14px', flexShrink: 0, backgroundColor: '#FEF3C7', border: '1.5px solid #FCD34D' }}
                   >
-                    <UserPlus size={20} />
+                    <Crown size={22} style={{ color: '#D97706' }} />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-text)', margin: 0, lineHeight: 1.2 }}>
-                      Add Team Member
-                    </h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-text)', margin: 0, lineHeight: 1.2 }}>
+                        Create Staff or Owner Account
+                      </h3>
+                      <span style={{ fontSize: '10px', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', backgroundColor: '#FEF3C7', color: '#B45309', border: '1px solid #FCD34D', textTransform: 'uppercase' }}>
+                        Owner Only
+                      </span>
+                    </div>
                     <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px', margin: 0 }}>
-                      Assign administrative staff or store owner privileges
+                      Only Store Owners have authority to provision Staff and Owner credentials
                     </p>
                   </div>
                 </div>
@@ -1295,8 +1351,8 @@ export default function AdminUsersPage() {
                       </>
                     ) : (
                       <>
-                        <Check size={14} />
-                        <span>Confirm Assignment</span>
+                        <Crown size={14} style={{ color: '#FFC800' }} />
+                        <span>Create {newStaffRole === 'owner' ? 'Store Owner' : 'Staff'} Account</span>
                       </>
                     )}
                   </button>

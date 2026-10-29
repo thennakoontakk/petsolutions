@@ -12,6 +12,7 @@ import {
   LogOut, 
   ArrowLeft, 
   Users,
+  Flame,
 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 
@@ -27,6 +28,7 @@ export const adminNavItems: AdminNavItem[] = [
   { name: 'Products', path: '/admin/products', icon: ShoppingCart },
   { name: 'Categories', path: '/admin/categories', icon: ListCollapse, roles: ['owner', 'staff'] },
   { name: 'Orders List', path: '/admin/orders', icon: ClipboardList },
+  { name: 'Weekly Deals', path: '/admin/deals', icon: Flame, roles: ['owner', 'staff'] },
   { name: 'Users & Staff', path: '/admin/users', icon: Users, roles: ['owner'] },
 ];
 
@@ -47,7 +49,7 @@ export default function AdminSidebar({ isOpen = true }: AdminSidebarProps) {
   }[currentRole];
 
   // Core Store Management Items
-  const corePaths = ['/admin', '/admin/products', '/admin/categories', '/admin/orders', '/admin/users'];
+  const corePaths = ['/admin', '/admin/products', '/admin/categories', '/admin/orders', '/admin/deals', '/admin/users'];
   const coreItems = adminNavItems.filter(
     (item) => corePaths.includes(item.path) && (!item.roles || item.roles.includes(currentRole))
   );

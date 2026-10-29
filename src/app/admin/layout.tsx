@@ -170,6 +170,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="font-bold text-text">
                 {pathname.startsWith('/admin/users')
                   ? 'Users & Staff'
+                  : pathname.startsWith('/admin/deals')
+                  ? 'Weekly Deals'
                   : pathname.split('/')[2]?.replace('-', ' ') || 'Dashboard'}
               </span>
             </div>

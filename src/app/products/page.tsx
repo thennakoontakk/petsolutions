@@ -9,6 +9,28 @@ import ProductFilter from '@/components/products/ProductFilter';
 import { createBrowserClient } from '@/lib/supabase/client';
 import type { Product, Category } from '@/lib/types';
 
+function parseCategoriesFromParams(searchParams: { getAll: (key: string) => string[]; get: (key: string) => string | null }): string[] {
+  const allValues = searchParams.getAll('category');
+  if (!allValues || allValues.length === 0) {
+    const single = searchParams.get('category');
+    if (!single) return [];
+    allValues.push(single);
+  }
+
+  const result: string[] = [];
+  allValues.forEach((val) => {
+    // If val is e.g. "dry-wet-pet-food?pet_type=Dog", strip any stray '?'
+    const cleanVal = val.split('?')[0];
+    cleanVal.split(',').forEach((c) => {
+      const trimmed = c.trim();
+      if (trimmed && !result.includes(trimmed)) {
+        result.push(trimmed);
+      }
+    });
+  });
+  return result;
+}
+
 function ProductsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -19,12 +41,13 @@ function ProductsContent() {
   const [loading, setLoading] = useState(true);
 
   // Initial Filter State from URL
-  const initialCategory = searchParams.get('category') || '';
   const initialPetType = searchParams.get('pet_type') || '';
+  const initialCategories = parseCategoriesFromParams(searchParams);
+  const openFilterParam = searchParams.get('filter') === 'open' || searchParams.get('openFilter') === 'true';
 
   const [filters, setFilters] = useState<any>({
     petType: initialPetType || 'All',
-    categories: initialCategory ? [initialCategory] : [],
+    categories: initialCategories,
     priceMin: '',
     priceMax: '',
     sortBy: 'newest',
@@ -71,16 +94,37 @@ function ProductsContent() {
     fetchData();
   }, []);
 
-  // Update filters if URL parameters change
+  // Auto-scroll to filter section when coming with ?filter=open
   useEffect(() => {
-    const cat = searchParams.get('category') || '';
-    const pet = searchParams.get('pet_type') || '';
-    
-    setFilters((prev: any) => ({
-      ...prev,
-      petType: pet || 'All',
-      categories: cat ? [cat] : [],
-    }));
+    if (openFilterParam) {
+      const el = document.getElementById('product-filter-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [openFilterParam]);
+
+  // Update filters if URL parameters change from outside
+  useEffect(() => {
+    const pet = searchParams.get('pet_type') || 'All';
+    const cats = parseCategoriesFromParams(searchParams);
+
+    setFilters((prev: any) => {
+      const samePet = prev.petType === pet;
+      const sameCats =
+        prev.categories.length === cats.length &&
+        prev.categories.every((c: string) => cats.includes(c));
+
+      if (samePet && sameCats) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        petType: pet,
+        categories: cats,
+      };
+    });
   }, [searchParams]);
 
   const searchQuery = searchParams.get('search') || '';
@@ -109,9 +153,15 @@ function ProductsContent() {
       );
     }
 
-    // Category Filter
-    if (filters.categories.length > 0) {
-      result = result.filter((p) => p.category && filters.categories.includes(p.category.slug));
+    // Category Filter (supports multiple selected categories)
+    if (filters.categories && filters.categories.length > 0) {
+      result = result.filter(
+        (p) =>
+          p.category &&
+          (filters.categories.includes(p.category.slug) ||
+            filters.categories.includes(p.category.id) ||
+            filters.categories.includes(p.category_id))
+      );
     }
 
     // Price Filter
@@ -163,14 +213,27 @@ function ProductsContent() {
     setFilters(newFilters);
     
     // Update URL query parameters based on filters
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
+
     if (newFilters.petType && newFilters.petType !== 'All') {
       params.set('pet_type', newFilters.petType);
+    } else {
+      params.delete('pet_type');
     }
-    if (newFilters.categories.length === 1) {
-      params.set('category', newFilters.categories[0]);
+
+    if (newFilters.categories && newFilters.categories.length > 0) {
+      params.set('category', newFilters.categories.join(','));
+    } else {
+      params.delete('category');
     }
-    router.replace(`/products?${params.toString()}`, { scroll: false });
+
+    // Clean up temporary filter open flag when user interacts with filters
+    params.delete('filter');
+    params.delete('openFilter');
+
+    const newQuery = params.toString();
+    const newUrl = newQuery ? `/products?${newQuery}` : '/products';
+    router.replace(newUrl, { scroll: false });
   };
 
   return (
@@ -186,13 +249,14 @@ function ProductsContent() {
       </div>
 
       {/* Top Horizontal Product Filter Bar & Collapsible Drawer */}
-      <div className="mb-8">
+      <div id="product-filter-section" className="mb-8">
         <ProductFilter
           availableCategories={categories}
           filters={filters}
           onFilterChange={handleFilterChange}
           totalProducts={products.length}
           filteredCount={filteredProducts.length}
+          initialExpanded={openFilterParam}
         />
       </div>
 

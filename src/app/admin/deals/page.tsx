@@ -39,6 +39,7 @@ export default function AdminDealsPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Deals Settings State
   const [isEnabled, setIsEnabled] = useState(true);
@@ -143,13 +144,15 @@ export default function AdminDealsPage() {
       const updated = [...deals, newDeal];
       setDeals(updated);
       setActiveEditIndex(updated.length - 1);
-      toast.success('Product added to Weekly Deals.');
+      setHasUnsavedChanges(true);
+      toast.success('Product added! Click "Save & Publish" to update storefront.');
     }
   };
 
   const handleRemoveProduct = (productId: string) => {
     const updated = deals.filter((d) => d.product_id !== productId);
     setDeals(updated);
+    setHasUnsavedChanges(true);
     if (activeEditIndex !== null && activeEditIndex >= updated.length) {
       setActiveEditIndex(updated.length > 0 ? updated.length - 1 : null);
     }
@@ -163,6 +166,7 @@ export default function AdminDealsPage() {
     newDeals[index] = temp;
     setDeals(newDeals);
     setActiveEditIndex(index - 1);
+    setHasUnsavedChanges(true);
   };
 
   const handleMoveDown = (index: number) => {
@@ -173,12 +177,14 @@ export default function AdminDealsPage() {
     newDeals[index] = temp;
     setDeals(newDeals);
     setActiveEditIndex(index + 1);
+    setHasUnsavedChanges(true);
   };
 
   const updateDealItem = (index: number, patch: Partial<WeeklyDealItem>) => {
     const newDeals = [...deals];
     newDeals[index] = { ...newDeals[index], ...patch };
     setDeals(newDeals);
+    setHasUnsavedChanges(true);
   };
 
   const handleSave = async (e?: React.FormEvent) => {
@@ -209,7 +215,8 @@ export default function AdminDealsPage() {
         );
 
       if (error) throw error;
-      toast.success('Weekly Deals & Offers updated and published successfully!');
+      setHasUnsavedChanges(false);
+      toast.success('Weekly Deals updated & published live to homepage!');
     } catch (err: any) {
       console.error('Error saving deals settings:', err);
       toast.error(err.message || 'Error saving weekly deals.');
@@ -288,7 +295,10 @@ export default function AdminDealsPage() {
               {/* Enable / Disable Toggle */}
               <button
                 type="button"
-                onClick={() => setIsEnabled(!isEnabled)}
+                onClick={() => {
+                  setIsEnabled(!isEnabled);
+                  setHasUnsavedChanges(true);
+                }}
                 className="flex items-center gap-2 text-xs font-bold cursor-pointer"
               >
                 <span className={isEnabled ? 'text-success' : 'text-text-muted'}>
@@ -308,7 +318,10 @@ export default function AdminDealsPage() {
                 <input
                   type="text"
                   value={badgeText}
-                  onChange={(e) => setBadgeText(e.target.value)}
+                  onChange={(e) => {
+                    setBadgeText(e.target.value);
+                    setHasUnsavedChanges(true);
+                  }}
                   placeholder="e.g. Deal of the Week"
                   className="input w-full text-xs font-semibold"
                 />
@@ -319,7 +332,10 @@ export default function AdminDealsPage() {
                 <input
                   type="text"
                   value={bannerTitle}
-                  onChange={(e) => setBannerTitle(e.target.value)}
+                  onChange={(e) => {
+                    setBannerTitle(e.target.value);
+                    setHasUnsavedChanges(true);
+                  }}
                   placeholder="e.g. DEALS OF THE WEEK"
                   className="input w-full text-xs font-black"
                 />
@@ -330,7 +346,10 @@ export default function AdminDealsPage() {
                 <input
                   type="text"
                   value={bannerSubtitle}
-                  onChange={(e) => setBannerSubtitle(e.target.value)}
+                  onChange={(e) => {
+                    setBannerSubtitle(e.target.value);
+                    setHasUnsavedChanges(true);
+                  }}
                   placeholder="e.g. While supplies last. Limited quantities on top veterinary care & pet food essentials."
                   className="input w-full text-xs"
                 />
@@ -663,6 +682,59 @@ export default function AdminDealsPage() {
 
         </div>
       )}
+
+      {/* ================================================================
+          4. STICKY FLOATING SAVE & PUBLISH ACTION BAR
+          ================================================================ */}
+      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-2xl bg-[#1A1A2E]/95 backdrop-blur-md text-white p-3.5 sm:p-4 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.35)] border border-white/15 flex items-center justify-between gap-3 sm:gap-4 transition-all">
+        <div className="flex items-center gap-3 min-w-0">
+          <span
+            className={`w-3.5 h-3.5 rounded-full shrink-0 ${
+              hasUnsavedChanges
+                ? 'bg-[#FFC800] ring-4 ring-[#FFC800]/30 animate-pulse'
+                : 'bg-emerald-400'
+            }`}
+          />
+          <div className="min-w-0">
+            <p className="text-xs sm:text-sm font-bold truncate">
+              {hasUnsavedChanges ? (
+                <span className="text-[#FFC800]">⚠️ You have unsaved changes!</span>
+              ) : (
+                <span className="text-emerald-300">✓ Up to date on storefront</span>
+              )}
+            </p>
+            <p className="text-[11px] text-slate-400 hidden sm:block truncate">
+              {hasUnsavedChanges
+                ? 'Remember to click Save & Publish to push deals to homepage.'
+                : `${deals.length} active deal products curated.`}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={saving}
+          className={`px-5 py-2.5 rounded-xl font-black text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer shrink-0 disabled:opacity-50 ${
+            hasUnsavedChanges
+              ? 'bg-[#FFC800] text-[#1A1A2E] hover:bg-[#E6B400] ring-2 ring-[#FFC800]/50 scale-105'
+              : 'bg-white/10 hover:bg-white/20 text-white'
+          }`}
+        >
+          {saving ? (
+            <>
+              <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-current" />
+              <span>Publishing...</span>
+            </>
+          ) : (
+            <>
+              <Save size={15} />
+              <span>Save & Publish Deals</span>
+            </>
+          )}
+        </button>
+      </div>
+
     </div>
   );
 }
