@@ -19,10 +19,11 @@ import {
   Tag,
   Percent,
   Eye,
+  ShoppingCart,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { createBrowserClient } from '@/lib/supabase/client';
-import { formatPrice } from '@/lib/utils/formatPrice';
+import { formatPrice, formatPriceShort } from '@/lib/utils/formatPrice';
 import type { Product, WeeklyDealItem, WeeklyDealsConfig } from '@/lib/types';
 
 const PRESET_OFFER_LABELS = [
@@ -34,6 +35,14 @@ const PRESET_OFFER_LABELS = [
   'Special Combo',
   'Deal of the Week',
 ];
+
+/** Cheapest active variant price — mirrors the storefront pricing basis exactly */
+function getCheapestVariantPrice(product: Product): number {
+  const active = (product.variants ?? []).filter((v) => v.is_active);
+  const pool = active.length > 0 ? active : product.variants ?? [];
+  if (pool.length === 0) return 0;
+  return Math.min(...pool.map((v) => Number(v.price)));
+}
 
 export default function AdminDealsPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -158,6 +167,16 @@ export default function AdminDealsPage() {
     }
   };
 
+  /** Drop saved deals whose product is inactive or deleted (they can't render or reorder) */
+  const handleCleanOrphans = () => {
+    const validIds = new Set(allProducts.map((p) => p.id));
+    const updated = deals.filter((d) => validIds.has(d.product_id));
+    setDeals(updated);
+    setActiveEditIndex(updated.length > 0 ? 0 : null);
+    setHasUnsavedChanges(true);
+    toast.success('Removed deals pointing to unavailable products.');
+  };
+
   const handleMoveUp = (index: number) => {
     if (index === 0) return;
     const newDeals = [...deals];
@@ -225,13 +244,16 @@ export default function AdminDealsPage() {
     }
   };
 
-  // Selected product objects mapping
+  // Selected product objects mapping — keeps each deal's ORIGINAL index in `deals`
+  // so reordering/editing stays correct even when some products are unavailable.
   const dealProductsWithMeta = deals
-    .map((deal) => {
+    .map((deal, dealIndex) => {
       const prod = allProducts.find((p) => p.id === deal.product_id);
-      return prod ? { product: prod, deal } : null;
+      return prod ? { product: prod, deal, dealIndex } : null;
     })
-    .filter(Boolean) as { product: Product; deal: WeeklyDealItem }[];
+    .filter(Boolean) as { product: Product; deal: WeeklyDealItem; dealIndex: number }[];
+
+  const orphanCount = deals.length - dealProductsWithMeta.length;
 
   const selectedProductIds = deals.map((d) => d.product_id);
 
@@ -378,6 +400,22 @@ export default function AdminDealsPage() {
               )}
             </div>
 
+            {orphanCount > 0 && (
+              <div className="flex flex-col gap-2 rounded-xl border border-amber-300/70 bg-amber-50 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-[11px] font-semibold leading-snug text-amber-800">
+                  {orphanCount} saved deal{orphanCount > 1 ? 's' : ''} point to products that are inactive or deleted.
+                  They are hidden on the storefront and cannot be reordered.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleCleanOrphans}
+                  className="shrink-0 rounded-lg border border-amber-400/70 bg-white px-2.5 py-1 text-[10.5px] font-bold text-amber-800 transition-colors hover:bg-amber-100 cursor-pointer"
+                >
+                  Remove them
+                </button>
+              </div>
+            )}
+
             {dealProductsWithMeta.length === 0 ? (
               <div className="py-12 text-center bg-secondary/15 rounded-2xl border border-dashed border-secondary-alt/40">
                 <Package size={32} className="mx-auto text-text-light mb-2" />
@@ -388,13 +426,10 @@ export default function AdminDealsPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {dealProductsWithMeta.map(({ product, deal }, idx) => {
-                  const minPrice =
-                    product.variants && product.variants.length > 0
-                      ? Math.min(...product.variants.map((v) => Number(v.price)))
-                      : 0;
+                {dealProductsWithMeta.map(({ product, deal, dealIndex }, idx) => {
+                  const minPrice = getCheapestVariantPrice(product);
 
-                  const isExpanded = activeEditIndex === idx;
+                  const isExpanded = activeEditIndex === dealIndex;
 
                   // Calculate discount percentage if deal_price set
                   const hasCustomPrice = deal.deal_price && deal.deal_price > 0;
@@ -416,7 +451,7 @@ export default function AdminDealsPage() {
                       <div className="p-3.5 flex items-center justify-between gap-3">
                         <div
                           className="flex items-center gap-3 overflow-hidden cursor-pointer flex-1"
-                          onClick={() => setActiveEditIndex(isExpanded ? null : idx)}
+                          onClick={() => setActiveEditIndex(isExpanded ? null : dealIndex)}
                         >
                           <span className="w-6 h-6 rounded-full bg-[#16335B] text-[#FFD800] font-black text-xs flex items-center justify-center shrink-0">
                             {idx + 1}
@@ -459,7 +494,7 @@ export default function AdminDealsPage() {
                         <div className="flex items-center gap-1 shrink-0">
                           <button
                             type="button"
-                            onClick={() => handleMoveUp(idx)}
+                            onClick={() => handleMoveUp(dealIndex)}
                             disabled={idx === 0}
                             className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-secondary/40 disabled:opacity-20 cursor-pointer"
                             title="Move Up in Carousel"
@@ -468,7 +503,7 @@ export default function AdminDealsPage() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleMoveDown(idx)}
+                            onClick={() => handleMoveDown(dealIndex)}
                             disabled={idx === dealProductsWithMeta.length - 1}
                             className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-secondary/40 disabled:opacity-20 cursor-pointer"
                             title="Move Down in Carousel"
@@ -478,7 +513,7 @@ export default function AdminDealsPage() {
 
                           <button
                             type="button"
-                            onClick={() => setActiveEditIndex(isExpanded ? null : idx)}
+                            onClick={() => setActiveEditIndex(isExpanded ? null : dealIndex)}
                             className="px-2.5 py-1 text-xs font-bold text-accent hover:bg-accent/10 rounded-lg transition-colors cursor-pointer"
                           >
                             {isExpanded ? 'Done' : 'Edit Offer'}
@@ -509,7 +544,7 @@ export default function AdminDealsPage() {
                                 type="text"
                                 value={deal.offer_label || ''}
                                 onChange={(e) =>
-                                  updateDealItem(idx, { offer_label: e.target.value })
+                                  updateDealItem(dealIndex, { offer_label: e.target.value })
                                 }
                                 placeholder="e.g. Buy 1 get 2 FREE, 25% OFF, Save LKR 1,500"
                                 className="input w-full text-xs font-black uppercase"
@@ -522,7 +557,7 @@ export default function AdminDealsPage() {
                                   <button
                                     key={preset}
                                     type="button"
-                                    onClick={() => updateDealItem(idx, { offer_label: preset })}
+                                    onClick={() => updateDealItem(dealIndex, { offer_label: preset })}
                                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all cursor-pointer ${
                                       deal.offer_label === preset
                                         ? 'bg-[#16335B] text-[#FFD800] border-[#16335B]'
@@ -544,7 +579,7 @@ export default function AdminDealsPage() {
                                 type="number"
                                 value={deal.deal_price ?? ''}
                                 onChange={(e) =>
-                                  updateDealItem(idx, {
+                                  updateDealItem(dealIndex, {
                                     deal_price: e.target.value ? parseFloat(e.target.value) : null,
                                   })
                                 }
@@ -567,7 +602,7 @@ export default function AdminDealsPage() {
                                 type="text"
                                 value={deal.promo_subtext || ''}
                                 onChange={(e) =>
-                                  updateDealItem(idx, { promo_subtext: e.target.value })
+                                  updateDealItem(dealIndex, { promo_subtext: e.target.value })
                                 }
                                 placeholder="e.g. Earn 2x loyalty points · Limited stock available"
                                 className="input w-full text-xs"
@@ -575,23 +610,72 @@ export default function AdminDealsPage() {
                             </div>
                           </div>
 
-                          {/* Live Visual Card Preview */}
-                          <div className="mt-3 p-3 bg-white rounded-xl border border-secondary-alt/30 flex items-center gap-3">
-                            <Eye size={16} className="text-accent shrink-0" />
-                            <span className="text-[11px] font-bold text-text shrink-0">Live Preview:</span>
-                            <div className="flex items-center gap-2 overflow-hidden text-xs">
-                              <span className="w-8 h-8 rounded-full bg-[#FFD800] border border-dashed border-amber-600 flex flex-col items-center justify-center text-[5px] font-black uppercase text-[#16335B] shrink-0">
-                                <span>Deal</span>
-                              </span>
-                              <span className="font-bold text-[#16335B] truncate">{product.name}</span>
-                              {deal.offer_label && (
-                                <span className="px-2 py-0.5 rounded bg-[#16335B] text-[#FFD800] text-[9px] font-black uppercase">
-                                  {deal.offer_label}
+                          {/* Storefront Card Preview — mirrors the homepage card layout */}
+                          <div className="mt-3 rounded-2xl border border-secondary-alt/30 bg-[#FFFCF3] p-3">
+                            <div className="mb-2 flex items-center gap-1.5">
+                              <Eye size={14} className="text-accent shrink-0" />
+                              <span className="text-[11px] font-bold text-text">Storefront Card Preview</span>
+                              <span className="text-[10px] text-text-muted">· matches homepage layout</span>
+                            </div>
+
+                            <div className="flex gap-3">
+                              {/* Mini image stage with offer badge overlay */}
+                              <div
+                                className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-[#E8EDF2]"
+                                style={{
+                                  width: 84,
+                                  height: 105,
+                                  background:
+                                    'radial-gradient(115% 85% at 50% 12%, #FFFFFF 0%, #FCF8F0 52%, #F5EEE2 100%)',
+                                }}
+                              >
+                                <Image
+                                  src={product.image_url || '/placeholder.png'}
+                                  alt={product.name}
+                                  fill
+                                  className="object-contain p-2"
+                                />
+                                {deal.offer_label && (
+                                  <span className="absolute left-1 top-1 inline-flex max-w-[calc(100%-8px)] items-center rounded-full bg-[#1A1A2E] px-1.5 py-[3px] text-[6px] font-extrabold uppercase leading-none tracking-[0.06em] text-[#FFD84D]">
+                                    <span className="truncate">{deal.offer_label}</span>
+                                  </span>
+                                )}
+                                {discountPercent && (
+                                  <span className="absolute right-1 top-1 flex h-6 w-6 -rotate-6 flex-col items-center justify-center rounded-full bg-[#E8483F] text-white ring-1 ring-white/80">
+                                    <span className="text-[7px] font-black leading-none">-{discountPercent}%</span>
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Mini details column */}
+                              <div className="flex min-w-0 flex-1 flex-col">
+                                <span className="truncate text-[7.5px] font-bold uppercase tracking-[0.16em] text-[#93A0AE]">
+                                  {product.brand || 'PetSolutions'}
                                 </span>
-                              )}
-                              <span className="font-black text-[#16335B]">
-                                {formatPrice(deal.deal_price ?? minPrice)}
-                              </span>
+                                <span className="mt-0.5 line-clamp-2 text-[11px] font-bold leading-[1.3] text-[#1A1A2E]">
+                                  {product.name}
+                                </span>
+                                <span className="mt-0.5 truncate text-[9px] font-semibold text-[#00A0CF]">
+                                  {deal.promo_subtext || 'Genuine stock'}
+                                </span>
+
+                                <div className="mt-auto pt-1">
+                                  <div className="flex items-baseline gap-1">
+                                    <span className="text-[12px] font-black text-[#1A1A2E]">
+                                      {formatPriceShort(deal.deal_price ?? minPrice)}
+                                    </span>
+                                    {hasCustomPrice && (
+                                      <span className="text-[9px] text-[#9AA5B1] line-through">
+                                        {formatPriceShort(minPrice)}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="mt-1 flex w-full items-center justify-center gap-1 rounded-full bg-[#FFC800] py-1 text-[9px] font-extrabold text-[#1A1A2E]">
+                                    <ShoppingCart size={9} strokeWidth={2.6} />
+                                    <span>Claim Deal</span>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>

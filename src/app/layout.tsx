@@ -6,6 +6,7 @@ import FloatingActions from '@/components/layout/FloatingActions';
 import ClickPawPulse from '@/components/layout/ClickPawPulse';
 import { Toaster } from 'sonner';
 import './globals.css';
+import './weekly-deals.css';
 
 /* --------------------------------------------------------------------------
    Google Fonts — loaded via next/font for zero layout-shift
