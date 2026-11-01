@@ -10,7 +10,8 @@ import {
   type ReactNode,
 } from 'react';
 import { createBrowserClient } from '@/lib/supabase/client';
-import type { CartItem, ProductVariant, Product } from '@/lib/types';
+import type { CartItem, ProductVariant, Product, CartItemDealMetadata } from '@/lib/types';
+import { calculateCartTotals } from '@/lib/utils/dealPricing';
 
 /* --------------------------------------------------------------------------
    Constants
@@ -48,7 +49,13 @@ function cartReducer(state: CartState, action: CartAction): CartState {
           ...state,
           items: state.items.map((i) =>
             i.variant_id === action.payload.variant_id
-              ? { ...i, quantity: i.quantity + action.payload.quantity }
+              ? {
+                  ...i,
+                  quantity: i.quantity + action.payload.quantity,
+                  applied_deal_price: action.payload.applied_deal_price ?? i.applied_deal_price,
+                  deal_type: action.payload.deal_type ?? i.deal_type,
+                  deal_label: action.payload.deal_label ?? i.deal_label,
+                }
               : i
           ),
         };
@@ -84,7 +91,9 @@ interface CartContextValue {
   isLoading: boolean;
   totalItems: number;
   subtotal: number;
-  addItem: (variantId: string, quantity?: number) => Promise<void>;
+  promotionalDiscount: number;
+  finalSubtotal: number;
+  addItem: (variantId: string, quantity?: number, dealOptions?: CartItemDealMetadata) => Promise<void>;
   removeItem: (variantId: string) => Promise<void>;
   updateQuantity: (variantId: string, quantity: number) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -100,7 +109,8 @@ const CartContext = createContext<CartContextValue | null>(null);
 function makeLocalCartItem(
   variantId: string,
   quantity: number,
-  variant?: ProductVariant & { product?: Product }
+  variant?: ProductVariant & { product?: Product },
+  dealOptions?: CartItemDealMetadata
 ): CartItem {
   return {
     id: `local_${variantId}`,
@@ -108,6 +118,9 @@ function makeLocalCartItem(
     variant_id: variantId,
     quantity,
     created_at: new Date().toISOString(),
+    applied_deal_price: dealOptions?.applied_deal_price ?? null,
+    deal_type: dealOptions?.deal_type ?? null,
+    deal_label: dealOptions?.deal_label ?? null,
     variant,
   };
 }
@@ -196,7 +209,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // ---------- actions ----------
   const addItem = useCallback(
-    async (variantId: string, quantity = 1) => {
+    async (variantId: string, quantity = 1, dealOptions?: CartItemDealMetadata) => {
       const supabase = createBrowserClient();
       const {
         data: { session },
@@ -208,7 +221,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (existing) {
           await supabase
             .from('cart_items')
-            .update({ quantity: existing.quantity + quantity })
+            .update({
+              quantity: existing.quantity + quantity,
+              ...(dealOptions?.applied_deal_price !== undefined ? { applied_deal_price: dealOptions.applied_deal_price } : {}),
+              ...(dealOptions?.deal_type !== undefined ? { deal_type: dealOptions.deal_type } : {}),
+              ...(dealOptions?.deal_label !== undefined ? { deal_label: dealOptions.deal_label } : {}),
+            })
             .eq('user_id', session.user.id)
             .eq('variant_id', variantId);
         } else {
@@ -216,6 +234,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
             user_id: session.user.id,
             variant_id: variantId,
             quantity,
+            applied_deal_price: dealOptions?.applied_deal_price ?? null,
+            deal_type: dealOptions?.deal_type ?? null,
+            deal_label: dealOptions?.deal_label ?? null,
           });
         }
 
@@ -244,7 +265,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           console.error('Failed to fetch variant details for guest cart item:', err);
         }
 
-        const item = makeLocalCartItem(variantId, quantity, variantData as any);
+        const item = makeLocalCartItem(variantId, quantity, variantData as any, dealOptions);
         dispatch({ type: 'ADD_ITEM', payload: item });
       }
     },
@@ -315,12 +336,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [state.items]
   );
 
-  const subtotal = useMemo(
-    () =>
-      state.items.reduce((sum, i) => {
-        const price = i.variant?.price ?? 0;
-        return sum + price * i.quantity;
-      }, 0),
+  const { subtotal, promotionalDiscount, finalSubtotal } = useMemo(
+    () => calculateCartTotals(state.items),
     [state.items]
   );
 
@@ -330,6 +347,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isLoading: state.isLoading,
       totalItems,
       subtotal,
+      promotionalDiscount,
+      finalSubtotal,
       addItem,
       removeItem,
       updateQuantity,
@@ -340,6 +359,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       state.isLoading,
       totalItems,
       subtotal,
+      promotionalDiscount,
+      finalSubtotal,
       addItem,
       removeItem,
       updateQuantity,

@@ -1,0 +1,408 @@
+/* ==========================================================================
+   BRAND STORY / WHY CHOOSE US — Direct Importers Showcase
+   Scoped styles for PetSolutions.lk (No Tailwind compiler dependency)
+   ========================================================================== */
+
+.bs-section {
+  padding-block: 2.25rem;
+}
+
+@media (min-width: 768px) {
+  .bs-section {
+    padding-block: 3.5rem;
+  }
+}
+
+/* ── Master Card ── */
+.bs-capsule {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #ebdbbe;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 16px 45px -14px rgba(22, 36, 59, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+@media (min-width: 1024px) {
+  .bs-capsule {
+    flex-direction: row;
+    align-items: stretch;
+    border-radius: 28px;
+  }
+}
+
+/* ── LEFT: Authentic Photograph Showcase ── */
+.bs-photo-col {
+  position: relative;
+  width: 100%;
+  padding: 16px;
+  background: #faf7f0;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .bs-photo-col {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bs-photo-col {
+    width: 44%;
+    padding: 24px;
+    border-right: 1px solid #ebd9b8;
+  }
+}
+
+/* Clean Photo Frame (NO artificial gradients, 100% natural photo) */
+.bs-photo-frame {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #e5dbc7;
+  box-shadow: 0 8px 24px -6px rgba(22, 36, 59, 0.1);
+}
+
+@media (min-width: 640px) {
+  .bs-photo-frame {
+    height: 380px;
+    border-radius: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bs-photo-frame {
+    height: 100%;
+    min-height: 480px;
+  }
+}
+
+.bs-photo-img {
+  object-fit: cover;
+  object-position: center 30%;
+  transition: transform 0.4s ease;
+}
+
+.bs-photo-frame:hover .bs-photo-img {
+  transform: scale(1.02);
+}
+
+/* Floating Natural Badge on Photo */
+.bs-photo-pill {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(235, 219, 190, 0.9);
+  box-shadow: 0 8px 20px -4px rgba(22, 36, 59, 0.15);
+}
+
+.bs-pill-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #e0f2fe;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bs-pill-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bs-pill-title {
+  font-family: var(--font-heading);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #16243b;
+  line-height: 1.25;
+}
+
+.bs-pill-desc {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+/* ── RIGHT: Direct Importer Trust & Value Column ── */
+.bs-content-col {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 20px;
+  background: #ffffff;
+}
+
+@media (min-width: 640px) {
+  .bs-content-col {
+    padding: 30px 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bs-content-col {
+    width: 56%;
+    padding: 36px 36px;
+  }
+}
+
+/* Header Area */
+.bs-head {
+  margin-bottom: 20px;
+}
+
+.bs-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.bs-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0284c7;
+}
+
+.bs-title {
+  margin: 0 0 10px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.45rem, 1.2rem + 1.2vw, 2.1rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #16243b;
+}
+
+.bs-title span {
+  color: #0099cc;
+}
+
+.bs-desc {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #555f6d;
+}
+
+/* 3 Benefit Cards */
+.bs-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.bs-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #faf7f0;
+  border: 1px solid #ebdbbe;
+  box-shadow: 0 2px 8px rgba(22, 36, 59, 0.03);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .bs-card {
+    padding: 16px 18px;
+    border-radius: 16px;
+  }
+}
+
+.bs-card:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: rgba(0, 153, 204, 0.35);
+  box-shadow: 0 10px 24px -8px rgba(22, 36, 59, 0.1);
+}
+
+/* Icon Squircles */
+.bs-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.bs-card:hover .bs-icon {
+  transform: scale(1.06);
+}
+
+.bs-icon-blue {
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+}
+
+.bs-icon-amber {
+  background: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.bs-icon-emerald {
+  background: #d1fae5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+/* Card Content */
+.bs-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.bs-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+
+.bs-card-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 5px;
+  line-height: 1.2;
+}
+
+.bs-badge-blue {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.bs-badge-amber {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.bs-badge-emerald {
+  background: #d1fae5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.bs-card-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  color: #16243b;
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .bs-card-title {
+    font-size: 15px;
+  }
+}
+
+.bs-card-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #555f6d;
+}
+
+/* Footer Reassurance */
+.bs-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #ebd9b8;
+}
+
+@media (min-width: 640px) {
+  .bs-foot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.bs-foot-stats {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.bs-foot-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.bs-foot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #16243b;
+  text-decoration: none;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.bs-foot-link:hover {
+  color: #0099cc;
+}
+
+.bs-foot-link svg {
+  transition: transform 0.2s ease;
+}
+
+.bs-foot-link:hover svg {
+  transform: translateX(3px);
+}

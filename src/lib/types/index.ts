@@ -122,6 +122,7 @@ export interface OrderItem {
   variant_label: string;
   quantity: number;
   unit_price: number;
+  deal_label?: string | null;
   created_at: string;
 }
 
@@ -147,7 +148,15 @@ export interface Order {
 /* --------------------------------------------------------------------------
    Cart
    -------------------------------------------------------------------------- */
-export interface CartItem {
+export type DealType = 'bogo' | 'custom_price' | 'percentage';
+
+export interface CartItemDealMetadata {
+  applied_deal_price?: number | null;
+  deal_type?: DealType | null;
+  deal_label?: string | null;
+}
+
+export interface CartItem extends CartItemDealMetadata {
   id: string;
   user_id: string;
   variant_id: string;
@@ -201,6 +210,8 @@ export interface CartState {
   items: CartItem[];
   totalItems: number;
   subtotal: number;
+  promotionalDiscount: number;
+  finalSubtotal: number;
   isLoading: boolean;
 }
 

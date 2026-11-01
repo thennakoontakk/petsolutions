@@ -184,22 +184,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span>{roleMeta.label}</span>
             </div>
 
-            {/* Owner-Only Quick Access: Users & Staff Management */}
-            {currentRole === 'owner' && (
-              <Link
-                href="/admin/users"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
-                  pathname.startsWith('/admin/users')
-                    ? 'bg-accent text-text border-accent/80 font-bold shadow-xs'
-                    : 'bg-white hover:bg-secondary/40 text-text border-secondary/80 shadow-xs'
-                }`}
-                title="Manage Registered Customers & Staff"
-              >
-                <Users size={14} className="text-text" />
-                <span className="hidden sm:inline">Users & Staff</span>
-              </Link>
-            )}
-
             <Link
               href="/"
               target="_blank"

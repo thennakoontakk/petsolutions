@@ -7,6 +7,7 @@
    0. Google Fonts Import
    -------------------------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import './brand-story.css';
 
 /* --------------------------------------------------------------------------
    1. CSS Custom Properties (Design Tokens)
@@ -1415,6 +1416,17 @@ input:-webkit-autofill:focus {
 @media (min-width: 768px) {
   .hero-banner-section {
     min-height: 92vh;
+  }
+}
+
+.hero-bg-video {
+  object-fit: cover;
+  object-position: 72% center;
+}
+
+@media (min-width: 768px) {
+  .hero-bg-video {
+    object-position: center center;
   }
 }
 

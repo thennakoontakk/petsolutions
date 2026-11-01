@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCart } from '@/lib/hooks/useCart';
 import CartItem from './CartItem';
-import FreeDeliveryProgressBar from './FreeDeliveryProgressBar';
 import { formatPrice } from '@/lib/utils/formatPrice';
 
 interface CartDrawerProps {
@@ -15,7 +14,7 @@ interface CartDrawerProps {
 }
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { items, totalItems, subtotal } = useCart();
+  const { items, totalItems, subtotal, promotionalDiscount, finalSubtotal } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Close drawer on click outside
@@ -110,13 +109,6 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </motion.button>
             </div>
 
-            {/* Free Delivery Bar in Drawer */}
-            {items.length > 0 && (
-              <div className="px-4 pt-3 pb-1">
-                <FreeDeliveryProgressBar subtotal={subtotal} />
-              </div>
-            )}
-
             {/* Cart Items List */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <AnimatePresence initial={false}>
@@ -177,11 +169,31 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
             {/* Summary Footer */}
             {items.length > 0 && (
-              <div className="p-5 bg-secondary-alt/10 border-t border-secondary-alt/20 space-y-4">
+              <div className="p-5 bg-secondary-alt/10 border-t border-secondary-alt/20 space-y-3">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted">Subtotal</span>
-                  <span className="font-heading font-bold text-lg">{formatPrice(subtotal)}</span>
+                  <span className={promotionalDiscount > 0 ? "text-muted line-through" : "font-heading font-bold text-base"}>
+                    {formatPrice(subtotal)}
+                  </span>
                 </div>
+
+                {promotionalDiscount > 0 && (
+                  <div className="flex justify-between items-center text-sm text-emerald-700 font-semibold bg-emerald-50/80 px-2.5 py-1.5 rounded-lg border border-emerald-200">
+                    <span className="flex items-center gap-1.5">
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      Deal & BOGO Savings
+                    </span>
+                    <span>-{formatPrice(promotionalDiscount)}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center pt-2 border-t border-secondary-alt/30">
+                  <span className="font-heading font-bold text-base text-text">Total Payable</span>
+                  <span className="font-heading font-black text-xl text-primary">
+                    {formatPrice(finalSubtotal)}
+                  </span>
+                </div>
+
                 <p className="text-xs text-muted">
                   Shipping and taxes are calculated at checkout.
                 </p>

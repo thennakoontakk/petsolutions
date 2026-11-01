@@ -8,7 +8,6 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CartItem from '@/components/cart/CartItem';
 import CartSummary from '@/components/cart/CartSummary';
-import FreeDeliveryProgressBar from '@/components/cart/FreeDeliveryProgressBar';
 
 /* --------------------------------------------------------------------------
    Warm Illustrated Sleeping Pet SVG
@@ -117,19 +116,19 @@ const quickCategories = [
 ];
 
 export default function CartPage() {
-  const { items, subtotal } = useCart();
+  const { items, subtotal, promotionalDiscount } = useCart();
 
   return (
     <>
       <Header />
       <main className="min-h-[80vh] py-6 md:py-10 bg-[#FEFCF3]">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3 mb-6">
             <h1 className="font-heading font-extrabold text-2xl md:text-3xl text-[#1A1A2E]">
               Your Shopping Cart
             </h1>
             {items.length > 0 && (
-              <span className="text-sm font-medium text-[#6B6B7B]">
+              <span className="text-xs font-bold text-accent bg-accent/10 px-3 py-1 rounded-full border border-accent/20">
                 {items.length} {items.length === 1 ? 'item' : 'items'}
               </span>
             )}
@@ -190,11 +189,7 @@ export default function CartPage() {
               </div>
             </motion.div>
           ) : (
-            <div className="space-y-6">
-              {/* Dynamic Free-Delivery Progress Bar */}
-              <FreeDeliveryProgressBar subtotal={subtotal} />
-
-              <div className="cart-layout">
+            <div className="cart-layout">
                 {/* Items List */}
                 <div className="w-full space-y-4">
                   <AnimatePresence initial={false}>
@@ -206,10 +201,9 @@ export default function CartPage() {
 
                 {/* Order Summary Sidebar */}
                 <aside className="w-full lg:w-96 flex-shrink-0">
-                  <CartSummary subtotal={subtotal} />
+                  <CartSummary subtotal={subtotal} discount={promotionalDiscount} />
                 </aside>
               </div>
-            </div>
           )}
         </div>
       </main>

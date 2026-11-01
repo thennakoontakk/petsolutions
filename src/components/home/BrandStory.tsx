@@ -1,166 +1,127 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { ShieldCheck, Truck, PackageCheck, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function BrandStory() {
-  const points = [
+  const trustPillars = [
     {
-      number: '1',
-      circleBg: '#00ACDF', // PetSolutions signature Brand Cyan
-      stat: '100% Genuine & Batch-Verified',
+      icon: ShieldCheck,
+      iconClass: 'bs-icon-blue',
+      badgeClass: 'bs-badge-blue',
+      badge: '100% FACTORY IMPORTED',
+      title: 'Direct Overseas Sourcing',
       description:
-        'Sourced directly from authorized global brands with sealed tamper-proof packaging and verified shelf life. Zero counterfeit risk, 100% safety for your pet.',
+        'Sourced directly from authorized international manufacturers. Every item comes in tamper-proof factory sealed packaging with authentic barcodes and verified expiry dates.',
     },
     {
-      number: '2',
-      circleBg: '#0284C7', // Deep brand blue
-      stat: '98.6% On-Time Islandwide Delivery',
+      icon: PackageCheck,
+      iconClass: 'bs-icon-emerald',
+      badgeClass: 'bs-badge-emerald',
+      badge: 'CLIMATE MONITORED',
+      title: 'Guaranteed Fresh Stock & Safe Storage',
       description:
-        'Fast 24–48 hour doorstep delivery across Colombo, Kandy, Galle, and all 25 districts in Sri Lanka with flexible Cash on Delivery (COD) options.',
+        'All kibble, wet food, treats, and supplements are stored in temperature-managed clean facilities to preserve maximum freshness, aroma, and essential nutrition.',
     },
     {
-      number: '3',
-      circleBg: '#FFC800', // PetSolutions signature Brand Yellow / Gold
-      textColor: '#1A1A2E',
-      stat: '94.8% Returning Pet Parents & Vet Approved',
+      icon: Truck,
+      iconClass: 'bs-icon-amber',
+      badgeClass: 'bs-badge-amber',
+      badge: '24–48 HOUR DISPATCH',
+      title: 'Fast Islandwide Doorstep Delivery',
       description:
-        'Trusted by over 15,000+ Sri Lankan pet owners and veterinary clinics for premium nutrition, specialized diets, and genuine healthcare essentials.',
+        'Reliable doorstep dispatch across Colombo, Kandy, Galle, and all 25 districts in Sri Lanka with careful packing and hassle-free Cash on Delivery (COD).',
     },
   ];
 
   return (
-    /* Margins matched directly with FeaturedProducts & CategoryShowcase (container mx-auto px-4) */
-    <section className="py-10 sm:py-14 md:py-16 container mx-auto px-4">
-      {/* Main Card with Split Background */}
-      <div
-        className="w-full overflow-hidden shadow-2xl border border-[#BDDFEA]/60 flex flex-col lg:flex-row relative"
-        style={{
-          borderRadius: '32px',
-          boxShadow:
-            '0 20px 45px -12px rgba(12, 36, 52, 0.18), 0 8px 20px -6px rgba(0, 172, 223, 0.12)',
-        }}
-      >
-        {/* Left Column: PetSolutions Brand Navy Panel with Pets Background */}
-        <div
-          className="w-full lg:w-[44%] relative select-none overflow-hidden flex flex-col justify-between"
-          style={{
-            backgroundColor: '#0C2434',
-            minHeight: '480px',
-            padding: 'clamp(36px, 4vw, 52px) clamp(24px, 3vw, 40px) 32px clamp(36px, 4.5vw, 60px)',
-          }}
-        >
-          {/* Background Image of Cute Pets anchored at the bottom */}
-          <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              height: '54%',
-              pointerEvents: 'none',
-              zIndex: 0,
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src="/images/storefront/cute_pets_pointing.jpg"
-              alt="Cute puppy and kitten pointing towards PetSolutions highlights"
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 12%',
-              }}
-            />
-            {/* Seamless gradient blend into top #0C2434 */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                pointerEvents: 'none',
-                background:
-                  'linear-gradient(180deg, #0C2434 0%, rgba(12, 36, 52, 0.75) 20%, rgba(12, 36, 52, 0) 55%)',
-              }}
-            />
-          </div>
+    <section className="bs-section">
+      <div className="container">
+        <div className="bs-capsule">
+          {/* ================================================================
+              LEFT: Authentic Real Photograph Showcase (No AI Gradients)
+              ================================================================ */}
+          <div className="bs-photo-col">
+            <div className="bs-photo-frame">
+              <Image
+                src="/images/storefront/brand-story-dog.jpg"
+                alt="PetSolutions Sri Lanka happy pet owner with golden retriever"
+                fill
+                priority={false}
+                sizes="(max-width: 1024px) 100vw, 44vw"
+                className="bs-photo-img"
+              />
 
-          {/* Header Typography */}
-          <div style={{ position: 'relative', zIndex: 10 }}>
-            <span
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-4 text-[#00ACDF] border border-[#00ACDF]/30"
-              style={{ backgroundColor: 'rgba(0, 172, 223, 0.16)' }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FFC800] animate-pulse" />
-              Why PetSolutions.lk
-            </span>
-
-            <h2
-              className="font-heading font-extrabold text-white tracking-tight leading-[1.06] mb-3 sm:mb-4 drop-shadow-sm"
-              style={{ fontSize: 'clamp(2.4rem, 1.8rem + 2vw, 3.6rem)' }}
-            >
-              Why
-              <br />
-              Choose
-              <br />
-              Us?
-            </h2>
-
-            <p className="text-[#BAE6FD] font-medium text-base sm:text-lg leading-relaxed max-w-sm drop-shadow-sm">
-              The numbers speak for themselves.
-            </p>
-          </div>
-        </div>
-
-        {/* Right Column: Warm Cream Panel matching site theme */}
-        <div
-          className="w-full lg:w-[56%] flex flex-col justify-center relative"
-          style={{
-            backgroundColor: 'var(--color-dominant, #FEFCF3)',
-            padding: 'clamp(40px, 4.5vw, 56px) clamp(28px, 3.5vw, 48px) clamp(40px, 4.5vw, 56px) clamp(36px, 4.5vw, 64px)',
-          }}
-        >
-          <div className="space-y-8 sm:space-y-10 lg:space-y-12">
-            {points.map((point) => (
-              <div
-                key={point.number}
-                className="relative flex flex-col sm:flex-row items-start gap-4 sm:gap-6 lg:gap-0 group"
-              >
-                {/* Number Circle Badge:
-                    On mobile/tablet: sits inline with flex
-                    On desktop (lg): sits exactly on the seam (left: 0, translate-x: -50%), overlapping 50% dark and 50% light! */}
-                <div
-                  className="shrink-0 flex items-center justify-center rounded-full font-heading font-extrabold select-none transition-transform duration-300 group-hover:scale-108 z-20 lg:absolute lg:left-0 lg:-translate-x-1/2"
-                  style={{
-                    width: '68px',
-                    height: '68px',
-                    backgroundColor: point.circleBg,
-                    color: point.textColor || '#FFFFFF',
-                    border: '5px solid var(--color-dominant, #FEFCF3)',
-                    boxShadow: '0 8px 24px rgba(12, 36, 52, 0.16)',
-                    fontSize: '26px',
-                  }}
-                >
-                  {point.number}
+              {/* Natural floating trust chip on photo */}
+              <div className="bs-photo-pill">
+                <div className="bs-pill-icon">
+                  <Sparkles size={18} />
                 </div>
-
-                {/* Stat & Explanation Text */}
-                <div className="min-w-0 flex-1 lg:pl-16">
-                  <h3 className="font-heading font-extrabold text-[#1A1A2E] text-lg sm:text-xl lg:text-[22px] tracking-tight leading-snug group-hover:text-[#00ACDF] transition-colors">
-                    {point.stat}
-                  </h3>
-                  <p className="text-[#6B6B7B] text-sm sm:text-[15px] leading-relaxed mt-2 max-w-xl">
-                    {point.description}
-                  </p>
+                <div className="bs-pill-text">
+                  <span className="bs-pill-title">Direct Importers in Sri Lanka</span>
+                  <span className="bs-pill-desc">100% Authentic Sealed Global Brands</span>
                 </div>
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* ================================================================
+              RIGHT: Direct Importer Trust & Benefits Column
+              ================================================================ */}
+          <div className="bs-content-col">
+            {/* Header */}
+            <div className="bs-head">
+              <div className="bs-eyebrow">
+                <span className="bs-eyebrow-dot" />
+                <span>Why PetSolutions.lk</span>
+              </div>
+
+              <h2 className="bs-title">
+                Sri Lanka&apos;s Direct Importer for <span>Premium Pet Brands</span>
+              </h2>
+
+              <p className="bs-desc">
+                We import top-quality dog and cat foods, grooming essentials, flea & tick care, treats, and wellness supplies directly from certified overseas brands — delivered fresh to your doorstep islandwide.
+              </p>
+            </div>
+
+            {/* 3 Importer Benefit Cards */}
+            <div className="bs-cards">
+              {trustPillars.map((pillar) => {
+                const Icon = pillar.icon;
+                return (
+                  <div key={pillar.title} className="bs-card">
+                    <div className={`bs-icon ${pillar.iconClass}`}>
+                      <Icon size={20} />
+                    </div>
+
+                    <div className="bs-card-content">
+                      <div className="bs-card-header">
+                        <span className={`bs-card-badge ${pillar.badgeClass}`}>
+                          {pillar.badge}
+                        </span>
+                        <h3 className="bs-card-title">{pillar.title}</h3>
+                      </div>
+                      <p className="bs-card-desc">{pillar.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Reassurance Footer */}
+            <div className="bs-foot">
+              <div className="bs-foot-stats">
+                <span className="bs-foot-dot" />
+                <span>Trusted by 15,000+ Sri Lankan Pet Parents</span>
+              </div>
+
+              <Link href="/products" className="bs-foot-link">
+                <span>Browse Imported Catalog</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

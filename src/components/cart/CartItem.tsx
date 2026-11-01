@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from '@/lib/hooks/useCart';
 import { formatPrice, formatPriceShort } from '@/lib/utils/formatPrice';
+import { calculateLineItemPricing } from '@/lib/utils/dealPricing';
+import { PRODUCT_IMAGE_MAP, OLD_IMAGE_PATH_MAP } from '@/lib/data/productImageMap';
+import type { CartItem as CartItemType } from '@/lib/types';
 
 /* --------------------------------------------------------------------------
    Paw Placeholder (small)
@@ -37,20 +40,7 @@ function PawPlaceholderSmall() {
    Props
    -------------------------------------------------------------------------- */
 interface CartItemProps {
-  item: {
-    variant_id: string;
-    quantity: number;
-    variant?: {
-      size_label: string;
-      price: number;
-      product?: {
-        name: string;
-        slug: string;
-        image_url: string | null;
-        images?: string[];
-      };
-    };
-  };
+  item: CartItemType;
   mode?: 'compact' | 'full';
 }
 
@@ -62,10 +52,24 @@ export default function CartItem({ item, mode = 'compact' }: CartItemProps) {
 
   const product = item.variant?.product;
   const productName = product?.name ?? 'Product';
-  const imageUrl = product?.image_url || (product?.images && product.images.length > 0 ? product.images[0] : null);
+  const rawImageUrl = product?.image_url || (product?.images && product.images.length > 0 ? product.images[0] : null);
+  const imageUrl = (product?.id && PRODUCT_IMAGE_MAP[product.id]?.image_url)
+    ? PRODUCT_IMAGE_MAP[product.id].image_url
+    : (product?.slug && PRODUCT_IMAGE_MAP[product.slug]?.image_url)
+      ? PRODUCT_IMAGE_MAP[product.slug].image_url
+      : (rawImageUrl && OLD_IMAGE_PATH_MAP[rawImageUrl])
+        ? OLD_IMAGE_PATH_MAP[rawImageUrl]
+        : rawImageUrl;
+
   const sizeLabel = item.variant?.size_label ?? '';
-  const unitPrice = item.variant?.price ?? 0;
-  const lineTotal = unitPrice * item.quantity;
+  const {
+    unitRegularPrice,
+    unitEffectivePrice,
+    grossLineTotal,
+    lineDiscount,
+    netLineTotal,
+    dealTag,
+  } = calculateLineItemPricing(item);
 
   const isCompact = mode === 'compact';
 
@@ -120,22 +124,52 @@ export default function CartItem({ item, mode = 'compact' }: CartItemProps) {
             )}
           </div>
 
-          <div className="flex items-baseline sm:flex-col sm:items-end gap-2 sm:gap-0 flex-shrink-0">
-            <span
-              className="font-heading font-bold"
-              style={{
-                fontSize: isCompact ? 'var(--text-sm)' : 'var(--text-base)',
-                color: 'var(--color-brand-blue)',
-              }}
-            >
-              {formatPrice(lineTotal)}
-            </span>
-            <span className="text-xs text-muted">
-              {formatPriceShort(unitPrice)} × {item.quantity}
-            </span>
+          <div className="flex flex-col items-end gap-0.5 flex-shrink-0 text-right">
+            {lineDiscount > 0 ? (
+              <>
+                <div className="flex items-baseline gap-2 justify-end">
+                  <span
+                    className="font-heading font-extrabold"
+                    style={{
+                      fontSize: isCompact ? 'var(--text-sm)' : 'var(--text-base)',
+                      color: 'var(--color-text)',
+                    }}
+                  >
+                    {formatPrice(netLineTotal)}
+                  </span>
+                  <span className="line-through text-xs text-muted/70">
+                    {formatPrice(grossLineTotal)}
+                  </span>
+                </div>
+                <span className="text-[10.5px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 mt-0.5 inline-block">
+                  Save {formatPriceShort(lineDiscount)}
+                </span>
+              </>
+            ) : (
+              <>
+                <span
+                  className="font-heading font-bold"
+                  style={{
+                    fontSize: isCompact ? 'var(--text-sm)' : 'var(--text-base)',
+                    color: 'var(--color-brand-blue)',
+                  }}
+                >
+                  {formatPrice(grossLineTotal)}
+                </span>
+                <span className="text-xs text-muted">
+                  {formatPriceShort(unitRegularPrice)} × {item.quantity}
+                </span>
+              </>
+            )}
           </div>
         </div>
-
+        {dealTag && (
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-bold bg-amber-50 text-amber-900 border border-amber-300 shadow-2xs">
+              🔥 {dealTag}
+            </span>
+          </div>
+        )}
         {/* Quantity Controls & Remove Button */}
         <div className="flex items-center justify-between border-t border-secondary-alt/25 pt-2 mt-1 w-full">
           <div

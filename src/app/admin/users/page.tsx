@@ -5,7 +5,6 @@ import Link from 'next/link';
 import {
   Users,
   ShieldAlert,
-  ShieldCheck,
   Package,
   Crown,
   Search,
@@ -857,63 +856,6 @@ export default function AdminUsersPage() {
       ) : (
         /* STAFF & PRIVILEGES TABLE */
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-          {/* Subtle Info Card */}
-          <div
-            style={{
-              background: '#FFFFFF',
-              border: '1px solid rgba(189, 223, 234, 0.55)',
-              borderRadius: '16px',
-              padding: '14px 20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '16px',
-              fontSize: '12px',
-              color: 'var(--color-text-muted)',
-              boxShadow: 'var(--shadow-xs)',
-              flexWrap: 'wrap',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: '280px' }}>
-              <ShieldCheck size={20} style={{ color: 'var(--color-brand-blue)', flexShrink: 0 }} />
-              <span>
-                <strong style={{ color: 'var(--color-text)' }}>Store Owners (👑)</strong> have full root access to settings, financials, and staff management. 
-                <strong style={{ color: 'var(--color-text)', marginLeft: '12px' }}>Staff Members (📦)</strong> have operational access to the products catalog, categories, and order fulfillment.
-                <span style={{ display: 'block', fontSize: '11px', color: '#0369A1', marginTop: '4px', fontWeight: 600 }}>
-                  🔒 Security Policy: Only verified Store Owners can create or modify Staff & Owner privileges.
-                </span>
-              </span>
-            </div>
-
-            {isOwner && (
-              <button
-                type="button"
-                onClick={() => setIsAddStaffOpen(true)}
-                className="btn btn-primary btn-sm"
-                style={{
-                  height: '38px',
-                  padding: '0 18px',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  backgroundColor: '#1A1A2E',
-                  color: '#FFFFFF',
-                  border: '1.5px solid rgba(255, 200, 0, 0.45)',
-                  boxShadow: '0 2px 8px rgba(26, 26, 46, 0.15)',
-                  gap: '8px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-                title="Create Staff or Owner Account"
-              >
-                <Crown size={15} style={{ color: '#FFC800' }} />
-                <span>+ Create Staff / Owner</span>
-              </button>
-            )}
-          </div>
-
           <div className="admin-table-container">
             <div className="admin-table-scroll">
               <table className="admin-table">

@@ -6,10 +6,11 @@ import Image from 'next/image';
 import { Flame, ShoppingCart, Clock, ChevronRight, Loader2, Sparkles } from 'lucide-react';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { formatPriceShort } from '@/lib/utils/formatPrice';
+import { parseDealOffer } from '@/lib/utils/dealPricing';
 import { PRODUCT_IMAGE_MAP, OLD_IMAGE_PATH_MAP } from '@/lib/data/productImageMap';
 import { useCart } from '@/lib/hooks/useCart';
 import { toast } from 'sonner';
-import type { Product, WeeklyDealItem, WeeklyDealsConfig } from '@/lib/types';
+import type { Product, WeeklyDealItem, WeeklyDealsConfig, CartItemDealMetadata } from '@/lib/types';
 
 interface PopulatedDeal {
   deal: WeeklyDealItem;
@@ -225,7 +226,7 @@ export default function WeeklyDeals() {
   }
 
   const handleAddToCart = async (item: PopulatedDeal) => {
-    const { product } = item;
+    const { product, deal } = item;
     const variant = getCheapestVariant(product);
 
     if (!variant?.id) {
@@ -235,8 +236,44 @@ export default function WeeklyDeals() {
 
     setAddingId(product.id);
     try {
-      await addItem(variant.id, 1);
-      toast.success(`Claimed offer on ${product.name}! Added to cart.`);
+      const parsed = parseDealOffer(deal.offer_label, deal.deal_price);
+      let addQuantity = 1;
+      let dealOptions: CartItemDealMetadata | undefined = undefined;
+
+      if (parsed) {
+        if (parsed.deal_type === 'bogo') {
+          // Bundled deal: Add eligible paid + free units (e.g. 1 + 1 = 2 total, 1 + 2 = 3 total)
+          addQuantity = Math.max(1, parsed.buyQty + parsed.freeQty);
+          dealOptions = {
+            deal_type: 'bogo',
+            deal_label: deal.offer_label || `Buy ${parsed.buyQty} Get ${parsed.freeQty} Free`,
+            applied_deal_price: null,
+          };
+        } else if (parsed.deal_type === 'custom_price' && parsed.dealPrice) {
+          addQuantity = 1;
+          dealOptions = {
+            deal_type: 'custom_price',
+            deal_label: deal.offer_label || 'Special Deal Price',
+            applied_deal_price: parsed.dealPrice,
+          };
+        } else if (parsed.deal_type === 'percentage') {
+          addQuantity = 1;
+          dealOptions = {
+            deal_type: 'percentage',
+            deal_label: deal.offer_label || `${parsed.percentage}% OFF`,
+            applied_deal_price: null,
+          };
+        }
+      }
+
+      await addItem(variant.id, addQuantity, dealOptions);
+      if (parsed?.deal_type === 'bogo') {
+        toast.success(`🎉 Claimed ${deal.offer_label}! ${addQuantity} items added to your cart (${parsed.freeQty} FREE).`);
+      } else if (parsed?.deal_type === 'custom_price') {
+        toast.success(`🎉 Special deal price applied on ${product.name}!`);
+      } else {
+        toast.success(`🎉 Added ${product.name} to cart with special promotional offer!`);
+      }
     } catch {
       toast.error('Could not add to cart.');
     } finally {
@@ -299,15 +336,26 @@ export default function WeeklyDeals() {
               {dealItems.map(({ product, deal }, idx) => {
                 const cheapest = getCheapestVariant(product);
                 const minPrice = cheapest ? Number(cheapest.price) : 0;
+                const compareAt = cheapest?.compare_at_price ? Number(cheapest.compare_at_price) : 0;
                 const inStock = (product.variants ?? []).some((v) => v.stock > 0);
 
                 const hasCustomPrice = Boolean(deal.deal_price && deal.deal_price > 0);
                 const effectivePrice = hasCustomPrice ? Number(deal.deal_price) : minPrice;
-                const saving = hasCustomPrice && minPrice > effectivePrice ? minPrice - effectivePrice : 0;
 
-                // Only ever show a percentage we can prove from the price itself
+                // Strikethrough compare price (either compare_at_price or regular minPrice when deal_price is set)
+                const strikePrice =
+                  compareAt > effectivePrice
+                    ? compareAt
+                    : hasCustomPrice && minPrice > effectivePrice
+                    ? minPrice
+                    : null;
+                const saving = strikePrice ? strikePrice - effectivePrice : 0;
+
+                // Percentage discount
                 const discountPercent =
-                  saving > 0 && minPrice > 0 ? Math.round((saving / minPrice) * 100) : null;
+                  saving > 0 && strikePrice
+                    ? Math.round((saving / strikePrice) * 100)
+                    : null;
 
                 const resolvedImageUrl = getProductImageUrl(product);
                 const isAdding = addingId === product.id;
@@ -385,13 +433,18 @@ export default function WeeklyDeals() {
                       <div className="wd-buy">
                         <div className="wd-price-row">
                           <span className="wd-price">{formatPriceShort(effectivePrice)}</span>
-                          {saving > 0 && <span className="wd-was">{formatPriceShort(minPrice)}</span>}
+                          {strikePrice && strikePrice > effectivePrice && (
+                            <span className="wd-was">{formatPriceShort(strikePrice)}</span>
+                          )}
                         </div>
 
                         {saving > 0 ? (
                           <span className="wd-save">Save {formatPriceShort(saving)}</span>
                         ) : (
-                          <span className="wd-note">Genuine stock</span>
+                          <span className="wd-stock-indicator">
+                            <span className="wd-stock-dot" />
+                            <span>In Stock</span>
+                          </span>
                         )}
 
                         <button

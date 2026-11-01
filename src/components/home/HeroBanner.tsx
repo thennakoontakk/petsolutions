@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Truck, ShieldCheck, Heart } from 'lucide-react';
+import { ShoppingBag, Truck, ShieldCheck, Heart, Flame } from 'lucide-react';
 
 const FEATURE_ITEMS = [
   {
@@ -46,7 +46,7 @@ export default function HeroBanner() {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 25 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
@@ -54,9 +54,19 @@ export default function HeroBanner() {
     },
   };
 
+  const handleDealsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const dealsEl = document.getElementById('weekly-deals');
+    if (dealsEl) {
+      dealsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.location.href = '/#weekly-deals';
+    }
+  };
+
   return (
     <section 
-      className="relative overflow-hidden flex flex-col justify-between hero-banner-section w-full pt-24 pb-8 md:pt-28 md:pb-12"
+      className="relative overflow-hidden flex flex-col justify-between hero-banner-section w-full pt-4 sm:pt-6 md:pt-8 pb-3 md:pb-5"
       style={{
         background: 'radial-gradient(circle at 50% 30%, #FFFDF6 0%, #FEF9EC 40%, #F5EFEB 100%)',
       }}
@@ -69,7 +79,7 @@ export default function HeroBanner() {
           loop
           muted
           playsInline
-          className="w-full h-full object-cover object-right md:object-center"
+          className="hero-bg-video w-full h-full object-cover"
         />
         {/* Desktop Left-to-Right Readability Gradient */}
         <div 
@@ -103,15 +113,19 @@ export default function HeroBanner() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl flex flex-col items-start gap-5 md:gap-7 text-left py-8 md:py-12"
+          className="max-w-xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl flex flex-col items-start gap-3 sm:gap-3.5 text-left pt-1 sm:pt-2 pb-4 sm:pb-6"
         >
           {/* Main Heading */}
           <motion.h1
             variants={itemVariants}
-            className="font-heading font-extrabold text-4xl sm:text-6xl md:text-8xl lg:text-9xl xl:text-[10rem] text-text leading-tight md:leading-[1.05] tracking-tight"
+            className="flex flex-col items-start tracking-tight"
           >
-            Everything Your Furry Friends <br />
-            <span className="text-accent relative">
+            {/* Line 1: Single line across desktop, clean proportionate font */}
+            <span className="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-[46px] xl:text-[54px] text-[#1A1A2E] leading-tight block whitespace-normal md:whitespace-nowrap">
+              Everything Your Furry Friends
+            </span>
+            {/* Line 2: Prominently enlarged in vibrant Brand Cyan */}
+            <span className="font-heading font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-[#00ACDF] leading-none mt-1 sm:mt-1.5 block">
               Deserve & More
             </span>
           </motion.h1>
@@ -119,35 +133,49 @@ export default function HeroBanner() {
           {/* Subheading */}
           <motion.p
             variants={itemVariants}
-            className="text-xs sm:text-sm md:text-base text-text-muted max-w-md md:max-w-xl leading-relaxed"
-            style={{ marginTop: '8px', marginBottom: '8px' }}
+            className="text-xs sm:text-sm md:text-base text-text-muted max-w-md md:max-w-xl leading-relaxed mt-0.5"
           >
             Experience premium pet care shopping. Browse authorized dry foods, medicated grooming solutions, tick treatments, and wellness products with direct home delivery.
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs with Prominently Highlighted Deals Button */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-4 w-full sm:w-auto"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2 w-full sm:w-auto"
           >
+            {/* 1. Hot Weekly Deals — The Star Highlighted CTA */}
+            <a
+              href="#weekly-deals"
+              onClick={handleDealsClick}
+              className="relative group px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2.5 text-xs sm:text-sm font-black text-[#1A1A2E] overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_10px_25px_-5px_rgba(255,160,0,0.5)] ring-2 ring-[#FFC800] cursor-pointer"
+              style={{
+                background: 'linear-gradient(135deg, #FFD84D 0%, #FFB800 45%, #FF9000 100%)',
+              }}
+            >
+              {/* Shimmer sweep effect */}
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none" />
+
+              <Flame size={18} className="text-[#1A1A2E] fill-[#1A1A2E] animate-pulse shrink-0" />
+              <span className="tracking-wide uppercase font-extrabold text-xs sm:text-sm">Hot Weekly Deals</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-[#1A1A2E] text-[#FFD84D] text-[10px] font-black uppercase tracking-wider ml-0.5 shadow-xs">
+                Special
+              </span>
+            </a>
+
+            {/* 2. Explore Shop Button */}
             <Link
               href="/products"
-              className="btn btn-primary px-6 sm:px-9 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2.5 text-xs sm:text-sm font-bold shadow-xl shadow-accent/25 hover:shadow-accent/40 transition-all hover:scale-105"
+              className="btn btn-outline px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-[#1A1A2E] bg-white/85 hover:bg-white border border-[#BDDFEA] hover:border-accent shadow-sm transition-all hover:scale-105"
             >
-              <ShoppingBag size={18} /> Explore Shop
-            </Link>
-            <Link
-              href="/products?category=tick-flea-treatment"
-              className="btn btn-outline px-6 sm:px-9 py-3.5 sm:py-4 rounded-xl flex items-center justify-center text-xs sm:text-sm font-bold border border-secondary-alt hover:border-accent hover:bg-white/30 transition-all hover:scale-105"
-            >
-              Flea & Tick Care
+              <ShoppingBag size={17} className="text-[#00ACDF]" />
+              <span>Explore Shop</span>
             </Link>
           </motion.div>
         </motion.div>
       </div>
 
       {/* ── Feature Cards Infinite Marquee Ticker ── */}
-      <div className="w-full overflow-hidden relative py-4 select-none z-10">
+      <div className="w-full overflow-hidden relative py-3 select-none z-10">
         {/* Soft edge fade overlays to hide raw crop cuts */}
         <div 
           className="absolute top-0 bottom-0 left-0 w-16 z-20 pointer-events-none" 
@@ -164,11 +192,11 @@ export default function HeroBanner() {
             return (
               <div 
                 key={idx} 
-                className="glass p-5 rounded-2xl border border-white/50 flex items-center gap-4 text-left hover:scale-[1.02] transition-transform duration-300 w-[280px] md:w-[320px] flex-shrink-0"
+                className="glass p-4 rounded-2xl border border-white/50 flex items-center gap-4 text-left hover:scale-[1.02] transition-transform duration-300 w-[280px] md:w-[320px] flex-shrink-0"
                 style={{ marginRight: '24px' }}
               >
-                <div className="p-3 bg-accent/10 text-accent rounded-xl">
-                  <Icon size={20} />
+                <div className="p-2.5 bg-accent/10 text-accent rounded-xl">
+                  <Icon size={19} />
                 </div>
                 <div>
                   <h4 className="font-heading font-bold text-xs text-text">{card.title}</h4>
