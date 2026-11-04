@@ -346,13 +346,13 @@ export default function Footer() {
                 <Link href="/orders">Order Tracking</Link>
               </li>
               <li>
-                <Link href="/products">Returns &amp; Refunds</Link>
+                <Link href="/refund-policy">Returns &amp; Refunds</Link>
               </li>
               <li>
-                <Link href="/products">Shipping Info</Link>
+                <Link href="/shipping-policy">Shipping Info</Link>
               </li>
               <li>
-                <Link href="/products">FAQs</Link>
+                <Link href="/contact">FAQs &amp; Help</Link>
               </li>
             </ul>
           </div>
@@ -368,13 +368,13 @@ export default function Footer() {
                 <Link href="/products">Blog</Link>
               </li>
               <li>
-                <Link href="/products">Privacy Policy</Link>
+                <Link href="/privacy-policy">Privacy &amp; Cookie Policy</Link>
               </li>
               <li>
-                <Link href="/products">Terms &amp; Conditions</Link>
+                <Link href="/terms">Terms &amp; Conditions</Link>
               </li>
               <li>
-                <Link href="/products">Contact Us</Link>
+                <Link href="/contact">Contact Us</Link>
               </li>
             </ul>
           </div>
