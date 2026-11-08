@@ -1,95 +1,186 @@
-'use client';
-
-import { useState, useEffect, use } from 'react';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import ProductDetail from '@/components/products/ProductDetail';
-import { createBrowserClient } from '@/lib/supabase/client';
+import type { Metadata } from 'next';
+import { createClient } from '@supabase/supabase-js';
+import { resolveProductImage } from '@/lib/data/productImageMap';
 import type { Product } from '@/lib/types';
-import Link from 'next/link';
+import ProductDetailClient from './ProductDetailClient';
 
 interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { slug } = use(params);
-  
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+async function getProductBySlug(slug: string): Promise<Product | null> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const supabase = createBrowserClient();
-        
-        // Fetch product with categories and variants
-        const { data, error } = await supabase
-          .from('products')
-          .select('*, categories(*), product_variants(*)')
-          .eq('slug', slug)
-          .single();
+  if (!supabaseUrl || !supabaseKey) return null;
 
-        if (error) throw error;
-        
-        if (data) {
-          const formatted: Product = {
-            ...data,
-            category: data.categories,
-            variants: data.product_variants || [],
-          };
-          setProduct(formatted);
-        } else {
-          setError('Product not found');
-        }
-      } catch (err: any) {
-        console.error('Error fetching product detail:', err);
-        setError(err.message || 'Error loading product');
-      } finally {
-        setLoading(false);
+  try {
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, categories(*), product_variants(*)')
+      .eq('slug', slug)
+      .single();
+
+    if (error || !data) return null;
+
+    const formatted: Product = {
+      ...data,
+      category: data.categories,
+      variants: data.product_variants || [],
+    };
+
+    return resolveProductImage(formatted);
+  } catch (err) {
+    console.error('Error fetching product in getProductBySlug:', err);
+    return null;
+  }
+}
+
+export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://petsolutions.lk';
+  const productUrl = `${siteUrl}/products/${slug}`;
+
+  if (!product) {
+    return {
+      title: 'Product Details | PetSolutions.lk',
+      description: 'Discover premium pet supplies, dog and cat foods, supplements, and veterinary essentials at PetSolutions.lk in Sri Lanka.',
+    };
+  }
+
+  const cleanDescription = (product.description || '')
+    .replace(/[#*`_\[\]]/g, '')
+    .slice(0, 155)
+    .trim();
+
+  const description = cleanDescription
+    ? `${cleanDescription}... Fast islandwide delivery in Sri Lanka.`
+    : `Buy ${product.name} online at PetSolutions.lk. Fast doorstep delivery islandwide across Sri Lanka.`;
+
+  const imageUrl = product.image_url || `${siteUrl}/logo-icon.png`;
+
+  return {
+    title: `${product.name} | PetSolutions.lk`,
+    description,
+    alternates: {
+      canonical: productUrl,
+    },
+    openGraph: {
+      title: `${product.name} — PetSolutions.lk`,
+      description,
+      url: productUrl,
+      siteName: 'PetSolutions.lk',
+      locale: 'en_LK',
+      type: 'website',
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 800,
+          alt: product.name,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.name} | PetSolutions.lk`,
+      description,
+      images: [imageUrl],
+    },
+  };
+}
+
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://petsolutions.lk';
+  const productUrl = `${siteUrl}/products/${slug}`;
+
+  // Find lowest price and stock status
+  const activeVariants = (product?.variants || []).filter((v) => v.is_active !== false);
+  const lowestPrice = activeVariants.length > 0
+    ? Math.min(...activeVariants.map((v) => v.price))
+    : 0;
+  const inStock = activeVariants.some((v) => (v.stock ?? 1) > 0);
+
+  const productJsonLd = product
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        image: product.image_url || `${siteUrl}/logo-icon.png`,
+        description: product.description || product.name,
+        sku: product.id,
+        brand: {
+          '@type': 'Brand',
+          name: 'PetSolutions.lk',
+        },
+        offers: {
+          '@type': 'Offer',
+          url: productUrl,
+          priceCurrency: 'LKR',
+          price: lowestPrice,
+          priceValidUntil: '2027-12-31',
+          itemCondition: 'https://schema.org/NewCondition',
+          availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+          seller: {
+            '@type': 'Organization',
+            name: 'PetSolutions.lk',
+          },
+        },
       }
-    }
+    : null;
 
-    if (slug) {
-      fetchProduct();
-    }
-  }, [slug]);
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Products',
+        item: `${siteUrl}/products`,
+      },
+      ...(product
+        ? [
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: product.name,
+              item: productUrl,
+            },
+          ]
+        : []),
+    ],
+  };
 
   return (
     <>
-      <Header />
-      <main className="min-h-[80vh] py-6 md:py-10">
-        <div className="container mx-auto px-4">
-
-          {loading ? (
-            <div className="glass p-6 rounded-2xl flex flex-col md:flex-row gap-8 animate-pulse">
-              <div className="w-full md:w-1/2 aspect-square bg-secondary/50 rounded-2xl" />
-              <div className="w-full md:w-1/2 space-y-4">
-                <div className="h-4 bg-secondary/50 w-1/4 rounded" />
-                <div className="h-8 bg-secondary/50 w-3/4 rounded" />
-                <div className="h-6 bg-secondary/50 w-1/3 rounded" />
-                <div className="h-32 bg-secondary/50 w-full rounded-xl" />
-                <div className="h-10 bg-secondary/50 w-1/3 rounded-xl" />
-              </div>
-            </div>
-          ) : error || !product ? (
-            <div className="glass p-12 text-center rounded-2xl space-y-4 max-w-md mx-auto">
-              <h2 className="font-heading font-bold text-xl text-text">Product Not Found</h2>
-              <p className="text-xs text-text-muted">
-                The product you are looking for might have been removed or is temporarily unavailable.
-              </p>
-              <Link href="/products" className="btn btn-primary inline-block">
-                Back to Shop
-              </Link>
-            </div>
-          ) : (
-            <ProductDetail product={product} />
-          )}
-
-        </div>
-      </main>
-      <Footer />
+      {productJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(productJsonLd),
+          }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd),
+        }}
+      />
+      <ProductDetailClient slug={slug} initialProduct={product} />
     </>
   );
 }

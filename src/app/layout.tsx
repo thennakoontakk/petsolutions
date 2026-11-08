@@ -26,7 +26,7 @@ const inter = Inter({
 });
 
 /* --------------------------------------------------------------------------
-   Metadata
+   Metadata & SEO
    -------------------------------------------------------------------------- */
 export const metadata: Metadata = {
   title: {
@@ -44,10 +44,15 @@ export const metadata: Metadata = {
     'pet care',
     'PetSolutions',
     'online pet shop',
+    'dewormers',
+    'veterinary medicines',
   ],
   authors: [{ name: 'PetSolutions.lk' }],
   creator: 'PetSolutions.lk',
-  metadataBase: new URL('https://petsolutions.lk'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://petsolutions.lk'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_LK',
@@ -55,16 +60,33 @@ export const metadata: Metadata = {
     title: 'PetSolutions.lk — Premium Pet Care Products',
     description:
       'Sri Lanka\'s trusted online pet store. Shop premium food, treats, toys, and accessories for cats & dogs.',
+    url: 'https://petsolutions.lk',
+    images: [
+      {
+        url: '/logo-icon.png',
+        width: 512,
+        height: 512,
+        alt: 'PetSolutions.lk Sri Lanka',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'PetSolutions.lk — Premium Pet Care Products',
     description:
       'Sri Lanka\'s trusted online pet store for cats & dogs.',
+    images: ['/logo-icon.png'],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   icons: {
     icon: [
@@ -76,6 +98,44 @@ export const metadata: Metadata = {
     apple: [
       { url: '/logo-icon.png', sizes: '180x180', type: 'image/png' },
     ],
+  },
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'PetStore',
+  name: 'PetSolutions.lk',
+  legalName: 'Guardian Agriculture (Pvt) Ltd',
+  url: 'https://petsolutions.lk',
+  logo: 'https://petsolutions.lk/logo-icon.png',
+  image: 'https://petsolutions.lk/logo-icon.png',
+  description: "Sri Lanka's trusted online pet store for cats & dogs food, accessories, and veterinary products.",
+  telephone: '+94777804175',
+  email: 'info@petsolutions.lk',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Lot No. 01, Lanka Industrial Estates (LINDEL), Maguruvila Road, Gonawala',
+    addressLocality: 'Kelaniya',
+    addressRegion: 'Western Province',
+    addressCountry: 'LK',
+  },
+  priceRange: 'LKR',
+  currenciesAccepted: 'LKR',
+  paymentAccepted: 'Credit Card, Debit Card, Cash on Delivery, OnePay',
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'PetSolutions.lk',
+  url: 'https://petsolutions.lk',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://petsolutions.lk/products?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
   },
 };
 
@@ -95,6 +155,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-dominant font-body text-text antialiased">
         <AuthProvider>
           <CartProvider>
