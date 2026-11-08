@@ -62,8 +62,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
-            style={{ position: 'fixed', zIndex: 1000 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            style={{ position: 'fixed', zIndex: 100000 }}
           />
 
           {/* Drawer container */}
@@ -78,7 +78,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               position: 'fixed',
               right: 0,
               top: 0,
-              zIndex: 1001,
+              zIndex: 100001,
               backgroundColor: 'rgba(254, 252, 243, 0.97)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',

@@ -490,6 +490,18 @@ export default function CheckoutPage() {
                     </>
                   )}
                 </button>
+
+                {/* Compliance agreement text */}
+                <p className="text-center text-xs text-text-muted mt-2">
+                  By placing your order, you agree to our{' '}
+                  <Link href="/terms" target="_blank" className="text-[#00ACDF] font-semibold underline hover:text-[#0090BB]">
+                    Terms &amp; Conditions
+                  </Link>
+                  {' '}and{' '}
+                  <Link href="/privacy-policy" target="_blank" className="text-[#00ACDF] font-semibold underline hover:text-[#0090BB]">
+                    Privacy Policy
+                  </Link>.
+                </p>
               </form>
 
               {/* Order items preview sidebar */}
