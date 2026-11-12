@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, ArrowRight, Sparkles, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Sparkles, AlertCircle, CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -200,18 +200,66 @@ function LoginFormContent() {
 
           <motion.button
             type="submit"
-            disabled={isSubmitting}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            className="btn btn-primary w-full py-3.5 mt-2 text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 rounded-xl shadow-md cursor-pointer transition-all duration-200"
+            disabled={isSubmitting || !!success}
+            whileHover={!isSubmitting && !success ? { scale: 1.01 } : undefined}
+            whileTap={{ scale: 1 }}
+            className={`btn btn-primary relative w-full h-[52px] min-h-[52px] mt-2 text-xs font-bold tracking-wider uppercase flex items-center justify-center rounded-xl shadow-md overflow-hidden transition-all duration-200 active:!scale-100 !transform-none ${
+              isSubmitting ? 'cursor-wait !opacity-95 shadow-lg shadow-accent/25' : 'cursor-pointer'
+            }`}
           >
-            {isSubmitting ? (
-              <div className="animate-spin rounded-full h-4.5 w-4.5 border-b-2 border-white"></div>
-            ) : (
-              <>
-                Sign In <ArrowRight size={15} />
-              </>
+            {/* Shimmer sweep animation during submission */}
+            {isSubmitting && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.2,
+                  ease: 'easeInOut',
+                }}
+              />
             )}
+
+            <AnimatePresence mode="wait">
+              {isSubmitting ? (
+                <motion.div
+                  key="submitting"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex items-center justify-center gap-2.5 text-text font-bold"
+                >
+                  <Loader2 size={18} className="animate-spin text-text shrink-0" />
+                  <span>Signing In...</span>
+                </motion.div>
+              ) : success ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex items-center justify-center gap-2 text-text font-bold"
+                >
+                  <CheckCircle2 size={18} className="text-text shrink-0" />
+                  <span>Redirecting...</span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="idle"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex items-center justify-center gap-2 text-text font-bold"
+                >
+                  <span>Sign In</span>
+                  <ArrowRight size={15} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.button>
         </form>
 

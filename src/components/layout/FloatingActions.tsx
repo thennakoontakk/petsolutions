@@ -12,24 +12,41 @@ export default function FloatingActions() {
   const pathname = usePathname();
   const { totalItems } = useCart();
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showFloatingCart, setShowFloatingCart] = useState(false);
   const [hotline, setHotline] = useState('+94771234567');
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [isCartTooltipVisible, setIsCartTooltipVisible] = useState(false);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
 
-  // Scroll listener for Back to Top button
+  // Scroll listener for Back to Top and Floating Cart button
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 350) {
+      const currentScrollY = window.scrollY;
+
+      // Back to top threshold
+      if (currentScrollY > 350) {
         setShowBackToTop(true);
       } else {
         setShowBackToTop(false);
       }
+
+      // Floating Cart threshold:
+      // When at the top (hero section), the top navbar already displays a cart button.
+      // Therefore, only reveal this floating button when the user scrolls past the hero section.
+      const heroBanner = document.getElementById('hero-banner');
+      if (heroBanner) {
+        const heroBottom = heroBanner.offsetTop + heroBanner.offsetHeight - 80;
+        setShowFloatingCart(currentScrollY > heroBottom);
+      } else {
+        // Fallback for pages without hero banner
+        setShowFloatingCart(currentScrollY > 300);
+      }
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   // Fetch hotline from store settings
   useEffect(() => {
@@ -112,119 +129,123 @@ export default function FloatingActions() {
           )}
         </AnimatePresence>
 
-        {/* 2. Floating Cart Button */}
-        {!isCartOrCheckout && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            style={{ pointerEvents: 'auto', position: 'relative', display: 'flex', alignItems: 'center' }}
-            onMouseEnter={() => setIsCartTooltipVisible(true)}
-            onMouseLeave={() => setIsCartTooltipVisible(false)}
-          >
-            {/* Tooltip on Desktop */}
-            <AnimatePresence>
-              {isCartTooltipVisible && (
-                <motion.div
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  style={{
-                    position: 'absolute',
-                    right: '100%',
-                    marginRight: '12px',
-                    padding: '8px 14px',
-                    borderRadius: '12px',
-                    backgroundColor: '#1A1A2E',
-                    color: '#FFFFFF',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    whiteSpace: 'nowrap',
-                    boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    zIndex: 10,
-                  }}
-                >
-                  <span>
-                    {totalItems > 0
-                      ? `View Cart (${totalItems} ${totalItems === 1 ? 'item' : 'items'})`
-                      : 'View Cart'}
-                  </span>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      right: '-4px',
-                      transform: 'translateY(-50%) rotate(45deg)',
-                      width: '8px',
-                      height: '8px',
-                      backgroundColor: '#1A1A2E',
-                    }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Floating Cart Button */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.93 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              onClick={() => setIsCartDrawerOpen(true)}
-              aria-label="Open Shopping Cart"
-              style={{
-                width: '54px',
-                height: '54px',
-                borderRadius: '50%',
-                backgroundColor: '#00ACDF',
-                color: '#FFFFFF',
-                boxShadow: '0 8px 24px rgba(0, 172, 223, 0.45)',
-                position: 'relative',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'none',
-                outline: 'none',
-              }}
+        {/* 2. Floating Cart Button — Only revealed when scrolled past Hero Banner */}
+        <AnimatePresence>
+          {!isCartOrCheckout && showFloatingCart && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              style={{ pointerEvents: 'auto', position: 'relative', display: 'flex', alignItems: 'center' }}
+              onMouseEnter={() => setIsCartTooltipVisible(true)}
+              onMouseLeave={() => setIsCartTooltipVisible(false)}
             >
-              <ShoppingBag size={25} className="text-white" />
-
-              {/* Dynamic Badge for items count */}
+              {/* Tooltip on Desktop */}
               <AnimatePresence>
-                {totalItems > 0 && (
-                  <motion.span
-                    key="floating-cart-badge"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                {isCartTooltipVisible && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
                     style={{
                       position: 'absolute',
-                      top: '-4px',
-                      right: '-4px',
-                      minWidth: '22px',
-                      height: '22px',
-                      padding: '0 6px',
+                      right: '100%',
+                      marginRight: '12px',
+                      padding: '8px 14px',
                       borderRadius: '12px',
-                      backgroundColor: '#FFC800',
-                      color: '#1A1A2E',
-                      fontSize: '11px',
-                      fontWeight: 800,
+                      backgroundColor: '#1A1A2E',
+                      color: '#FFFFFF',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                      boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 3px 10px rgba(0,0,0,0.25)',
-                      border: '2px solid #FFFFFF',
+                      zIndex: 10,
                     }}
                   >
-                    {totalItems > 99 ? '99+' : totalItems}
-                  </motion.span>
+                    <span>
+                      {totalItems > 0
+                        ? `View Cart (${totalItems} ${totalItems === 1 ? 'item' : 'items'})`
+                        : 'View Cart'}
+                    </span>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        right: '-4px',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        width: '8px',
+                        height: '8px',
+                        backgroundColor: '#1A1A2E',
+                      }}
+                    />
+                  </motion.div>
                 )}
               </AnimatePresence>
-            </motion.button>
-          </motion.div>
-        )}
+
+              {/* Floating Cart Button */}
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.93 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                onClick={() => setIsCartDrawerOpen(true)}
+                aria-label="Open Shopping Cart"
+                style={{
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '50%',
+                  backgroundColor: '#00ACDF',
+                  color: '#FFFFFF',
+                  boxShadow: '0 8px 24px rgba(0, 172, 223, 0.45)',
+                  position: 'relative',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: 'none',
+                  outline: 'none',
+                }}
+              >
+                <ShoppingBag size={25} className="text-white" />
+
+                {/* Dynamic Badge for items count */}
+                <AnimatePresence>
+                  {totalItems > 0 && (
+                    <motion.span
+                      key="floating-cart-badge"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                      style={{
+                        position: 'absolute',
+                        top: '-4px',
+                        right: '-4px',
+                        minWidth: '22px',
+                        height: '22px',
+                        padding: '0 6px',
+                        borderRadius: '12px',
+                        backgroundColor: '#FFC800',
+                        color: '#1A1A2E',
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 3px 10px rgba(0,0,0,0.25)',
+                        border: '2px solid #FFFFFF',
+                      }}
+                    >
+                      {totalItems > 99 ? '99+' : totalItems}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* 3. WhatsApp Support Floating Button */}
         <motion.div

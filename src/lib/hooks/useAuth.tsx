@@ -393,14 +393,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     setIsLoading(true);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('mock_auth_user');
-      localStorage.removeItem('mock_auth_profile');
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('mock_auth_user');
+        localStorage.removeItem('mock_auth_profile');
+        // Clear all session storage and Supabase auth keys
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('sb-') || key.includes('supabase.auth')) {
+            localStorage.removeItem(key);
+          }
+        });
+      }
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.warn('Supabase auth.signOut completed with warning:', err);
+    } finally {
+      setUser(null);
+      setProfile(null);
+      setIsLoading(false);
     }
-    await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
-    setIsLoading(false);
   }, [supabase]);
 
   // Role switcher for live testing

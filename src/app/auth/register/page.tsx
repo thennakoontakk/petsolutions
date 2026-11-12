@@ -3,8 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Lock, Mail, ArrowRight, User, UserPlus, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Lock, Mail, ArrowRight, User, UserPlus, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -243,19 +243,57 @@ function RegisterFormContent() {
             </div>
           </div>
 
-          <button
+          <motion.button
             type="submit"
             disabled={isSubmitting}
-            className="btn btn-primary w-full py-4 text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-accent/20 rounded-xl mt-2"
+            whileHover={!isSubmitting ? { scale: 1.01 } : undefined}
+            whileTap={{ scale: 1 }}
+            className={`btn btn-primary relative w-full h-[52px] min-h-[52px] mt-2 text-xs font-bold tracking-wider uppercase flex items-center justify-center rounded-xl shadow-md overflow-hidden transition-all duration-200 active:!scale-100 !transform-none ${
+              isSubmitting ? 'cursor-wait !opacity-95 shadow-lg shadow-accent/25' : 'cursor-pointer'
+            }`}
           >
-            {isSubmitting ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            ) : (
-              <>
-                Register <ArrowRight size={16} />
-              </>
+            {/* Shimmer sweep animation during submission */}
+            {isSubmitting && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.2,
+                  ease: 'easeInOut',
+                }}
+              />
             )}
-          </button>
+
+            <AnimatePresence mode="wait">
+              {isSubmitting ? (
+                <motion.div
+                  key="submitting"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex items-center justify-center gap-2.5 text-text font-bold"
+                >
+                  <Loader2 size={18} className="animate-spin text-text shrink-0" />
+                  <span>Creating Account...</span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="idle"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex items-center justify-center gap-2 text-text font-bold"
+                >
+                  <span>Register</span>
+                  <ArrowRight size={16} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </form>
 
         {/* Footer link */}

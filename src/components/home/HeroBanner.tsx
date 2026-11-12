@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Truck, ShieldCheck, Heart, Flame } from 'lucide-react';
+import { ShoppingBag, Truck, ShieldCheck, Heart } from 'lucide-react';
 
 const FEATURE_ITEMS = [
   {
@@ -66,6 +66,7 @@ export default function HeroBanner() {
 
   return (
     <section 
+      id="hero-banner"
       className="relative overflow-hidden flex flex-col justify-between hero-banner-section w-full pt-4 sm:pt-6 md:pt-8 pb-3 md:pb-5"
       style={{
         background: 'radial-gradient(circle at 50% 30%, #FFFDF6 0%, #FEF9EC 40%, #F5EFEB 100%)',
@@ -155,11 +156,7 @@ export default function HeroBanner() {
               {/* Shimmer sweep effect */}
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none" />
 
-              <Flame size={18} className="text-[#1A1A2E] fill-[#1A1A2E] animate-pulse shrink-0" />
               <span className="tracking-wide uppercase font-extrabold text-xs sm:text-sm">Hot Weekly Deals</span>
-              <span className="px-1.5 py-0.5 rounded-full bg-[#1A1A2E] text-[#FFD84D] text-[10px] font-black uppercase tracking-wider ml-0.5 shadow-xs">
-                Special
-              </span>
             </a>
 
             {/* 2. Explore Shop Button */}

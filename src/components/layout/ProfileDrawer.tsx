@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -16,8 +16,10 @@ import {
   LogIn, 
   UserPlus, 
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Loader2
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useCart } from '@/lib/hooks/useCart';
 
@@ -30,7 +32,22 @@ interface ProfileDrawerProps {
 export default function ProfileDrawer({ isOpen, onClose, onOpenCart }: ProfileDrawerProps) {
   const { user, profile, isAdmin, signOut } = useAuth();
   const { totalItems } = useCart();
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  const handleSignOut = async () => {
+    try {
+      setIsSigningOut(true);
+      await signOut();
+      toast.success('Signed out successfully');
+      onClose();
+    } catch (err) {
+      console.error('Sign out error:', err);
+      toast.error('Failed to sign out. Please try again.');
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   // Close drawer on click outside
   useEffect(() => {
@@ -88,8 +105,8 @@ export default function ProfileDrawer({ isOpen, onClose, onOpenCart }: ProfileDr
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
-            style={{ position: 'fixed', zIndex: 1000 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            style={{ position: 'fixed', zIndex: 100000 }}
           />
 
           {/* Drawer container */}
@@ -99,42 +116,43 @@ export default function ProfileDrawer({ isOpen, onClose, onOpenCart }: ProfileDr
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl border-l border-white/20 flex flex-col justify-between"
+            className="fixed top-0 right-0 h-full w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl border-l border-white/20 flex flex-col overflow-hidden"
             style={{
               position: 'fixed',
               right: 0,
               top: 0,
-              zIndex: 1001,
-              backgroundColor: 'rgba(254, 252, 243, 0.96)',
+              height: '100dvh',
+              maxHeight: '100dvh',
+              zIndex: 100001,
+              backgroundColor: 'rgba(254, 252, 243, 0.98)',
             }}
           >
             {/* ── 1. Top Header ── */}
-            <div>
-              <div className="p-4 sm:p-5 border-b border-secondary-alt/30 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="p-2 bg-accent/15 text-accent rounded-xl">
-                    <User size={20} />
-                  </div>
-                  <div>
-                    <h2 className="font-heading font-bold text-lg text-text">
-                      {user ? 'My Account' : 'Account'}
-                    </h2>
-                    <p className="text-[11px] text-text-muted">
-                      {user ? 'Manage your profile & orders' : 'Welcome to PetSolutions'}
-                    </p>
-                  </div>
+            <div className="p-4 sm:p-5 border-b border-secondary-alt/30 flex items-center justify-between flex-shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-accent/15 text-accent rounded-xl">
+                  <User size={20} />
                 </div>
-                <button
-                  onClick={onClose}
-                  className="p-2 hover:bg-secondary/40 rounded-full transition-colors text-muted hover:text-text"
-                  aria-label="Close drawer"
-                >
-                  <X size={20} />
-                </button>
+                <div>
+                  <h2 className="font-heading font-bold text-lg text-text">
+                    {user ? 'My Account' : 'Account'}
+                  </h2>
+                  <p className="text-[11px] text-text-muted">
+                    {user ? 'Manage your profile & orders' : 'Welcome to PetSolutions'}
+                  </p>
+                </div>
               </div>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-secondary/40 rounded-full transition-colors text-muted hover:text-text"
+                aria-label="Close drawer"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
-              {/* ── 2. Content Body ── */}
-              <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(100vh-170px)]">
+            {/* ── 2. Content Body ── */}
+            <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6">
                 {user ? (
                   <div className="flex flex-col gap-6">
                     {/* User Profile Card */}
@@ -350,19 +368,32 @@ export default function ProfileDrawer({ isOpen, onClose, onOpenCart }: ProfileDr
                   </div>
                 )}
               </div>
-            </div>
 
             {/* ── 3. Bottom Footer Action ── */}
             {user && (
-              <div className="p-4 sm:p-5 border-t border-secondary-alt/30 bg-white/40">
+              <div className="p-4 sm:p-5 border-t border-secondary-alt/30 bg-white/85 backdrop-blur-sm flex-shrink-0 mt-auto">
                 <button
-                  onClick={async () => {
-                    await signOut();
-                    onClose();
+                  type="button"
+                  disabled={isSigningOut}
+                  onClick={handleSignOut}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs hover:shadow active:scale-[0.99] disabled:opacity-75 disabled:cursor-wait"
+                  style={{
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    color: '#EF4444',
+                    border: '1px solid rgba(239, 68, 68, 0.25)',
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold text-error bg-error/10 hover:bg-error/20 transition-all cursor-pointer"
                 >
-                  <LogOut size={16} /> Sign Out
+                  {isSigningOut ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin text-red-500 shrink-0" />
+                      <span>Signing Out...</span>
+                    </>
+                  ) : (
+                    <>
+                      <LogOut size={16} className="shrink-0" />
+                      <span>Sign Out</span>
+                    </>
+                  )}
                 </button>
               </div>
             )}
