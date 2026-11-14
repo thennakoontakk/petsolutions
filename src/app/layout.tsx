@@ -4,6 +4,7 @@ import { AuthProvider } from '@/lib/hooks/useAuth';
 import { CartProvider } from '@/lib/hooks/useCart';
 import FloatingActions from '@/components/layout/FloatingActions';
 import ClickPawPulse from '@/components/layout/ClickPawPulse';
+import CookieConsent from '@/components/common/CookieConsent';
 import { Toaster } from 'sonner';
 import './globals.css';
 import './weekly-deals.css';
@@ -175,6 +176,7 @@ export default function RootLayout({
             {children}
             <FloatingActions />
             <ClickPawPulse />
+            <CookieConsent />
             <Toaster position="top-right" richColors closeButton />
           </CartProvider>
         </AuthProvider>

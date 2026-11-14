@@ -96,10 +96,28 @@ export default function PrivacyPolicyPage() {
               </div>
             </section>
 
-            {/* 3. Retention, security and customer requests */}
+            {/* 3. Cookies and Tracking Technologies */}
             <section className="space-y-4 pt-4 border-t border-gray-100">
               <h2 className="text-xl font-bold text-[#1A1A2E] flex items-center gap-2">
-                <FileText className="w-5 h-5 text-[#00ACDF]" /> 3. Retention, Security and Customer Requests
+                <FileText className="w-5 h-5 text-amber-500" /> 3. Cookies and Tracking Technologies
+              </h2>
+              <div className="space-y-3 text-sm">
+                <p>
+                  PetSolutions.lk uses strictly necessary cookies and browser storage to maintain your active shopping cart, preserve authenticated customer sessions, ensure CSRF security, and facilitate encrypted communication with authorized payment gateways (e.g., OnePay, 3DS verification).
+                </p>
+                <div className="p-4 rounded-xl bg-[#F9F6EE] border border-gray-200 text-xs text-[#2D2D3F]">
+                  For complete details on specific cookie names, retention durations, and how to manage browser cookie settings, please read our dedicated{' '}
+                  <Link href="/cookie-policy" className="text-[#00ACDF] font-bold underline hover:text-[#0090BB]">
+                    Cookie Policy
+                  </Link>.
+                </div>
+              </div>
+            </section>
+
+            {/* 4. Retention, security and customer requests */}
+            <section className="space-y-4 pt-4 border-t border-gray-100">
+              <h2 className="text-xl font-bold text-[#1A1A2E] flex items-center gap-2">
+                <FileText className="w-5 h-5 text-[#00ACDF]" /> 4. Retention, Security and Customer Requests
               </h2>
               
               <div className="space-y-3 text-sm">
